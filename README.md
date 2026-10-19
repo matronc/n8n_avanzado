@@ -3,7 +3,7 @@
 ![n8n](https://img.shields.io/badge/n8n-Workflow-orange?style=for-the-badge&logo=n8n)
 ![Groq](https://img.shields.io/badge/Groq-LLM_Engine-purple?style=for-the-badge)
 ![Slack](https://img.shields.io/badge/Slack-Integration-blue?style=for-the-badge&logo=slack)
-![Google Sheets](https://img.shields.io/badge/Google_Sheets-Database-green?style=for-the-badge&logo=googlesheets)
+![Google Sheets]([https://img.shields.io/badge/Google_Sheets-Database-green?style=for-the-badge&logo=googlesheets](https://docs.google.com/spreadsheets/d/1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c/edit#gid=0))
 
 ---
 
