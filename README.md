@@ -1,4 +1,4 @@
-# 🍔 GustoBot · Módulo 1: Agente Base y Motor de Razonamiento ReAct
+# 🍔 GustoBot · Arquitectura Multi-Agente, Orquestación Manager-Worker y Memoria Persistente (Checkpoints 2 & 3)
 
 ![n8n](https://img.shields.io/badge/n8n-Workflow-orange?style=for-the-badge&logo=n8n)
 ![Groq](https://img.shields.io/badge/Groq-LLM_Engine-purple?style=for-the-badge)
@@ -9,49 +9,55 @@
 
 ## 📌 Descripción del Proyecto
 
-**GustoBot** es un asistente virtual inteligente basado en arquitecturas agénticas diseñado para la automatización de la toma de pedidos y el triaje comercial en un restaurante de comida rápida.
+**GustoBot** es un asistente virtual inteligente y omnicanal diseñado para la automatización de la toma de pedidos, atención de consultas y gestión de reclamos en un restaurante de comida rápida.
 
-Este repositorio contiene la entrega técnica correspondiente al **Checkpoint 1** del proyecto integrador. Implementa un motor de razonamiento central en **n8n** bajo el paradigma de autonomía ReAct (Reasoning + Acting) conectado a canales de mensajería empresarial y persistencia de datos en la nube.
-
----
-
-## 📂 Estructura de Entregables y Recursos
-
-* 📄 **`checkpoint1_marcelo_troncoso.json`**: Archivo de configuración visual exportado de n8n que contiene la arquitectura completa del Agente Base.
-
-* 📊 **Base de Datos de Pedidos:**
-  
-  [![Google Sheets](https://img.shields.io/badge/Ver_Planilla_de_Pedidos-Google_Sheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=white)](https://docs.google.com/spreadsheets/d/1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c/edit?gid=0#gid=0)
+Este repositorio contiene la evolución técnica de los **Checkpoints 2 y 3**, migrando desde una estructura monolítica inicial hacia una **arquitectura multi-agente bajo el patrón Manager-Worker**, incorporando además protocolos de seguridad **Human-In-The-Loop (HITL)**, trazabilidad de ejecución y **memoria persistente con compresión y síntesis automática mediada por Agentes IA**.
 
 ---
 
-## 🧠 Arquitectura y Componentes Obligatorios (Hito M1)
+## 📂 Archivos y Entregables del Repositorio
 
-1. **Disparador (Trigger):**
-   * **Slack Trigger:** Captura en tiempo real los mensajes recibidos en el canal `#gestor-pedidos` para su procesamiento asíncrono.
-
-2. **Cerebro (AI Agent Node):**
-   * Configurado en modo **Tools Agent** (`@n8n/n8n-nodes-langchain.agent`).
-   * Conectado a un modelo de lenguaje de alto rendimiento a través de **Groq Chat Model** (`llama-3.1-8b-instant`).
-   * **Guardrail de Presupuesto:** Configuración de iteraciones máximas (`maxIterations: 5`) para prevenir bucles lógicos y optimizar el consumo de tokens.
-
-3. **Constitución del Agente (System Prompt):**
-   * Estructura modular estricta: `[ROL Y ÁMBITO]` $\rightarrow$ `[OBJETIVO OPERATIVO]` $\rightarrow$ `[REGLAS DE USO DE HERRAMIENTAS]` $\rightarrow$ `[PROTOCOLO DE ESCALAMIENTO]` $\rightarrow$ `[ESTILO]`.
-   * Limita el margen de acción del agente a la toma de pedidos y mitiga posibles alucinaciones de respuestas comerciales fuera de contexto.
-
-4. **Herramienta Autónoma (Tool):**
-   * **Google Sheets Tool (`Registrar_Pedido_Google_Sheets`)**: Herramienta conectada al Agente para la inserción estructurada de datos (cliente, teléfono, correo, detalle de pedido) directamente en la planilla en la nube.
-
-5. **Observabilidad y Notificación (Output):**
-   * **Slack Node:** Captura el resultado devuelto por el agente (`{{ $json.output }}`) y envía la confirmación de vuelta al usuario en el mismo hilo de conversación de Slack.
+* 📄 **`Checkpoint2_marcelo_troncoso.json`**: Configuración del workflow principal (Manager) con enrutamiento inteligente, triaje mediante LLM, validación de riesgo y delegación a sub-workflows.
+* 📄 **`Checkpoint3_marcelo_troncoso.json`**: Configuración avanzada que añade recuperación de historial por sesión (`Session_ID`), control de longitud de hilos conversacionales y un Agente IA de síntesis de memoria.
+* 📊 **Base de Datos y Registro de Auditoría:** 
+  [![Google Sheets](https://img.shields.io/badge/Ver_Planilla_Logs-Google_Sheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=white)](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)
 
 ---
 
-## 🚀 Vista Previa del Diagrama de Flujo en n8n
+## 🏗️ Arquitectura y Componentes: Checkpoint 2 (Manager-Worker & HITL)
 
-```text
-[Chat de Slack] ──> [AI Agent (Agente GustoBot)] ──> [Respuesta a Slack]
-                           │        ▲
-                           │        │ (Tool Call)
-                   [Groq Chat Model] [Registrar_Pedido_Google_Sheets]
-```
+El flujo principal opera como un **Manager** centralizado que gestiona de forma determinista el ciclo de vida de cada solicitud:
+
+1. **Ingesta y Mitigación de Payload ("Pasillo de la Muerte"):** Captura en tiempo real de mensajes en Slack y sanitización visual mediante nodos de edición para extraer únicamente la carga útil esencial (`mensaje`, `usuario_id`, `canal`), optimizando el uso de memoria.
+2. **Router IA y Taxonomía Cerrada:** Inferencia mediante Groq para clasificar las entradas del usuario en intenciones strictly definidas del negocio:
+   * `REGISTRAR_PEDIDO`
+   * `CONSULTA_MENU`
+   * `RECLAMO_SOPORTE`
+   * `UNKNOWN`
+3. **Escalamiento y Seguridad HITL (Human-in-the-Loop):** Evaluación condicional que verifica el nivel de riesgo (`risk == 'HIGH'`) o la certeza de la predicción (`confidence < 0.75`). Si se cumplen estas condiciones, el sistema desvía la ejecución y envía una alerta directa a los operadores en Slack sin invocar trabajadores automáticos.
+4. **Bifurcación Determinista y Sub-Workflows (Workers):** Mediante un nodo Switch y llamadas síncronas (`Wait For Sub-Workflow Completion`), el Manager delega las tareas a lienzos especializados independientes:
+   * `Worker_Registrar_Pedido`
+   * `Worker_Atencion_Consultas`
+   * `Worker_Atencion_Reclamos`
+   * `Worker_Anfitrion`
+5. **Trazabilidad y Auditoría:** Inserción automática de registros de ejecución en Google Sheets detallando marcas de tiempo, estados, workers invocados y flags de intervención humana.
+
+---
+
+## 🧠 Memoria Persistente y Síntesis Automática: Checkpoint 3
+
+El **Checkpoint 3** dota al sistema de un mecanismo avanzado de retención de contexto a largo plazo:
+
+1. **Identificación y Consulta por Sesión (`Session_ID`):** Cada interacción utiliza el ID de usuario de Slack para buscar y recuperar el historial acumulado almacenado en Google Sheets antes de procesar el mensaje entrante.
+2. **Control de Umbral Conversacional:** Un nodo condicional evalúa si la longitud de la conversación supera los **5 mensajes** (`conversación > 5 mensajes`).
+3. **Agente IA de Síntesis de Memoria:** Al rebasar el límite establecido, un **AI Agent** analiza el hilo reciente y actualiza de manera autónoma una celda resumen en Google Sheets estructurando:
+   * **Asunto Principal del Caso**
+   * **Puntos Clave** (preferencias, ítems o inconvenientes reportados)
+   * **Acción Requerida o Estado Final**
+
+---
+
+## 🚀 Información de Autoría
+* **Autor:** Marcelo Troncoso
+* **Repositorio GitHub:** [matronc/n8n_avanzado](https://github.com/matronc/n8n_avanzado)
+* **Entorno:** n8n Enterprise
