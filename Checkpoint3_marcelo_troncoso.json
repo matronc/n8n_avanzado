@@ -1,0 +1,1713 @@
+{
+  "name": "Gestor de Pedidos e Información para Comida Rápida Checkpoint 3",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0C9MH644BZ",
+          "mode": "list",
+          "cachedResultName": "gestor-pedidos"
+        },
+        "options": {
+          "userIds": [
+            "U0CA4S3TCDP"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2048,
+        -16
+      ],
+      "id": "4eb9303d-9614-4039-b6a9-3f4fbe4ebd64",
+      "name": "Chat de Slack",
+      "webhookId": "6fe4bcca-add0-466b-b32a-19626f7aeb8f",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0C9MH644BZ",
+          "mode": "list",
+          "cachedResultName": "gestor-pedidos"
+        },
+        "text": "={{ $json.respuesta }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Chat de Slack').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        80,
+        224
+      ],
+      "id": "fe56e93d-b9b1-40cb-a6f7-fc2ca340afe0",
+      "name": "Respuesta  a Slack",
+      "webhookId": "c3d862e3-01b0-43b6-9c02-c5d3a862d1f7",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres el Router de una mesa de ayuda de la empresa GustoBot.\n\n[INICIO DE CONTEXTO COMPARTIDO]\nID de Sesión: {{ $json.Session_ID }}\nEstado previo del caso: {{ $json.Estado_Caso }}\nResumen acumulado de la relación: {{ $json.Resumen_Consolidado }}\nDatos clave del cliente: {{ $json.Datos_Clave }}\n[FIN DE CONTEXTO COMPARTIDO]\n\nMensaje actual del usuario:\n{{ $('Input  de Slack').item.json.mensaje }}\n\nTu única tarea es clasificar el mensaje entrante utilizando el contexto anterior si es necesario. NO resuelvas el problema ni respondas al cliente.\n\nIntents permitidos:\n- REGISTRAR_PEDIDO: Cuando el usuario solicita comprar productos, armar un pedido o menciona cantidades de comida.\n- CONSULTA_MENU: Preguntas sobre precios, horarios, disponibilidad o información general de la carta.\n- RECLAMO_SOPORTE: Reclamos por pedidos erróneos, demoras, comida en mal estado o solicitudes de ayuda.\n- UNKNOWN: Mensajes ambiguos, saludos aislados o fuera de alcance.\n\nRisk (Nivel de riesgo):\n- LOW: Saludos, preguntas sobre el menú o pedidos de comida estándar (incluyendo listas de productos largos o desestructurados). Todo pedido habitual debe ser LOW.\n- MEDIUM: Solicitudes levemente ambiguas, cambios menores sobre un pedido en curso, o reclamos operativos estándar (tales como demoras, pedidos que no llegaron, ítems faltantes o errores comunes de entrega).\n- HIGH: Únicamente situaciones críticas de salud, seguridad o agresión extrema: alergias alimentarias severas, contaminación cruzada, intoxicación, amenazas graves, lenguaje ofensivo explícito o fraude. (Nota: un reclamo operativo de retraso o falta de entrega NO es HIGH, debe ser MEDIUM).\n\nConfidence: Número decimal entre 0 y 1 que indique la seguridad de la clasificación.\n\nREGLA OBLIGATORIA: Responde ÚNICAMENTE con un objeto JSON válido, sin bloques de código Markdown (como ```json), sin explicaciones ni texto adicional. Utiliza exactamente la siguiente estructura:\n{\n  \"intent\": \"REGISTRAR_PEDIDO\",\n  \"confidence\": 0.95,\n  \"risk\": \"LOW\"\n}",
+        "messages": {
+          "messageValues": []
+        }
+      },
+      "id": "b8421ffd-2819-4cbb-981b-3b6bfeb5570a",
+      "name": "Router IA - Groq",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -1248,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3.8-27b",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "id": "920da752-85a4-4965-b46c-e89950913b5a",
+      "name": "Modelo Router Groq",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -1248,
+        176
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "6eReWjCTpmf2SxR0",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6cdff667-a829-4633-9e69-2f1ae47cf4c7",
+              "name": "mensaje",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "c8bd830f-9077-42ef-b906-d9e15f4fd9f2",
+              "name": "usuario_id",
+              "value": "={{ $json.user }}",
+              "type": "string"
+            },
+            {
+              "id": "e7eea853-30de-4858-a0f6-787663dd3a71",
+              "name": "canal",
+              "value": "={{ $json.channel }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -1872,
+        -16
+      ],
+      "id": "626d3a2e-9914-4910-912b-2efb7ab0eed7",
+      "name": "Input  de Slack"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Capturamos el mensaje original desde tu nodo 'Input de Slack'\nconst original = $('Input  de Slack').first().json.mensaje;\n\n// Extraemos el texto crudo devuelto por la IA\nconst raw = $json.text ?? $json.output ?? $json.response ?? '';\n\nlet d;\ntry {\n  // Limpiamos bloques markdown (```json ... ```) si la IA los incluyó y parseamos\n  d = JSON.parse(String(raw).replace(/^```json\\s*/i, '').replace(/```$/, '').trim());\n} catch (e) {\n  // Fallback seguro si falla el parseo\n  d = { intent: 'UNKNOWN', confidence: 0, risk: 'HIGH' };\n}\n\n// Taxonomía permitida para GustoBot\nconst allowed = ['REGISTRAR_PEDIDO', 'CONSULTA_MENU', 'RECLAMO_SOPORTE', 'UNKNOWN'];\n\n// Validaciones y normalización\nconst intent = allowed.includes(d.intent) ? d.intent : 'UNKNOWN';\nconst confidence = Math.max(0, Math.min(1, Number(d.confidence ?? 0)));\nconst risk = ['LOW', 'MEDIUM', 'HIGH'].includes(d.risk) ? d.risk : 'HIGH';\n\n// Retornamos el objeto normalizado para el Switch y los Workers\nreturn [{\n  json: {\n    original_input: original,\n    intent: intent,\n    confidence: confidence,\n    risk: risk\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        -32
+      ],
+      "id": "4704fca3-2553-44f9-b9b4-c1452d641816",
+      "name": "Normalizar clasificacion Router"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b3f6aa03-16e2-4e3d-92a6-d73a646bf0d3",
+              "leftValue": "={{ $json.risk }}",
+              "rightValue": "HIGH",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "965f5251-fdb9-4035-a832-62b919a88328",
+              "leftValue": "={{ $json.confidence }}",
+              "rightValue": 0.75,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -704,
+        -32
+      ],
+      "id": "65118bc3-bbeb-407c-8c5c-8e177ca71885",
+      "name": "¿Requiere HITL?"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "REGISTRAR_PEDIDO",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "679f501c-66d7-43aa-b454-210db2363682"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PEDIDO"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6b71e3e6-ef09-4713-abc0-ecc073b26a97",
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "CONSULTA_MENU",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "MENU"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a3e7cdfc-3ae6-4e42-b2de-56582c31c222",
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "RECLAMO_SOPORTE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "RECLAMO"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "77437419-e8ae-45a2-a55e-f1a5d713a51f",
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "UNKNOWN",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "UNKNOWN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        288
+      ],
+      "id": "916f64ea-8fee-4849-88b3-c621e76e4bb9",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => ({json:{\n  timestamp:new Date().toISOString(),\n  status:item.json.status ?? 'success',\n  worker:item.json.worker ?? 'N/D',\n  respuesta:item.json.respuesta ?? '',\n  requires_human:Boolean(item.json.requires_human)\n}}));"
+      },
+      "id": "0784f053-8a5a-42dc-8ecf-f185b99e6c5c",
+      "name": "Preparar respuesta final",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const data = item.json;\n  \n  // Extraer valores con fallback por seguridad\n  const ts = data.timestamp || new Date().toISOString();\n  const worker = data.worker || 'UNKNOWN';\n  const status = data.status || 'success';\n  const hitl = data.requires_human ?? false;\n  \n  // Construir string de trazabilidad estandarizado\n  const logString = `[${ts}] | WORKER: ${worker} | STATUS: ${status} | HITL: ${hitl}`;\n\n  return {\n    json: {\n      ...data,\n      log: logString\n    }\n  };\n});"
+      },
+      "id": "8382ff75-33f3-4214-ac59-48dcdf4fe680",
+      "name": "Log de ejecución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        272,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "26679462-7dbc-44bf-a344-561ed018f597",
+              "name": "status",
+              "value": "needs_human",
+              "type": "string"
+            },
+            {
+              "id": "6de45167-a3b4-4ecd-9b72-ff5ce1da209c",
+              "name": "worker",
+              "value": "HITL",
+              "type": "string"
+            },
+            {
+              "id": "1dc46813-ac25-4821-8d6c-0dea3c3c2ff7",
+              "name": "respuesta",
+              "value": "La solicitud necesita revisión humana por riesgo alto, baja confianza o intención no reconocida.",
+              "type": "string"
+            },
+            {
+              "id": "4c49ddee-1f27-4765-b82b-03fd2a3a8d6a",
+              "name": "requires_human",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8fb125e3-7551-4029-b77f-bf12c3c68893",
+      "name": "Preparar HITL / Unknown",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -320,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0CA4R8ANTT",
+          "mode": "list",
+          "cachedResultName": "Marcelo (@mtroncoso29)"
+        },
+        "text": "=🚨 INFORMACION IMPORTANTE  Se detectó una solicitud que supera los límites de ejecución automática.  📋 Solicitud {{ $('Normalizar clasificacion Router').item.json.original_input }}  🏷️ Clasificación • Área: {{ $('Normalizar clasificacion Router').item.json.intent }} • Confianza: {{ Math.round($('Normalizar clasificacion Router').item.json.confidence * 100) }}% • Riesgo: {{ $('Normalizar clasificacion Router').item.json.risk }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        -16,
+        -176
+      ],
+      "id": "a7c705fb-5912-4ea8-8418-7dcd1dd718d1",
+      "name": "Respuesta  a Slack1",
+      "webhookId": "fc5f2b78-2851-4ae9-9003-2aa7b762e306",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "tDnwUOrR1q7RGRkM",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/tDnwUOrR1q7RGRkM",
+          "cachedResultName": "Worker_Registrar_Pedido"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_input": "={{ $json.original_input }}"
+          },
+          "matchingColumns": [
+            "original_input"
+          ],
+          "schema": [
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        -208,
+        -16
+      ],
+      "name": "Call Worker_Registrar_Pedido",
+      "id": "98dac1c0-d5e6-4b38-b728-11c91023fc7a"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ibfeJgvWT0nhOvZW",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ibfeJgvWT0nhOvZW",
+          "cachedResultName": "Worker_Atencion_Consultas"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_input": "={{ $json.original_input }}"
+          },
+          "matchingColumns": [
+            "original_input"
+          ],
+          "schema": [
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        -208,
+        160
+      ],
+      "name": "Call Worker_Atencion_Consultas",
+      "id": "8b7eee5f-6bf7-48a2-8c43-d57ac5878cdb"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "7vW1stAUaoAXGhog",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/7vW1stAUaoAXGhog",
+          "cachedResultName": "Worker_Atencion_Reclamos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_input": "={{ $json.original_input }}"
+          },
+          "matchingColumns": [
+            "original_input"
+          ],
+          "schema": [
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        -208,
+        336
+      ],
+      "name": "Call Worker_Atencion_Reclamos",
+      "id": "3ad3fcc3-a570-4061-af61-da5e456babd6"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "qdiIQcRt9oVp4FCA",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/qdiIQcRt9oVp4FCA",
+          "cachedResultName": "Worker_Anfitrion"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_input": "={{ $json.original_input }}"
+          },
+          "matchingColumns": [
+            "original_input"
+          ],
+          "schema": [
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        -208,
+        528
+      ],
+      "name": "Call Worker_Anfitrion",
+      "id": "2705c81f-ca5a-48b4-8453-583611423b1e"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2cfc5ce7-5d94-472a-8bca-6f3fbd610822",
+              "leftValue": "={{ $json.Session_ID ? true : false }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1504,
+        -16
+      ],
+      "id": "39ca035c-3f57-4c3d-9004-d2009513a7bd",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Session_ID": "={{ $('Input  de Slack').item.json.usuario_id }}",
+            "timestamp": "={{ $json.timestamp }}",
+            "original_input": "={{ $('Input  de Slack').item.json.mensaje }}",
+            "Resumen_Consolidado": "Primera interacción del usuario.",
+            "Estado_Caso": "Nuevo",
+            "Datos_Clave": "Sin datos clave registrados."
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "risk",
+              "displayName": "risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "worker",
+              "displayName": "worker",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "respuesta",
+              "displayName": "respuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "requires_human",
+              "displayName": "requires_human",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "human_decision",
+              "displayName": "human_decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha_Actualizacion",
+              "displayName": "Fecha_Actualizacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen_Consolidado",
+              "displayName": "Resumen_Consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado_Caso",
+              "displayName": "Estado_Caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Datos_Clave",
+              "displayName": "Datos_Clave",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1472,
+        224
+      ],
+      "id": "7ef1c779-92ea-4773-9f9e-a44b8e6177cd",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente analítico de inteligencia artificial especializado en síntesis de servicio al cliente para la empresa GustoBot.\n\nTu única función es analizar el historial reciente de interacción con el usuario, extraer un resumen consolidado con los puntos más importantes del caso, y utilizar la herramienta de Google Sheets disponible para actualizar el registro.\n\n[HISTORIAL RECIENTE Y CONTEXTO]\n- Mensaje del cliente: {{ $('Input  de Slack').item.json.mensaje }}\n- Respuesta otorgada: {{ $('Respuesta  a Slack').item.json.message.text }}\n[FIN DEL HISTORIAL]\n\nREGLAS DE SALIDA Y FORMATO:\n1. Responde ÚNICAMENTE con un objeto JSON válido que cumpla strictly con la siguiente estructura:\n\n{\n  \"asunto_principal\": \"<Escribe en una frase corta el tema o motivo central de la conversación>\",\n  \"puntos_clave\": [\n    \"<Detalle relevante 1 (ej: productos solicitados, dirección o preferencia especificada)>\",\n    \"<Detalle relevante 2 (ej: inconveniente reportado o estatus de la consulta)>\"\n  ],\n  \"accion_requerida\": \"<Indica el siguiente paso operativo o estado final del caso, ej: Pendiente de entrega, Caso cerrado, Requiere seguimiento>\"\n}\n\n2. EJECUCIÓN OBLIGATORIA DE LA HERRAMIENTA:\n   - Después de generar el análisis, debes invocar obligatoriamente la herramienta conectada (\"Update row in sheet in Google Sheets\").\n   - Pasa como filtro de búsqueda (Matching Column) el ID de sesión del usuario: {{ $('Input  de Slack').item.json.usuario_id }}\n   - Envía el JSON generado en el campo correspondiente para actualizar el resumen consolidado de la sesión.",
+        "options": {
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        464
+      ],
+      "id": "6216678b-dfb1-4c8f-8809-491c61081469",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.timestamp }}",
+            "status": "={{ $json.status }}",
+            "worker": "={{ $json.worker }}",
+            "requires_human": "={{ $json.requires_human }}",
+            "original_input": "={{ $('Normalizar clasificacion Router').item.json.original_input }}",
+            "intent": "={{ $('Normalizar clasificacion Router').item.json.intent }}",
+            "confidence": "={{ $('Normalizar clasificacion Router').item.json.confidence }}",
+            "risk": "={{ $('Normalizar clasificacion Router').item.json.risk }}",
+            "respuesta": "={{ $json.respuesta }}",
+            "Session_ID": "={{ $('Input  de Slack').item.json.usuario_id }}",
+            "human_decision": "={{ $('If').item.json.human_decision }}",
+            "Fecha_Actualizacion": "={{ $('If').item.json.Fecha_Actualizacion }}"
+          },
+          "matchingColumns": [
+            "Session_ID"
+          ],
+          "schema": [
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "risk",
+              "displayName": "risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "worker",
+              "displayName": "worker",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "respuesta",
+              "displayName": "respuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "requires_human",
+              "displayName": "requires_human",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "human_decision",
+              "displayName": "human_decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha_Actualizacion",
+              "displayName": "Fecha_Actualizacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resumen_Consolidado",
+              "displayName": "Resumen_Consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado_Caso",
+              "displayName": "Estado_Caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Datos_Clave",
+              "displayName": "Datos_Clave",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        0
+      ],
+      "id": "d9f58803-12d2-4617-ad54-7e00817e3f05",
+      "name": "Log de Ejecucion sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1680,
+        -16
+      ],
+      "id": "010f8137-5ebc-4311-83d3-bcc118b6056f",
+      "name": "Memoria in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Session_ID",
+              "lookupValue": "={{ $('Input  de Slack').item.json.usuario_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        224
+      ],
+      "id": "5316d98f-c584-4a51-a7db-061808de4f64",
+      "name": "Cuenta Log de Ejecucion sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Actualiza el resumen consolidado de la sesión del usuario en Google Sheets cuando la conversación supere los 5 mensajes.",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha_Actualizacion": "={{ $now }}",
+            "Resumen_Consolidado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Resumen_Consolidado', ``, 'string') }}",
+            "Estado_Caso": "Caso Resumido",
+            "Session_ID": "={{ $('Input  de Slack').item.json.usuario_id }}"
+          },
+          "matchingColumns": [
+            "Session_ID"
+          ],
+          "schema": [
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "risk",
+              "displayName": "risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "worker",
+              "displayName": "worker",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "respuesta",
+              "displayName": "respuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "requires_human",
+              "displayName": "requires_human",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "human_decision",
+              "displayName": "human_decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha_Actualizacion",
+              "displayName": "Fecha_Actualizacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen_Consolidado",
+              "displayName": "Resumen_Consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado_Caso",
+              "displayName": "Estado_Caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Datos_Clave",
+              "displayName": "Datos_Clave",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        688
+      ],
+      "id": "d604705d-5bf3-4aff-80ae-21883c71688b",
+      "name": "Actualiza log in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3.8-27b",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "id": "874d5a58-9091-4205-8fca-c8d798d3a9a4",
+      "name": "Modelo Router Groq1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        224,
+        704
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "6eReWjCTpmf2SxR0",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "933aef01-14d2-4855-ba3b-47dd988d6801",
+              "leftValue": "={{ $items('Cuenta Log de Ejecucion sheet1').length }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        224
+      ],
+      "id": "207e6ed5-b678-49e6-99e2-adce98c1bf57",
+      "name": "conversación > 5 mensajes"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        64,
+        464
+      ],
+      "id": "787722fc-0477-47d1-ab41-b8f5fc5f90f0",
+      "name": "Limit a un registro"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat de Slack": {
+      "main": [
+        [
+          {
+            "node": "Input  de Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta  a Slack": {
+      "main": [
+        [
+          {
+            "node": "Cuenta Log de Ejecucion sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Router Groq": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Router IA - Groq",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router IA - Groq": {
+      "main": [
+        [
+          {
+            "node": "Normalizar clasificacion Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input  de Slack": {
+      "main": [
+        [
+          {
+            "node": "Memoria in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar clasificacion Router": {
+      "main": [
+        [
+          {
+            "node": "¿Requiere HITL?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Requiere HITL?": {
+      "main": [
+        [
+          {
+            "node": "Preparar HITL / Unknown",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Call Worker_Registrar_Pedido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Worker_Atencion_Consultas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Worker_Atencion_Reclamos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Worker_Anfitrion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar respuesta final": {
+      "main": [
+        [
+          {
+            "node": "Log de ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log de ejecución": {
+      "main": [
+        [
+          {
+            "node": "Log de Ejecucion sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar HITL / Unknown": {
+      "main": [
+        [
+          {
+            "node": "Respuesta  a Slack1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta  a Slack1": {
+      "main": [
+        []
+      ]
+    },
+    "Call Worker_Registrar_Pedido": {
+      "main": [
+        [
+          {
+            "node": "Preparar respuesta final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Worker_Atencion_Consultas": {
+      "main": [
+        [
+          {
+            "node": "Preparar respuesta final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Worker_Atencion_Reclamos": {
+      "main": [
+        [
+          {
+            "node": "Preparar respuesta final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Worker_Anfitrion": {
+      "main": [
+        [
+          {
+            "node": "Preparar respuesta final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Router IA - Groq",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Router IA - Groq",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log de Ejecucion sheet": {
+      "main": [
+        [
+          {
+            "node": "Respuesta  a Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoria in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cuenta Log de Ejecucion sheet1": {
+      "main": [
+        [
+          {
+            "node": "conversación > 5 mensajes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualiza log in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Router Groq1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "conversación > 5 mensajes": {
+      "main": [
+        [
+          {
+            "node": "Limit a un registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit a un registro": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ae257431-29d7-4c80-83d9-942b361ec54d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
+  },
+  "nodeGroups": [],
+  "id": "Mpm42NqkS3FHVzQw",
+  "tags": []
+}
