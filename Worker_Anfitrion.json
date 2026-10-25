@@ -1,0 +1,124 @@
+{
+  "name": "Worker_Anfitrion",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        1328
+      ],
+      "id": "42b13fdc-800c-4b99-b4b3-cccd6e27c249",
+      "name": "Groq Chat Model3",
+      "credentials": {
+        "groqApi": {
+          "id": "6eReWjCTpmf2SxR0",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.text ?? $json.output ?? $json.response ?? '';\nlet d;\ntry {\n  const clean = String(raw).replace(/^```json\\s*/i, '').replace(/```$/,'').trim();\n  d = JSON.parse(clean);\n} catch (e) {\n  // Si no es un JSON, asumimos que el agente respondió con texto plano conversacional\n  d = {\n    status: 'success',\n    worker: 'CONSULTAS',\n    respuesta: String(raw),\n    requires_human: false\n  };\n}\nreturn [{ json: {\n  status: d.status ?? 'success',\n  worker: d.worker ?? 'CONSULTAS',\n  respuesta: d.respuesta ?? '',\n  requires_human: Boolean(d.requires_human)\n} }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        1120
+      ],
+      "id": "0ee1b0f1-1056-4f59-8f33-b7dfe3aec3f7",
+      "name": "Contrato de salida3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.original_input }}",
+        "options": {
+          "systemMessage": "[ROL Y ÁMBITO]\nEres el Agente Anfitrión de \"GustoBot\", el asistente virtual del restaurante. Te activas únicamente cuando el mensaje del usuario es ambiguo, fuera de contexto o clasificado como \"UNKNOWN\" (saludos generales, comentarios fuera de tema o consultas no reconocidas).\n\nTu objetivo es dar una bienvenida cálida, empatizar y guiarlos amablemente hacia los servicios principales del restaurante para que el sistema pueda ayudarles.\n\n[REGLAS DE OPERACIÓN]\n1. Saluda amablemente y preséntate como el asistente de \"GustoBot\".\n2. Reconoce la entrada del usuario con cortesía y explícale brevemente las opciones disponibles en el restaurante:\n   - 🍜 **Consultar el Menú:** Platos de comida china, rápida, bebestibles, precios e ingredientes.\n   - 🛒 **Realizar un Pedido:** Registrar una nueva orden de comida.\n   - 📦 **Estado de Pedido:** Ver en qué etapa se encuentra una orden.\n   - 🛠️ **Soporte y Reclamos:** Reportar inconvenientes con un pedido anterior.\n3. Invita al usuario a formular su mensaje o pregunta enfocada en una de estas opciones para asistirlo de inmediato.\n\n[ESTILO Y COMUNICACIÓN]\n- Mantén un tono sumamente hospitalario, claro, breve y servicial.\n- No utilices lenguaje inclusivo con terminaciones en -e, -x o @.\n- Evita asumir intenciones: haz que el usuario elija o aclare su necesidad de forma natural.",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -304,
+        1120
+      ],
+      "id": "a5e0bbf8-08ff-4509-998a-69e108e7f482",
+      "name": "Agente de Anfitrion"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "original_input",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "8299162d-42b9-438c-b07d-360d77a94fb7",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -512,
+        1120
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de Anfitrion",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de Anfitrion": {
+      "main": [
+        [
+          {
+            "node": "Contrato de salida3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Agente de Anfitrion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8cf1ae52-83e6-429c-8bad-bf98f406651f",
+  "meta": {
+    "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
+  },
+  "nodeGroups": [],
+  "id": "qdiIQcRt9oVp4FCA",
+  "tags": []
+}

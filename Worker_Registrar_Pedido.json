@@ -1,0 +1,307 @@
+{
+  "name": "Worker_Registrar_Pedido",
+  "nodes": [
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Úsalo para registrar el pedido de un cliente en Google Sheets cuando se mencione el producto o la intención de compra.",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c",
+          "mode": "list",
+          "cachedResultName": "Pedidos_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha_Hora": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha_Hora', ``, 'string') }}",
+            "Nombre_Cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_Cliente', ``, 'string') }}",
+            "Contacto_Telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contacto_Telefono', ``, 'string') }}",
+            "Correo_Electronico": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Correo_Electronico', ``, 'string') }}",
+            "Canal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Canal', ``, 'string') }}",
+            "Pedido_Detalle": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pedido_Detalle', ``, 'string') }}",
+            "Notas_Especiales": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notas_Especiales', ``, 'string') }}",
+            "Estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha_Hora",
+              "displayName": "Fecha_Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre_Cliente",
+              "displayName": "Nombre_Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contacto_Telefono",
+              "displayName": "Contacto_Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo_Electronico",
+              "displayName": "Correo_Electronico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Canal",
+              "displayName": "Canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Pedido_Detalle",
+              "displayName": "Pedido_Detalle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notas_Especiales",
+              "displayName": "Notas_Especiales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -160,
+        48
+      ],
+      "id": "f25e873d-bb41-41e0-871b-c35d6448b528",
+      "name": "Registrar_Pedido_Google_Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.original_input }}",
+        "options": {
+          "systemMessage": "[ROL Y ÁMBITO]\nEres un Agente de Triaje y Gestión de Pedidos para el restaurante \"GustoBot\". Tu único ámbito es interpretar solicitudes de clientes en Slack, verificar la disponibilidad de los productos en la carta, validar la completitud de la información de contacto y registrar la orden limpia para que la cocina la procese.\n\nNO tienes autorización para: prometer tiempos exactos de entrega, aplicar descuentos no autorizados, cancelar pedidos previamente registrados, procesar cobros directos, modificar la carta de productos ni comprometer decisiones comerciales.\n\n[OBJETIVO OPERATIVO]\nConvertir cada solicitud válida en un registro estructurado con: fecha/hora, nombre completo del cliente, teléfono de contacto, correo electrónico, canal de origen, lista de productos válidos con sus cantidades, notas especiales y estado inicial de la orden.\n\n[REGLAS DE VALIDACIÓN Y USO DE HERRAMIENTAS]\n\n1. **VERIFICACIÓN OBLIGATORIA DE MENÚ:**\n   - Antes de registrar cualquier pedido, DEBES verificar que los productos solicitados existan en la carta oficial de GustoBot (Comida China, Hamburguesas, Papas Fritas, Bebidas, etc.).\n   - **NUNCA registres un producto que NO exista en el menú (ejemplo: \"Salchipapas\", \"Pizza\", \"Tacos\").**\n   - Si el cliente pide un producto no disponible:\n     * **NO ejecutes la herramienta `Registrar_Pedido_Google_Sheets`.**\n     * Informa amablemente que no disponen de ese producto en la carta y ofrece alternativas cercanas (ej: *\"Lamentablemente no contamos con Salchipapas en nuestro menú, pero tenemos papas fritas grandes o combos de comida china e hamburguesas. ¿Te gustaría ordenar alguno de ellos?\"*).\n\n2. **RESTRICCIÓN DE COMPLETITUD DE DATOS MÍNIMOS:**\n   - Para poder invocar la herramienta `Registrar_Pedido_Google_Sheets`, el mensaje del cliente DEBE contener obligatoriamente:\n     1. Al menos un producto VÁLIDO del menú.\n     2. El Nombre del cliente.\n     3. Un Número de teléfono de contacto (o correo electrónico).\n   - Si los productos son válidos pero **NO proporciona Nombre o Teléfono**, NO ejecutes la herramienta bajo ninguna circunstancia (NO uses \"No informado\").\n   - En su lugar, responde cortésmente solicitando los datos faltantes (ej: *\"¡Con gusto tomo tu pedido de 2 hamburguesas dobles! Para registrarlo, ¿me indicas tu nombre y un número de teléfono de contacto?\"*).\n\n3. **CONFIRMACIÓN FINAL:**\n   - Una vez que la herramienta `Registrar_Pedido_Google_Sheets` haya sido ejecutada con éxito, genera UNA SOLA respuesta de confirmación final para el cliente con el resumen de la orden y FINALIZA la ejecución.\n\n[PROTOCOLO DE ESCALAMIENTO / GUARDRAILS]\n- Si el cliente reporta alergias alimentarias severas, contaminación cruzada, reclamos por pedidos anteriores o solicita cambios en órdenes activas, responde respetuosamente: \"Tu caso requiere atención personalizada. Un operador humano del equipo tomará tu solicitud a la brevedad.\" y NO ejecutes registros automáticos.\n- Si el mensaje contiene lenguaje ofensivo o solicitudes fuera del ámbito gastronómico, detén el procesamiento y deriva a un operador.\n- Limítate a responder en la conversación de Slack.\n\n[ESTILO Y COMUNICACIÓN]\n- Escribe en español neutro, claro, amable y profesional.\n- No uses lenguaje inclusivo con terminaciones en -e, -x o @.\n- Sé breve, directo y enfocado en la eficiencia operativa.",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -304,
+        -192
+      ],
+      "id": "1a73ba52-dd68-4ef3-b9c0-7c636e7ed9ca",
+      "name": "Agente de Pedidos"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        32
+      ],
+      "id": "0ef06558-7d8b-4e1c-8f44-5861dc3853c0",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "6eReWjCTpmf2SxR0",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.text ?? $json.output ?? $json.response ?? '';\nlet d;\ntry {\n  const clean = String(raw).replace(/^```json\\s*/i, '').replace(/```$/,'').trim();\n  d = JSON.parse(clean);\n} catch (e) {\n  // Si no es un JSON, tratamos el texto plano como un mensaje exitoso del agente\n  d = {\n    status: 'success',\n    worker: 'PEDIDOS',\n    respuesta: String(raw),\n    requires_human: false\n  };\n}\n\nreturn [{ json: {\n  status: d.status ?? 'success',\n  worker: d.worker ?? 'PEDIDOS',\n  respuesta: d.respuesta ?? '',\n  requires_human: Boolean(d.requires_human)\n} }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        -192
+      ],
+      "id": "2d4500c6-5bb0-4134-8384-33db1e845dd6",
+      "name": "Contrato de salida"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Úsala obligatoriamente para buscar información actualizada sobre el menú del restaurante GustoBot, incluyendo el catálogo de platos (comida china, comida rápida, bebestibles), sus precios en pesos chilenos (CLP), la disponibilidad, los ingredientes detallados de cada producto y para consultar el estado de pedidos previos de los clientes mediante su nombre o teléfono.",
+        "documentId": {
+          "__rl": true,
+          "value": "1KeRgsdVaPcty-3LgGUjRzAOH-b0sws4E5c2y_L7TI3E",
+          "mode": "list",
+          "cachedResultName": "Menu_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KeRgsdVaPcty-3LgGUjRzAOH-b0sws4E5c2y_L7TI3E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Menu",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KeRgsdVaPcty-3LgGUjRzAOH-b0sws4E5c2y_L7TI3E/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        32,
+        48
+      ],
+      "id": "2026d7ba-c66d-4aae-921c-e427504e5adc",
+      "name": "Menu_Google_Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "original_input",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "2e15964f-c47a-4f0f-b190-81f08e947d58",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -512,
+        -192
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Registrar_Pedido_Google_Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de Pedidos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de Pedidos": {
+      "main": [
+        [
+          {
+            "node": "Contrato de salida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de Pedidos",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Menu_Google_Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de Pedidos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Agente de Pedidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6e7ca970-bac4-4865-ab24-cbf5deff4d78",
+  "meta": {
+    "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
+  },
+  "nodeGroups": [],
+  "id": "tDnwUOrR1q7RGRkM",
+  "tags": []
+}

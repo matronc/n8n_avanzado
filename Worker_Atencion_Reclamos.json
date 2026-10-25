@@ -1,0 +1,350 @@
+{
+  "name": "Worker_Atencion_Reclamos",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        896
+      ],
+      "id": "62536c48-a283-42a8-8308-5e63917272f2",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "6eReWjCTpmf2SxR0",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.text ?? $json.output ?? $json.response ?? '';\nlet d;\ntry {\n  const clean = String(raw).replace(/^```json\\s*/i, '').replace(/```$/,'').trim();\n  d = JSON.parse(clean);\n} catch (e) {\n  // Si no es un JSON, asumimos que el agente respondió con texto plano conversacional\n  d = {\n    status: 'success',\n    worker: 'CONSULTAS',\n    respuesta: String(raw),\n    requires_human: false\n  };\n}\nreturn [{ json: {\n  status: d.status ?? 'success',\n  worker: d.worker ?? 'CONSULTAS',\n  respuesta: d.respuesta ?? '',\n  requires_human: Boolean(d.requires_human)\n} }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        704
+      ],
+      "id": "97ef9b01-692a-48cc-8996-18a3af56328b",
+      "name": "Contrato de salida2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.original_input }}",
+        "options": {
+          "systemMessage": "[ROL Y ÁMBITO]\nEres un Agente de Empatía, Gestión de Reclamos y Soporte al Cliente para \"GustoBot\". Tu objetivo es acoger a los clientes con insatisfacciones o problemas con su pedido, registrar o consultar incidentes en la planilla \"Reclamos_GustoBot\" de forma inmediata y ofrecer soluciones claras o derivar a supervisión humana cuando corresponda.\n\nNO tienes autorización para: tomar nuevos pedidos de comida, modificar precios del menú ni procesar transacciones de pago.\n\n[REGLAS DE OPERACIÓN Y USO DE HERRAMIENTAS]\n\n1. **Ingreso Directo e Inmediato de Reclamos:**\n   - Tan pronto como el cliente mencione un problema o insatisfacción junto con su información básica (o si los datos ya vienen en su mensaje), **DEBES invocar OBLIGATORIAMENTE la herramienta `Registrar_Reclamo_Google_Sheets` en esa misma interacción**. No pospongas el registro pidiendo detalles adicionales si el cliente ya expresó un inconveniente.\n   - Mapea estrictamente los parámetros con los nombres exactos de las columnas de la planilla:\n     * `Fecha_Hora`: Timestamp actual en formato ISO.\n     * `Nombre_Cliente`: Nombre brindado por el cliente.\n     * `Contacto_Telefono`: Teléfono o celular de contacto.\n     * `Tipo_Incidente`: Categoría adecuada (ej: *Pedido Erróneo*, *Demora Excesiva*, *Comida en Mal Estado*, *Cobro Incorrecto*, *Otro*).\n     * `Detalle_Reclamo`: La descripción o queja expresada por el cliente.\n     * `Nivel_Urgencia`: Asigna exactamente uno de los valores: `ALTA`, `MEDIA` o `BAJA` (NUNCA envíes parámetros con nombres genéricos como \"Urgencia\").\n       - **ALTA:** Comida en mal estado, reacción alérgica, intoxicación o cobro duplicado/indebido.\n       - **MEDIA:** Pedido incompleto, platos incorrectos/cambiados o demora mayor a 45 minutos.\n       - **BAJA:** Demora leve, observaciones sobre empaque, temperatura o sugerencias.\n     * `Estado_Caso`: Asigna `\"Derivado a Humano\"` si la urgencia es ALTA, o `\"Abierto\"` para urgencias MEDIA o BAJA.\n\n2. **Consulta de Estado de Reclamos:**\n   - Si el cliente pregunta por el estado de un reclamo anterior, utiliza la herramienta `Consultar_Reclamo_Google_Sheets` buscando por su `Nombre_Cliente` o `Contacto_Telefono`.\n   - Informa de manera transparente el estado actual del caso (`Estado_Caso`: Abierto, En Revisión, Derivado a Humano, Resuelto, Cancelado).\n\n3. **Cancelación o Modificación de Reclamos:**\n   - Si el cliente solicita anular o cancelar su reclamo, busca el registro y utiliza la herramienta `Actualizar_Reclamo_Google_Sheets` para cambiar `Estado_Caso` a `\"Cancelado\"`.\n   - Confirma amablemente al cliente que el caso ha sido cerrado a su solicitud.\n\n[ESTILO Y COMUNICACIÓN]\n- Mantén siempre un tono sumamente empático, calmado, profesional, comprensivo y enfocado en dar soluciones rápida y tranquilizadoramente.\n- Discúlplate sinceramente en nombre del restaurante por el inconveniente ocasionado.\n- No utilices lenguaje inclusivo con terminaciones en -e, -x o @.\n- Confirma siempre al cliente de forma explícita que su reclamo o actualización fue ingresado exitosamente al sistema.",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -288,
+        704
+      ],
+      "id": "18d1c8b2-143b-4162-a7a2-a8b6b5b4919e",
+      "name": "Agente de Reclamos"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Úsala para cambiar el estado de un reclamo existente a Cancelado o Resuelto cuando el cliente lo solicite.",
+        "documentId": {
+          "__rl": true,
+          "value": "1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA",
+          "mode": "list",
+          "cachedResultName": "Reclamos_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Reclamos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        64,
+        912
+      ],
+      "id": "eade9b46-4ec4-4a05-a201-5bb7915e9552",
+      "name": "Cosulta_Estado_Reclamo_Google_Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Úsala cuando el cliente solicite cancelar su reclamo o se requiera cambiar el estado del caso a 'Cancelado' o 'Resuelto'.",
+        "documentId": {
+          "__rl": true,
+          "value": "1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA",
+          "mode": "list",
+          "cachedResultName": "Reclamos_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Reclamos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        912
+      ],
+      "id": "66a4fe6f-b5f9-4e62-bb7f-df954455dab8",
+      "name": "Actualizar/Cancelar_Reclamo_Google_Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "ÚSALA OBLIGATORIAMENTE en la primera interacción para guardar el reclamo en la planilla Reclamos_GustoBot siempre que el cliente proporcione su nombre, teléfono y mencione un problema con un producto, asignando en Detalle_Reclamo el texto recibido",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA",
+          "mode": "list",
+          "cachedResultName": "Reclamos_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Reclamos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha_Hora": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha_Hora', ``, 'string') }}",
+            "Nombre_Cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_Cliente', ``, 'string') }}",
+            "Contacto_Telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contacto_Telefono', ``, 'string') }}",
+            "Tipo_Incidente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tipo_Incidente', ``, 'string') }}",
+            "Detalle_Reclamo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Detalle_Reclamo', ``, 'string') }}",
+            "Nivel_Urgencia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nivel_Urgencia', ``, 'string') }}",
+            "Estado_Caso": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado_Caso', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha_Hora",
+              "displayName": "Fecha_Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre_Cliente",
+              "displayName": "Nombre_Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contacto_Telefono",
+              "displayName": "Contacto_Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tipo_Incidente",
+              "displayName": "Tipo_Incidente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Detalle_Reclamo",
+              "displayName": "Detalle_Reclamo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nivel_Urgencia",
+              "displayName": "Nivel_Urgencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado_Caso",
+              "displayName": "Estado_Caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -96,
+        912
+      ],
+      "id": "9b5069d6-aae3-4323-979b-801f627fac64",
+      "name": "Registrar_Reclamo_Google_Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "original_input",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "65a434d7-8bff-4e73-b539-68d0a1fd9690",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -496,
+        704
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de Reclamos",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de Reclamos": {
+      "main": [
+        [
+          {
+            "node": "Contrato de salida2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cosulta_Estado_Reclamo_Google_Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de Reclamos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar/Cancelar_Reclamo_Google_Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de Reclamos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar_Reclamo_Google_Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de Reclamos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Agente de Reclamos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2f1fb9f5-896d-4e58-aa78-201e60476a76",
+  "meta": {
+    "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
+  },
+  "nodeGroups": [],
+  "id": "7vW1stAUaoAXGhog",
+  "tags": []
+}

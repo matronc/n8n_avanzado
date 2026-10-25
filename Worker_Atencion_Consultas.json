@@ -1,0 +1,170 @@
+{
+  "name": "Worker_Atencion_Consultas",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        464
+      ],
+      "id": "a3d0e33c-6d5f-49c8-b65d-a63077da648d",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "6eReWjCTpmf2SxR0",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.original_input }}",
+        "options": {
+          "systemMessage": "[ROL Y ÁMBITO]\nEres un Agente Informativo y de Atención a Consultas para \"GustoBot\". Tu función es responder preguntas sobre el menú, opciones de comida china y rápida, precios, ingredientes, disponibilidad y consultar el estado de pedidos existentes.\n\nNO tienes autorización para: registrar nuevos pedidos, modificar pedidos existentes, procesar cobros ni ofrecer productos fuera del catálogo oficial.\n\n[OBJETIVO OPERATIVO]\n1. **Consultas de Menú y Precios:** Utiliza la herramienta de lectura sobre \"Menu_GustoBot\". Informa platos, precios y disponibilidad.\n2. **Consultas de Ingredientes:** Cuando el cliente pregunte qué trae un plato o pida la lista de ingredientes, consulta la columna \"Ingredientes\" de \"Menu_GustoBot\" y detállalos de forma clara y amable.\n3. **Manejo de Alergias / Requerimientos Médicos:** \n   - Si el cliente solo consulta ingredientes de manera informativa, responde la lista directamente.\n   - Si el cliente declara explícitamente una ALERGIA SEVERA (ej: \"soy alérgico al maní/mariscos\", \"tengo celiaquía\"), indícale: *\"Para tu seguridad ante alergias severas o contaminación cruzada, transferiré tu consulta a un operador humano.\"* y no asumas que la comida es 100% segura.\n4. **Consultas de Estado de Pedido:** Consulta la planilla \"Pedidos_GustoBot\" buscando por el Nombre o Teléfono del usuario y devuelve el estado actual (ej: Nuevo, En preparación, Listo, Entregado).\n\n[ESTILO]\n- Escribe en español neutro, claro, amable y profesional.\n- No uses lenguaje inclusivo con terminaciones en -e, -x o @.\n- Sé breve, directo y utiliza viñetas claras cuando listes ingredientes o precios.",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -288,
+        272
+      ],
+      "id": "28fc5beb-0feb-4e3b-bda1-d2ecdd2595d4",
+      "name": "Agente de Consultas"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Úsala obligatoriamente para buscar información actualizada sobre el menú del restaurante GustoBot, incluyendo el catálogo de platos (comida china, comida rápida, bebestibles), sus precios en pesos chilenos (CLP), la disponibilidad, los ingredientes detallados de cada producto y para consultar el estado de pedidos previos de los clientes mediante su nombre o teléfono.",
+        "documentId": {
+          "__rl": true,
+          "value": "1KeRgsdVaPcty-3LgGUjRzAOH-b0sws4E5c2y_L7TI3E",
+          "mode": "list",
+          "cachedResultName": "Menu_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KeRgsdVaPcty-3LgGUjRzAOH-b0sws4E5c2y_L7TI3E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Menu",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KeRgsdVaPcty-3LgGUjRzAOH-b0sws4E5c2y_L7TI3E/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -144,
+        464
+      ],
+      "id": "0cb82008-f56f-4566-a209-7660b8e423f5",
+      "name": "Menu_Google_Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.text ?? $json.output ?? $json.response ?? '';\nlet d;\ntry {\n  const clean = String(raw).replace(/^```json\\s*/i, '').replace(/```$/,'').trim();\n  d = JSON.parse(clean);\n} catch (e) {\n  // Si no es un JSON, asumimos que el agente respondió con texto plano conversacional\n  d = {\n    status: 'success',\n    worker: 'CONSULTAS',\n    respuesta: String(raw),\n    requires_human: false\n  };\n}\nreturn [{ json: {\n  status: d.status ?? 'success',\n  worker: d.worker ?? 'CONSULTAS',\n  respuesta: d.respuesta ?? '',\n  requires_human: Boolean(d.requires_human)\n} }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        272
+      ],
+      "id": "6bf6f455-4ca1-43dc-9501-1cfb528ff749",
+      "name": "Contrato de salida1"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "original_input",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "184bfc51-04b3-4c58-ba2f-6665cac53b98",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -496,
+        272
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de Consultas",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de Consultas": {
+      "main": [
+        [
+          {
+            "node": "Contrato de salida1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Menu_Google_Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de Consultas",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Agente de Consultas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d32a8db3-53d1-4ca2-9cfd-4b5fa4af9213",
+  "meta": {
+    "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
+  },
+  "nodeGroups": [],
+  "id": "ibfeJgvWT0nhOvZW",
+  "tags": []
+}
