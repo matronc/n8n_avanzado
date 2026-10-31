@@ -1,5 +1,5 @@
 {
-  "name": "Gestor de Pedidos e Información para Comida Rápida Checkpoint 3",
+  "name": "Checkpoint4_marcelo_troncoso",
   "nodes": [
     {
       "parameters": {
@@ -21,16 +21,202 @@
       "type": "n8n-nodes-base.slackTrigger",
       "typeVersion": 1,
       "position": [
-        -2048,
-        -16
+        3632,
+        736
       ],
-      "id": "4eb9303d-9614-4039-b6a9-3f4fbe4ebd64",
+      "id": "d408a2e0-ee8f-483b-bce9-11150848ad2f",
       "name": "Chat de Slack",
-      "webhookId": "6fe4bcca-add0-466b-b32a-19626f7aeb8f",
+      "webhookId": "913caa95-fef5-4ac3-9d3e-a79ec0c47195",
       "credentials": {
         "slackApi": {
           "id": "PHcr43Mb8P966pB8",
           "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "readStatus": "unread"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        3632,
+        416
+      ],
+      "id": "dbdca014-f0d6-4df9-8957-d22512c84347",
+      "name": "Gmail Trigger (Entrante)",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "47YZOyE3fJxMkCAe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-autoreply-1",
+              "leftValue": "={{ $json.subject ?? '' }}",
+              "rightValue": "Auto-reply",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "cond-autoreply-2",
+              "leftValue": "={{ $json.subject ?? '' }}",
+              "rightValue": "Out of office",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "cond-autoreply-3",
+              "leftValue": "={{ $json.subject ?? '' }}",
+              "rightValue": "Undeliverable",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "cond-autoreply-4",
+              "leftValue": "={{ $json.from?.value?.[0]?.address ?? $json.from ?? '' }}",
+              "rightValue": "no-reply@",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3856,
+        416
+      ],
+      "id": "d4f78150-00b9-4004-98c8-408a9cb14414",
+      "name": "① IF — ¿Es Auto-reply?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-clean-1",
+              "name": "from_email",
+              "value": "={{ $json.from?.value?.[0]?.address ?? $json.from ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "set-clean-2",
+              "name": "subject_clean",
+              "value": "={{ $json.subject ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "set-clean-3",
+              "name": "body_text",
+              "value": "={{ $json.textPlain ?? $json.text ?? $json.snippet ?? '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4080,
+        416
+      ],
+      "id": "f69e383f-e28a-4de2-ac2a-7c1f06f109b8",
+      "name": "④ Set — Limpiar Payload"
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "operation": "search",
+        "filterGroupsUi": {
+          "filterGroupsValues": [
+            {
+              "filtersUi": {
+                "filterValues": [
+                  {
+                    "propertyName": "email",
+                    "value": "={{ $json.from_email }}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        4528,
+        416
+      ],
+      "id": "b7982974-f5fa-4950-8e22-783b862abe91",
+      "name": "② Look up — Buscar Contacto CRM",
+      "alwaysOutputData": true,
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "viDsT9qEaokSqye6",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.body }}",
+        "options": {
+          "sendTo": "={{ $json.to }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        6608,
+        560
+      ],
+      "id": "b52a7b8b-91d7-4069-b2be-e0291158a3c0",
+      "name": "③ Create Draft — Borrador HITL",
+      "webhookId": "e2f013ef-f11c-4af5-ae73-97395593bd8e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "47YZOyE3fJxMkCAe",
+          "name": "Gmail account"
         }
       }
     },
@@ -43,12 +229,12 @@
           "mode": "list",
           "cachedResultName": "gestor-pedidos"
         },
-        "text": "={{ $json.respuesta }}",
+        "text": "={{ $json.text }}",
         "otherOptions": {
           "includeLinkToWorkflow": false,
           "thread_ts": {
             "replyValues": {
-              "thread_ts": "={{ $('Chat de Slack').item.json.ts }}"
+              "thread_ts": "={{ $json.thread_ts }}"
             }
           }
         }
@@ -56,12 +242,12 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        80,
-        224
+        5760,
+        976
       ],
-      "id": "fe56e93d-b9b1-40cb-a6f7-fc2ca340afe0",
+      "id": "c80ded8d-3a21-4e45-a476-f6395e88a172",
       "name": "Respuesta  a Slack",
-      "webhookId": "c3d862e3-01b0-43b6-9c02-c5d3a862d1f7",
+      "webhookId": "c97eb359-94a6-49ea-8586-c3661ae7f597",
       "credentials": {
         "slackApi": {
           "id": "PHcr43Mb8P966pB8",
@@ -71,63 +257,59 @@
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "=Eres el Router de una mesa de ayuda de la empresa GustoBot.\n\n[INICIO DE CONTEXTO COMPARTIDO]\nID de Sesión: {{ $json.Session_ID }}\nEstado previo del caso: {{ $json.Estado_Caso }}\nResumen acumulado de la relación: {{ $json.Resumen_Consolidado }}\nDatos clave del cliente: {{ $json.Datos_Clave }}\n[FIN DE CONTEXTO COMPARTIDO]\n\nMensaje actual del usuario:\n{{ $('Input  de Slack').item.json.mensaje }}\n\nTu única tarea es clasificar el mensaje entrante utilizando el contexto anterior si es necesario. NO resuelvas el problema ni respondas al cliente.\n\nIntents permitidos:\n- REGISTRAR_PEDIDO: Cuando el usuario solicita comprar productos, armar un pedido o menciona cantidades de comida.\n- CONSULTA_MENU: Preguntas sobre precios, horarios, disponibilidad o información general de la carta.\n- RECLAMO_SOPORTE: Reclamos por pedidos erróneos, demoras, comida en mal estado o solicitudes de ayuda.\n- UNKNOWN: Mensajes ambiguos, saludos aislados o fuera de alcance.\n\nRisk (Nivel de riesgo):\n- LOW: Saludos, preguntas sobre el menú o pedidos de comida estándar (incluyendo listas de productos largos o desestructurados). Todo pedido habitual debe ser LOW.\n- MEDIUM: Solicitudes levemente ambiguas, cambios menores sobre un pedido en curso, o reclamos operativos estándar (tales como demoras, pedidos que no llegaron, ítems faltantes o errores comunes de entrega).\n- HIGH: Únicamente situaciones críticas de salud, seguridad o agresión extrema: alergias alimentarias severas, contaminación cruzada, intoxicación, amenazas graves, lenguaje ofensivo explícito o fraude. (Nota: un reclamo operativo de retraso o falta de entrega NO es HIGH, debe ser MEDIUM).\n\nConfidence: Número decimal entre 0 y 1 que indique la seguridad de la clasificación.\n\nREGLA OBLIGATORIA: Responde ÚNICAMENTE con un objeto JSON válido, sin bloques de código Markdown (como ```json), sin explicaciones ni texto adicional. Utiliza exactamente la siguiente estructura:\n{\n  \"intent\": \"REGISTRAR_PEDIDO\",\n  \"confidence\": 0.95,\n  \"risk\": \"LOW\"\n}",
-        "messages": {
-          "messageValues": []
-        }
-      },
-      "id": "b8421ffd-2819-4cbb-981b-3b6bfeb5570a",
-      "name": "Router IA - Groq",
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.5,
-      "position": [
-        -1248,
-        -32
-      ]
-    },
-    {
-      "parameters": {
         "model": "qwen/qwen3.8-27b",
         "options": {
           "temperature": 0
         }
       },
-      "id": "920da752-85a4-4965-b46c-e89950913b5a",
+      "id": "27c755e8-ea99-42c3-ac7e-2f537d0640f1",
       "name": "Modelo Router Groq",
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        -1248,
-        176
+        4432,
+        944
       ],
       "credentials": {
         "groqApi": {
           "id": "6eReWjCTpmf2SxR0",
           "name": "Groq account"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "6cdff667-a829-4633-9e69-2f1ae47cf4c7",
+              "id": "assign-msg",
               "name": "mensaje",
-              "value": "={{ $json.text }}",
+              "value": "={{ $json.text ?? $json.body_text ?? $json.snippet ?? '' }}",
               "type": "string"
             },
             {
-              "id": "c8bd830f-9077-42ef-b906-d9e15f4fd9f2",
+              "id": "assign-user",
               "name": "usuario_id",
-              "value": "={{ $json.user }}",
+              "value": "={{ $json.user ?? $json.from_email ?? '' }}",
               "type": "string"
             },
             {
-              "id": "e7eea853-30de-4858-a0f6-787663dd3a71",
+              "id": "assign-channel",
               "name": "canal",
-              "value": "={{ $json.channel }}",
+              "value": "={{ $json.channel ?? 'email' }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-subject",
+              "name": "asunto",
+              "value": "={{ $json.subject_clean ?? $json.subject ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-thread",
+              "name": "thread_ts",
+              "value": "={{ $json.ts ?? '' }}",
               "type": "string"
             }
           ]
@@ -137,10 +319,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -1872,
-        -16
+        3808,
+        736
       ],
-      "id": "626d3a2e-9914-4910-912b-2efb7ab0eed7",
+      "id": "b9708cbe-1882-4826-a955-d9b2dde439e0",
       "name": "Input  de Slack"
     },
     {
@@ -150,10 +332,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -928,
-        -32
+        4752,
+        720
       ],
-      "id": "4704fca3-2553-44f9-b9b4-c1452d641816",
+      "id": "046922e2-f93d-43bf-8d1d-ca2a8bbf2d2d",
       "name": "Normalizar clasificacion Router"
     },
     {
@@ -167,7 +349,7 @@
           },
           "conditions": [
             {
-              "id": "b3f6aa03-16e2-4e3d-92a6-d73a646bf0d3",
+              "id": "cond-risk-high",
               "leftValue": "={{ $json.risk }}",
               "rightValue": "HIGH",
               "operator": {
@@ -176,7 +358,7 @@
               }
             },
             {
-              "id": "965f5251-fdb9-4035-a832-62b919a88328",
+              "id": "cond-conf-low",
               "leftValue": "={{ $json.confidence }}",
               "rightValue": 0.75,
               "operator": {
@@ -192,10 +374,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -704,
-        -32
+        4976,
+        720
       ],
-      "id": "65118bc3-bbeb-407c-8c5c-8e177ca71885",
+      "id": "0ceaa003-497f-42d2-ae91-29ff7b3ba009",
       "name": "¿Requiere HITL?"
     },
     {
@@ -218,7 +400,7 @@
                       "type": "string",
                       "operation": "equals"
                     },
-                    "id": "679f501c-66d7-43aa-b454-210db2363682"
+                    "id": "rule-pedido"
                   }
                 ],
                 "combinator": "and"
@@ -236,7 +418,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "6b71e3e6-ef09-4713-abc0-ecc073b26a97",
+                    "id": "rule-menu",
                     "leftValue": "={{ $json.intent }}",
                     "rightValue": "CONSULTA_MENU",
                     "operator": {
@@ -260,7 +442,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "a3e7cdfc-3ae6-4e42-b2de-56582c31c222",
+                    "id": "rule-reclamo",
                     "leftValue": "={{ $json.intent }}",
                     "rightValue": "RECLAMO_SOPORTE",
                     "operator": {
@@ -284,7 +466,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "77437419-e8ae-45a2-a55e-f1a5d713a51f",
+                    "id": "rule-unknown",
                     "leftValue": "={{ $json.intent }}",
                     "rightValue": "UNKNOWN",
                     "operator": {
@@ -305,36 +487,36 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -640,
-        288
+        5040,
+        1040
       ],
-      "id": "916f64ea-8fee-4849-88b3-c621e76e4bb9",
+      "id": "2a3e5224-65d8-418b-9925-5e3df076036a",
       "name": "Switch"
     },
     {
       "parameters": {
         "jsCode": "return $input.all().map(item => ({json:{\n  timestamp:new Date().toISOString(),\n  status:item.json.status ?? 'success',\n  worker:item.json.worker ?? 'N/D',\n  respuesta:item.json.respuesta ?? '',\n  requires_human:Boolean(item.json.requires_human)\n}}));"
       },
-      "id": "0784f053-8a5a-42dc-8ecf-f185b99e6c5c",
+      "id": "f8d87b6f-6fcb-46f4-81cb-a87ea179fbbc",
       "name": "Preparar respuesta final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        96,
-        0
+        5776,
+        752
       ]
     },
     {
       "parameters": {
-        "jsCode": "return $input.all().map(item => {\n  const data = item.json;\n  \n  // Extraer valores con fallback por seguridad\n  const ts = data.timestamp || new Date().toISOString();\n  const worker = data.worker || 'UNKNOWN';\n  const status = data.status || 'success';\n  const hitl = data.requires_human ?? false;\n  \n  // Construir string de trazabilidad estandarizado\n  const logString = `[${ts}] | WORKER: ${worker} | STATUS: ${status} | HITL: ${hitl}`;\n\n  return {\n    json: {\n      ...data,\n      log: logString\n    }\n  };\n});"
+        "jsCode": "return $input.all().map(item => {\n  const data = item.json;\n  const ts = data.timestamp || new Date().toISOString();\n  const worker = data.worker || 'UNKNOWN';\n  const status = data.status || 'success';\n  const hitl = data.requires_human ?? false;\n  const logString = `[${ts}] | WORKER: ${worker} | STATUS: ${status} | HITL: ${hitl}`;\n\n  return {\n    json: {\n      ...data,\n      log: logString\n    }\n  };\n});"
       },
-      "id": "8382ff75-33f3-4214-ac59-48dcdf4fe680",
+      "id": "d9971918-e7fa-44d8-8e06-68c24586ffff",
       "name": "Log de ejecución",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        272,
-        0
+        5952,
+        752
       ]
     },
     {
@@ -342,25 +524,25 @@
         "assignments": {
           "assignments": [
             {
-              "id": "26679462-7dbc-44bf-a344-561ed018f597",
+              "id": "hitl-status",
               "name": "status",
               "value": "needs_human",
               "type": "string"
             },
             {
-              "id": "6de45167-a3b4-4ecd-9b72-ff5ce1da209c",
+              "id": "hitl-worker",
               "name": "worker",
               "value": "HITL",
               "type": "string"
             },
             {
-              "id": "1dc46813-ac25-4821-8d6c-0dea3c3c2ff7",
+              "id": "hitl-resp",
               "name": "respuesta",
               "value": "La solicitud necesita revisión humana por riesgo alto, baja confianza o intención no reconocida.",
               "type": "string"
             },
             {
-              "id": "4c49ddee-1f27-4765-b82b-03fd2a3a8d6a",
+              "id": "hitl-req",
               "name": "requires_human",
               "value": true,
               "type": "boolean"
@@ -369,13 +551,13 @@
         },
         "options": {}
       },
-      "id": "8fb125e3-7551-4029-b77f-bf12c3c68893",
+      "id": "53bdabb8-69e5-4395-b15b-78ce4568fbb0",
       "name": "Preparar HITL / Unknown",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -320,
-        -176
+        5360,
+        576
       ]
     },
     {
@@ -395,12 +577,12 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        -16,
-        -176
+        5664,
+        576
       ],
-      "id": "a7c705fb-5912-4ea8-8418-7dcd1dd718d1",
+      "id": "3aad6b37-219b-4c8c-9a3d-85a1e317facf",
       "name": "Respuesta  a Slack1",
-      "webhookId": "fc5f2b78-2851-4ae9-9003-2aa7b762e306",
+      "webhookId": "a60ebd5e-60cd-41f5-aacd-bc05f8830f06",
       "credentials": {
         "slackApi": {
           "id": "PHcr43Mb8P966pB8",
@@ -446,11 +628,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -208,
-        -16
+        5472,
+        736
       ],
       "name": "Call Worker_Registrar_Pedido",
-      "id": "98dac1c0-d5e6-4b38-b728-11c91023fc7a"
+      "id": "895b4cf1-61d4-41ef-aa45-197a2ec41b37"
     },
     {
       "parameters": {
@@ -490,11 +672,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -208,
-        160
+        5472,
+        912
       ],
       "name": "Call Worker_Atencion_Consultas",
-      "id": "8b7eee5f-6bf7-48a2-8c43-d57ac5878cdb"
+      "id": "7c555203-7744-46a0-b542-38e4cfb9138c"
     },
     {
       "parameters": {
@@ -534,11 +716,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -208,
-        336
+        5472,
+        1088
       ],
       "name": "Call Worker_Atencion_Reclamos",
-      "id": "3ad3fcc3-a570-4061-af61-da5e456babd6"
+      "id": "8ad7ca04-134e-4370-93a4-b62855dc4cf0"
     },
     {
       "parameters": {
@@ -578,11 +760,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -208,
-        528
+        5472,
+        1280
       ],
       "name": "Call Worker_Anfitrion",
-      "id": "2705c81f-ca5a-48b4-8453-583611423b1e"
+      "id": "0969fd6f-b437-4ee5-98dc-9b3c052e9f4b"
     },
     {
       "parameters": {
@@ -595,7 +777,7 @@
           },
           "conditions": [
             {
-              "id": "2cfc5ce7-5d94-472a-8bca-6f3fbd610822",
+              "id": "cond-session-id",
               "leftValue": "={{ $json.Session_ID ? true : false }}",
               "rightValue": true,
               "operator": {
@@ -611,10 +793,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -1504,
-        -16
+        4176,
+        736
       ],
-      "id": "39ca035c-3f57-4c3d-9004-d2009513a7bd",
+      "id": "a69c17df-4011-4af4-b908-f947f05a1657",
       "name": "If"
     },
     {
@@ -625,21 +807,21 @@
           "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
           "mode": "list",
           "cachedResultName": "Logs_Ejecucion_GustoBot",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Log_ejecucion",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
             "Session_ID": "={{ $('Input  de Slack').item.json.usuario_id }}",
             "timestamp": "={{ $json.timestamp }}",
-            "original_input": "={{ $('Input  de Slack').item.json.mensaje }}",
+            "original_input": "={{ String($('Input  de Slack').item.json.mensaje ?? '').slice(0, 4000) }}",
             "Resumen_Consolidado": "Primera interacción del usuario.",
             "Estado_Caso": "Nuevo",
             "Datos_Clave": "Sin datos clave registrados."
@@ -790,10 +972,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1472,
-        224
+        4208,
+        976
       ],
-      "id": "7ef1c779-92ea-4773-9f9e-a44b8e6177cd",
+      "id": "45e158bc-7a6a-47d3-a2b3-41297ea3f3b2",
       "name": "Append row in sheet1",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -804,37 +986,20 @@
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "=Eres un asistente analítico de inteligencia artificial especializado en síntesis de servicio al cliente para la empresa GustoBot.\n\nTu única función es analizar el historial reciente de interacción con el usuario, extraer un resumen consolidado con los puntos más importantes del caso, y utilizar la herramienta de Google Sheets disponible para actualizar el registro.\n\n[HISTORIAL RECIENTE Y CONTEXTO]\n- Mensaje del cliente: {{ $('Input  de Slack').item.json.mensaje }}\n- Respuesta otorgada: {{ $('Respuesta  a Slack').item.json.message.text }}\n[FIN DEL HISTORIAL]\n\nREGLAS DE SALIDA Y FORMATO:\n1. Responde ÚNICAMENTE con un objeto JSON válido que cumpla strictly con la siguiente estructura:\n\n{\n  \"asunto_principal\": \"<Escribe en una frase corta el tema o motivo central de la conversación>\",\n  \"puntos_clave\": [\n    \"<Detalle relevante 1 (ej: productos solicitados, dirección o preferencia especificada)>\",\n    \"<Detalle relevante 2 (ej: inconveniente reportado o estatus de la consulta)>\"\n  ],\n  \"accion_requerida\": \"<Indica el siguiente paso operativo o estado final del caso, ej: Pendiente de entrega, Caso cerrado, Requiere seguimiento>\"\n}\n\n2. EJECUCIÓN OBLIGATORIA DE LA HERRAMIENTA:\n   - Después de generar el análisis, debes invocar obligatoriamente la herramienta conectada (\"Update row in sheet in Google Sheets\").\n   - Pasa como filtro de búsqueda (Matching Column) el ID de sesión del usuario: {{ $('Input  de Slack').item.json.usuario_id }}\n   - Envía el JSON generado en el campo correspondiente para actualizar el resumen consolidado de la sesión.",
-        "options": {
-          "maxIterations": 5
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3.1,
-      "position": [
-        224,
-        464
-      ],
-      "id": "6216678b-dfb1-4c8f-8809-491c61081469",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
           "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
           "mode": "list",
           "cachedResultName": "Logs_Ejecucion_GustoBot",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Log_ejecucion",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -975,47 +1140,6 @@
               "type": "string",
               "canBeUsedToMatch": true,
               "removed": false
-            },
-            {
-              "id": "Resumen_Consolidado",
-              "displayName": "Resumen_Consolidado",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "Estado_Caso",
-              "displayName": "Estado_Caso",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "Datos_Clave",
-              "displayName": "Datos_Clave",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "row_number",
-              "displayName": "row_number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "number",
-              "canBeUsedToMatch": true,
-              "readOnly": true,
-              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -1026,10 +1150,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        464,
-        0
+        6144,
+        752
       ],
-      "id": "d9f58803-12d2-4617-ad54-7e00817e3f05",
+      "id": "c32e8cad-580a-48c2-9bb1-3c499262d5ee",
       "name": "Log de Ejecucion sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -1045,24 +1169,32 @@
           "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
           "mode": "list",
           "cachedResultName": "Logs_Ejecucion_GustoBot",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Log_ejecucion",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Session_ID",
+              "lookupValue": "={{ $('Input  de Slack').item.json.usuario_id }}"
+            }
+          ]
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1680,
-        -16
+        4000,
+        736
       ],
-      "id": "010f8137-5ebc-4311-83d3-bcc118b6056f",
+      "id": "7f557652-f7db-4da9-9197-062760803704",
       "name": "Memoria in sheet",
       "alwaysOutputData": true,
       "credentials": {
@@ -1079,14 +1211,14 @@
           "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
           "mode": "list",
           "cachedResultName": "Logs_Ejecucion_GustoBot",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Log_ejecucion",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
         },
         "filtersUI": {
           "values": [
@@ -1101,10 +1233,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        288,
-        224
+        5968,
+        976
       ],
-      "id": "5316d98f-c584-4a51-a7db-061808de4f64",
+      "id": "e18075d1-d453-4178-8691-17fe330c61a2",
       "name": "Cuenta Log de Ejecucion sheet1",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -1123,20 +1255,20 @@
           "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
           "mode": "list",
           "cachedResultName": "Logs_Ejecucion_GustoBot",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Log_ejecucion",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0"
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
             "Fecha_Actualizacion": "={{ $now }}",
-            "Resumen_Consolidado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Resumen_Consolidado', ``, 'string') }}",
+            "Resumen_Consolidado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Resumen_Consolidado', 'Síntesis estructurada del caso en JSON', 'string') }}",
             "Estado_Caso": "Caso Resumido",
             "Session_ID": "={{ $('Input  de Slack').item.json.usuario_id }}"
           },
@@ -1153,106 +1285,6 @@
               "type": "string",
               "canBeUsedToMatch": true,
               "removed": false
-            },
-            {
-              "id": "timestamp",
-              "displayName": "timestamp",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "original_input",
-              "displayName": "original_input",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "intent",
-              "displayName": "intent",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "confidence",
-              "displayName": "confidence",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "risk",
-              "displayName": "risk",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "worker",
-              "displayName": "worker",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "status",
-              "displayName": "status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "respuesta",
-              "displayName": "respuesta",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "requires_human",
-              "displayName": "requires_human",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "human_decision",
-              "displayName": "human_decision",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
             },
             {
               "id": "Fecha_Actualizacion",
@@ -1280,27 +1312,6 @@
               "display": true,
               "type": "string",
               "canBeUsedToMatch": true
-            },
-            {
-              "id": "Datos_Clave",
-              "displayName": "Datos_Clave",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "row_number",
-              "displayName": "row_number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "number",
-              "canBeUsedToMatch": true,
-              "readOnly": true,
-              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -1311,37 +1322,15 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        432,
-        688
+        6560,
+        1552
       ],
-      "id": "d604705d-5bf3-4aff-80ae-21883c71688b",
+      "id": "f4e39964-5a78-47c5-9fd9-2166bfc36e15",
       "name": "Actualiza log in Google Sheets",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "021fhpPV07Yb1Noj",
           "name": "Google Sheets account 4"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "model": "qwen/qwen3.8-27b",
-        "options": {
-          "temperature": 0
-        }
-      },
-      "id": "874d5a58-9091-4205-8fca-c8d798d3a9a4",
-      "name": "Modelo Router Groq1",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
-      "position": [
-        224,
-        704
-      ],
-      "credentials": {
-        "groqApi": {
-          "id": "6eReWjCTpmf2SxR0",
-          "name": "Groq account"
         }
       }
     },
@@ -1356,7 +1345,7 @@
           },
           "conditions": [
             {
-              "id": "933aef01-14d2-4855-ba3b-47dd988d6801",
+              "id": "cond-count-msgs",
               "leftValue": "={{ $items('Cuenta Log de Ejecucion sheet1').length }}",
               "rightValue": 5,
               "operator": {
@@ -1372,22 +1361,485 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        480,
-        224
+        5872,
+        1280
       ],
-      "id": "207e6ed5-b678-49e6-99e2-adce98c1bf57",
+      "id": "b9b3e6cc-248c-4a13-8a48-c0b0c1a86447",
       "name": "conversación > 5 mensajes"
     },
     {
-      "parameters": {},
+      "parameters": {
+        "keep": "lastItems"
+      },
       "type": "n8n-nodes-base.limit",
       "typeVersion": 1,
       "position": [
-        64,
-        464
+        6176,
+        1264
       ],
-      "id": "787722fc-0477-47d1-ab41-b8f5fc5f90f0",
+      "id": "b1f36b82-fd80-4a50-8232-ad7454a38d74",
       "name": "Limit a un registro"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-email-normal",
+              "leftValue": "={{ $('Input  de Slack').item.json.canal }}",
+              "rightValue": "email",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        6464,
+        928
+      ],
+      "id": "b4f8ea2e-e23f-4c1a-bfdc-65bb923005d2",
+      "name": "¿Es respuesta de correo?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-email-hitl",
+              "leftValue": "={{ $('Input  de Slack').item.json.canal }}",
+              "rightValue": "email",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        5888,
+        576
+      ],
+      "id": "c97b2874-08da-4316-ac82-065521856280",
+      "name": "¿Es HITL de correo?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-contact-exists",
+              "leftValue": "={{ Boolean($json.id) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4768,
+        416
+      ],
+      "id": "e3b7092c-fd13-46fd-b9e0-7b92b0b5536d",
+      "name": "Contacto existe en CRM?"
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "operation": "createOrUpdate"
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        4992,
+        256
+      ],
+      "id": "5936588b-a00d-4514-860a-78a81b6aa636",
+      "name": "HubSpot - Update contacto",
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "viDsT9qEaokSqye6",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "operation": "create"
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        4992,
+        480
+      ],
+      "id": "7b306dad-6954-4daa-aee3-257375565779",
+      "name": "HubSpot - Create contacto",
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "viDsT9qEaokSqye6",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "restore-email-text",
+              "name": "text",
+              "value": "={{ $('④ Set — Limpiar Payload').first().json.body_text }}",
+              "type": "string"
+            },
+            {
+              "id": "restore-email-from",
+              "name": "from_email",
+              "value": "={{ $('④ Set — Limpiar Payload').first().json.from_email }}",
+              "type": "string"
+            },
+            {
+              "id": "restore-email-subject",
+              "name": "subject_clean",
+              "value": "={{ $('④ Set — Limpiar Payload').first().json.subject_clean }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5216,
+        416
+      ],
+      "id": "63b38949-1074-4e1b-b10d-3cce311f12a1",
+      "name": "⑤ Restaurar Payload Gmail"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4304,
+        128
+      ],
+      "id": "50c38ad5-bdae-4cbc-8acd-e8acbbeb0637",
+      "name": "Stop - Auto-reply ignorado"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "condition-valid-email",
+              "leftValue": "={{ /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(String($json.from_email ?? '').trim()) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4304,
+        416
+      ],
+      "id": "be267cfd-6000-44b9-acdf-40b166b0461d",
+      "name": "¿Email válido?"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4304,
+        288
+      ],
+      "id": "3fd27ae1-20f7-4997-838c-b4c18e269fb1",
+      "name": "Stop - Email inválido"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "draft-normal-to",
+              "name": "to",
+              "value": "={{ $('Input  de Slack').first().json.usuario_id }}",
+              "type": "string"
+            },
+            {
+              "id": "draft-normal-subject",
+              "name": "subject",
+              "value": "={{ 'Re: ' + ($('Input  de Slack').first().json.asunto || 'Su solicitud') }}",
+              "type": "string"
+            },
+            {
+              "id": "draft-normal-body",
+              "name": "body",
+              "value": "={{ $('Preparar respuesta final').first().json.respuesta }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6704,
+        944
+      ],
+      "id": "354a7f52-10b0-46d4-99f8-7b466d48b4dd",
+      "name": "Preparar envío de respuesta Gmail"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        6944,
+        944
+      ],
+      "id": "2e6b2d12-f91b-42a2-9d58-0cfa5e4559ad",
+      "name": "Gmail - Enviar respuesta automática",
+      "webhookId": "gmail-send-normal-response-webhook",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "47YZOyE3fJxMkCAe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "draft-hitl-to",
+              "name": "to",
+              "value": "={{ $('Input  de Slack').first().json.usuario_id }}",
+              "type": "string"
+            },
+            {
+              "id": "draft-hitl-subject",
+              "name": "subject",
+              "value": "={{ 'Revisión humana: ' + ($('Input  de Slack').first().json.asunto || 'Su solicitud') }}",
+              "type": "string"
+            },
+            {
+              "id": "draft-hitl-body",
+              "name": "body",
+              "value": "={{ $('Preparar HITL / Unknown').first().json.respuesta + '\\n\\nSolicitud original: ' + $('Input  de Slack').first().json.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6224,
+        560
+      ],
+      "id": "713b2826-db53-4b44-a9ee-044003c23871",
+      "name": "Preparar borrador HITL Gmail"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "slack-clean-text",
+              "name": "text",
+              "value": "={{ $('Preparar respuesta final').first().json.respuesta }}",
+              "type": "string"
+            },
+            {
+              "id": "slack-clean-thread",
+              "name": "thread_ts",
+              "value": "={{ $('Input  de Slack').first().json.thread_ts }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6704,
+        1168
+      ],
+      "id": "ae13ffb1-e38a-484e-a277-ccf717a28c97",
+      "name": "Preparar payload mínimo Slack"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        4592,
+        960
+      ],
+      "id": "eb44a579-fb51-4238-a968-efde3cef8753",
+      "name": "Modelo Router OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente analítico de inteligencia artificial especializado en síntesis de servicio al cliente para la empresa GustoBot.\n\nTu única función es analizar el historial completo de interacción con el usuario, extraer un resumen consolidado con los puntos más importantes del caso, y utilizar la herramienta de Google Sheets disponible para actualizar el registro.\n\n[HISTORIAL COMPLETO DE LA CONVERSACIÓN]\n{{ $('Cuenta Log de Ejecucion sheet1').all().map((item, index) => `Interacción ${index + 1}:\n- Cliente: ${item.json.original_input || 'N/A'}\n- Respuesta GustoBot: ${item.json.respuesta || 'N/A'}`).join('\\n\\n') }}\n[FIN DEL HISTORIAL]\n\nREGLAS DE SALIDA Y FORMATO:\n1. Responde ÚNICAMENTE con un objeto JSON válido que cumpla estrictamente con la siguiente estructura:\n\n{\n  \"asunto_principal\": \"<Escribe en una frase corta el tema o motivo central de la conversación>\",\n  \"puntos_clave\": [\n    \"<Detalle relevante 1 (ej: productos solicitados, dirección o preferencia especificada)>\",\n    \"<Detalle relevante 2 (ej: inconveniente reportado o estatus de la consulta)>\"\n  ],\n  \"accion_requerida\": \"<Indica el siguiente paso operativo o estado final del caso, ej: Pendiente de entrega, Caso cerrado, Requiere seguimiento>\"\n}\n\n2. EJECUCIÓN OBLIGATORIA DE LA HERRAMIENTA:\n   - Después de generar el análisis, debes invocar obligatoriamente la herramienta conectada (\"Actualiza log in Google Sheets\").\n   - Pasa como filtro de búsqueda (Matching Column) el ID de sesión del usuario: {{ $('Input  de Slack').item.json.usuario_id }}\n   - Envía el JSON generado en el campo correspondiente para actualizar el resumen consolidado de la sesión.",
+        "options": {
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        6384,
+        1264
+      ],
+      "id": "a50e4f71-1203-4208-8cc3-fd9ce17807b8",
+      "name": "AI Agent Analitico"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        6384,
+        1536
+      ],
+      "id": "2b6d96f7-3a7c-4540-81d4-f0a032aee3b4",
+      "name": "Modelo Analitico OpenAI Chat",
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3.8-27b",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "id": "165192a1-eca2-404c-920f-3403e052d6ee",
+      "name": "Modelo Analitico  Groq1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        6208,
+        1536
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "6eReWjCTpmf2SxR0",
+          "name": "Groq account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres el Router de una mesa de ayuda de la empresa GustoBot.\n\n[INICIO DE CONTEXTO COMPARTIDO]\nID de Sesión: {{ $json.Session_ID }}\nEstado previo del caso: {{$json.Estado_Caso }}\nResumen acumulado de la relación: {{ String($json.Resumen_Consolidado ?? '').slice(-4000) }}\nDatos clave del cliente: {{ String($json.Datos_Clave ?? '').slice(0, 1500) }}\n[FIN DE CONTEXTO COMPARTIDO]\n\nMensaje actual del usuario:\n{{ String($('Input  de Slack').item.json.mensaje ?? '').slice(0, 4000) }}\n\nTu única tarea es clasificar el mensaje entrante utilizando el contexto anterior si es necesario. NO resuelvas el problema ni respondas al cliente.\n\nIntents permitidos:\n- REGISTRAR_PEDIDO: Cuando el usuario solicita comprar productos, armar un pedido o menciona cantidades de comida.\n- CONSULTA_MENU: Preguntas sobre precios, horarios, disponibilidad o información general de la carta.\n- RECLAMO_SOPORTE: Reclamos por pedidos erróneos, demoras, comida en mal estado o solicitudes de ayuda.\n- UNKNOWN: Mensajes ambiguos, saludos aislados o fuera de alcance.\n\nRisk (Nivel de riesgo):\n- LOW: Saludos, preguntas sobre el menú o pedidos de comida estándar (incluyendo listas de productos largos o desestructurados). Todo pedido habitual debe ser LOW.\n- MEDIUM: Solicitudes levemente ambiguas, cambios menores sobre un pedido en curso, o reclamos operativos estándar (tales como demoras, pedidos que no llegaron, ítems faltantes o errores comunes de entrega).\n- HIGH: Únicamente situaciones críticas de salud, seguridad o agresión extrema: alergias alimentarias severas, contaminación cruzada, intoxicación, amenazas graves, lenguaje ofensivo explícito o fraude. (Nota: un reclamo operativo de retraso o falta de entrega NO es HIGH, debe ser MEDIUM).\n\nConfidence: Número decimal entre 0 y 1 que indique la seguridad de la clasificación.\n\nREGLA OBLIGATORIA: Responde ÚNICAMENTE con un objeto JSON válido, sin bloques de código Markdown (como ```json), sin explicaciones ni texto adicional. Utiliza exactamente la siguiente estructura:\n{\n  \"intent\": \"REGISTRAR_PEDIDO\",\n  \"confidence\": 0.95,\n  \"risk\": \"LOW\"\n}",
+        "messages": {
+          "messageValues": []
+        }
+      },
+      "id": "f84344e6-5651-406c-891c-8f18c3f2858f",
+      "name": "Router IA",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        4432,
+        720
+      ]
     }
   ],
   "pinData": {},
@@ -1397,6 +1849,75 @@
         [
           {
             "node": "Input  de Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger (Entrante)": {
+      "main": [
+        [
+          {
+            "node": "① IF — ¿Es Auto-reply?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "① IF — ¿Es Auto-reply?": {
+      "main": [
+        [
+          {
+            "node": "Stop - Auto-reply ignorado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "④ Set — Limpiar Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "④ Set — Limpiar Payload": {
+      "main": [
+        [
+          {
+            "node": "¿Email válido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Email válido?": {
+      "main": [
+        [
+          {
+            "node": "② Look up — Buscar Contacto CRM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop - Email inválido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "② Look up — Buscar Contacto CRM": {
+      "main": [
+        [
+          {
+            "node": "Contacto existe en CRM?",
             "type": "main",
             "index": 0
           }
@@ -1414,22 +1935,51 @@
         ]
       ]
     },
-    "Modelo Router Groq": {
-      "ai_languageModel": [
+    "¿Es respuesta de correo?": {
+      "main": [
         [
           {
-            "node": "Router IA - Groq",
-            "type": "ai_languageModel",
+            "node": "Preparar envío de respuesta Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar payload mínimo Slack",
+            "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Router IA - Groq": {
+    "Preparar envío de respuesta Gmail": {
       "main": [
         [
           {
-            "node": "Normalizar clasificacion Router",
+            "node": "Gmail - Enviar respuesta automática",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Enviar respuesta automática": {
+      "main": [
+        [
+          {
+            "node": "Cuenta Log de Ejecucion sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar payload mínimo Slack": {
+      "main": [
+        [
+          {
+            "node": "Respuesta  a Slack",
             "type": "main",
             "index": 0
           }
@@ -1543,7 +2093,35 @@
     },
     "Respuesta  a Slack1": {
       "main": [
-        []
+        [
+          {
+            "node": "¿Es HITL de correo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es HITL de correo?": {
+      "main": [
+        [
+          {
+            "node": "Preparar borrador HITL Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar borrador HITL Gmail": {
+      "main": [
+        [
+          {
+            "node": "③ Create Draft — Borrador HITL",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Call Worker_Registrar_Pedido": {
@@ -1594,7 +2172,7 @@
       "main": [
         [
           {
-            "node": "Router IA - Groq",
+            "node": "Router IA",
             "type": "main",
             "index": 0
           }
@@ -1612,7 +2190,7 @@
       "main": [
         [
           {
-            "node": "Router IA - Groq",
+            "node": "Router IA",
             "type": "main",
             "index": 0
           }
@@ -1623,7 +2201,7 @@
       "main": [
         [
           {
-            "node": "Respuesta  a Slack",
+            "node": "¿Es respuesta de correo?",
             "type": "main",
             "index": 0
           }
@@ -1652,23 +2230,17 @@
         ]
       ]
     },
+    "③ Create Draft — Borrador HITL": {
+      "main": [
+        []
+      ]
+    },
     "Actualiza log in Google Sheets": {
       "ai_tool": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent Analitico",
             "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Modelo Router Groq1": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -1689,7 +2261,91 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent Analitico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HubSpot - Update contacto": {
+      "main": [
+        [
+          {
+            "node": "⑤ Restaurar Payload Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HubSpot - Create contacto": {
+      "main": [
+        [
+          {
+            "node": "⑤ Restaurar Payload Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⑤ Restaurar Payload Gmail": {
+      "main": [
+        [
+          {
+            "node": "Input  de Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contacto existe en CRM?": {
+      "main": [
+        [
+          {
+            "node": "HubSpot - Update contacto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HubSpot - Create contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Router OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Router IA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Analitico OpenAI Chat": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Analitico",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router IA": {
+      "main": [
+        [
+          {
+            "node": "Normalizar clasificacion Router",
             "type": "main",
             "index": 0
           }
@@ -1702,12 +2358,12 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "ae257431-29d7-4c80-83d9-942b361ec54d",
+  "versionId": "51324806-634f-4e8d-8db8-51256b3bf33a",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
   },
   "nodeGroups": [],
-  "id": "Mpm42NqkS3FHVzQw",
+  "id": "5EznTsmWXnyucxsg",
   "tags": []
 }
