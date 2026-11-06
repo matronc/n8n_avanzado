@@ -1,0 +1,4432 @@
+{
+  "name": "Checkpoint5_marcelo_troncoso",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "80762ecf-804f-4753-8d2f-61ecce8fd2a5",
+      "name": "Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        17520,
+        -44288
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a247724c-6c9e-4b19-b75a-e646aef7e12a",
+      "name": "Embeddings1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        45808,
+        -43088
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "3d8973e6-02a0-4790-bf33-17e0fb10e620",
+      "name": "Embeddings3",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        96640,
+        -44304
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a70472e7-5e1e-44e4-96da-7c56b4e886a5",
+      "name": "Embeddings4",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        124928,
+        -43104
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9aed95d8-36b7-483e-8e11-64ce316eb4f7",
+      "name": "Embeddings5",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        91088,
+        -43680
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "62dc664e-4f1d-4151-b37b-b8ed66a289b8",
+      "name": "Embeddings6",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        119376,
+        -42480
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "f576e6c5-0e97-4b47-86a9-8c4ad2671a8b",
+      "name": "Embeddings7",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        166928,
+        -42992
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "cc557d98-129a-426c-9477-c162e58427ee",
+      "name": "Embeddings8",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        195216,
+        -41792
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "041ddf60-19d3-4367-a7ec-3f233544a48b",
+      "name": "Embeddings10",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        196784,
+        -33056
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "951e9fee-8ce8-40aa-9c30-a7e1b370f3dd",
+      "name": "Embeddings9",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        72560,
+        -66384
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2e6f2605-8535-4358-aabc-0e5d14842604",
+      "name": "Embeddings11",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        100848,
+        -65184
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0C9MH644BZ",
+          "mode": "list",
+          "cachedResultName": "gestor-pedidos"
+        },
+        "options": {
+          "userIds": [
+            "U0CA4S3TCDP"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        214400,
+        -59728
+      ],
+      "id": "da5c6278-8b27-4ed5-960a-3f805b71febe",
+      "name": "Chat de Slack",
+      "webhookId": "913caa95-fef5-4ac3-9d3e-a79ec0c47195",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "readStatus": "unread"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        214400,
+        -60048
+      ],
+      "id": "cbba472f-8b5f-4787-a4e2-b3aca74059f6",
+      "name": "Gmail Trigger (Entrante)",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "47YZOyE3fJxMkCAe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-autoreply-1",
+              "leftValue": "={{ $json.subject ?? '' }}",
+              "rightValue": "Auto-reply",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "cond-autoreply-2",
+              "leftValue": "={{ $json.subject ?? '' }}",
+              "rightValue": "Out of office",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "cond-autoreply-3",
+              "leftValue": "={{ $json.subject ?? '' }}",
+              "rightValue": "Undeliverable",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "cond-autoreply-4",
+              "leftValue": "={{ $json.from?.value?.[0]?.address ?? $json.from ?? '' }}",
+              "rightValue": "no-reply@",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        214624,
+        -60048
+      ],
+      "id": "3c86e88b-c032-448c-b073-c6ff9ff7c9b0",
+      "name": "① IF — ¿Es Auto-reply?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-clean-1",
+              "name": "from_email",
+              "value": "={{ $json.from?.value?.[0]?.address ?? $json.from ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "set-clean-2",
+              "name": "subject_clean",
+              "value": "={{ $json.subject ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "set-clean-3",
+              "name": "body_text",
+              "value": "={{ $json.textPlain ?? $json.text ?? $json.snippet ?? '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        214848,
+        -60048
+      ],
+      "id": "bc161d4b-e856-4656-943f-a63285db8386",
+      "name": "④ Set — Limpiar Payload"
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "operation": "search",
+        "filterGroupsUi": {
+          "filterGroupsValues": [
+            {
+              "filtersUi": {
+                "filterValues": [
+                  {
+                    "propertyName": "email",
+                    "value": "={{ $json.from_email }}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        215296,
+        -60048
+      ],
+      "id": "f770b3c5-a91c-43de-bb8b-3f07299201dc",
+      "name": "② Look up — Buscar Contacto CRM",
+      "alwaysOutputData": true,
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "viDsT9qEaokSqye6",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.body }}",
+        "options": {
+          "sendTo": "={{ $json.to }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        217904,
+        -59904
+      ],
+      "id": "81cfe5ea-d1f2-43fc-b50d-01046c794a96",
+      "name": "③ Create Draft — Borrador HITL",
+      "webhookId": "e2f013ef-f11c-4af5-ae73-97395593bd8e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "47YZOyE3fJxMkCAe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $('Entrada multicanal').first().json.slack_channel_id || 'C0C9MH644BZ' }}",
+          "mode": "id"
+        },
+        "text": "={{ $json.text }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $json.thread_ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        217056,
+        -59488
+      ],
+      "id": "2b008156-e237-43ff-825c-4ffa569bbcf7",
+      "name": "Respuesta  a Slack",
+      "webhookId": "c97eb359-94a6-49ea-8586-c3661ae7f597",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assign-msg",
+              "name": "mensaje",
+              "value": "={{ $json.text ?? $json.body_text ?? $json.snippet ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-user",
+              "name": "usuario_id",
+              "value": "={{ $json.user ?? $json.from_email ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-channel",
+              "name": "canal",
+              "value": "={{ $json.canal ?? 'slack' }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-slack-channel",
+              "name": "slack_channel_id",
+              "value": "={{ $json.channel ?? $json.channel_id ?? 'C0C9MH644BZ' }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-subject",
+              "name": "asunto",
+              "value": "={{ $json.subject_clean ?? $json.subject ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-thread",
+              "name": "thread_ts",
+              "value": "={{ $json.ts ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-session-id",
+              "name": "session_id",
+              "value": "={{ $json.Session_ID ?? $json.sessionId ?? $json.user ?? $json.from_email ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-source-message-id",
+              "name": "source_message_id",
+              "value": "={{ $json.ts ?? $json.messageId ?? $json.id ?? '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        214576,
+        -59728
+      ],
+      "id": "c2b73a09-6bdb-44e7-803f-d979535587f9",
+      "name": "Entrada multicanal"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Capturamos el mensaje original desde tu nodo 'Input de Slack'\nconst original = $('Entrada multicanal').first().json.mensaje;\n\n// Extraemos el texto crudo devuelto por la IA\nconst raw = $json.text ?? $json.output ?? $json.response ?? '';\n\nlet d;\ntry {\n  // Limpiamos bloques markdown (```json ... ```) si la IA los incluyó y parseamos\n  d = JSON.parse(String(raw).replace(/^```json\\s*/i, '').replace(/```$/, '').trim());\n} catch (e) {\n  // Fallback seguro si falla el parseo\n  d = { intent: 'UNKNOWN', confidence: 0, risk: 'HIGH' };\n}\n\n// Taxonomía permitida para GustoBot\nconst allowed = ['REGISTRAR_PEDIDO', 'CONSULTA_MENU', 'CONSULTA_DOCUMENTAL', 'RECLAMO_SOPORTE', 'UNKNOWN'];\n\n// Validaciones y normalización\nconst intent = allowed.includes(d.intent) ? d.intent : 'UNKNOWN';\nconst confidence = Math.max(0, Math.min(1, Number(d.confidence ?? 0)));\nconst risk = ['LOW', 'MEDIUM', 'HIGH'].includes(d.risk) ? d.risk : 'HIGH';\n\n// Retornamos el objeto normalizado para el Switch y los Workers\nreturn [{\n  json: {\n    original_input: original,\n    intent: intent,\n    confidence: confidence,\n    risk: risk\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        215520,
+        -59744
+      ],
+      "id": "13a06cf2-42e9-46d7-b281-6a509db54e78",
+      "name": "Normalizar clasificacion Router"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-risk-high",
+              "leftValue": "={{ $json.risk }}",
+              "rightValue": "HIGH",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "cond-conf-low",
+              "leftValue": "={{ $json.confidence }}",
+              "rightValue": 0.75,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        216272,
+        -59744
+      ],
+      "id": "91a8c72b-6c63-409d-96e7-4a2138243e53",
+      "name": "¿Requiere HITL?"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "REGISTRAR_PEDIDO",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "rule-pedido"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PEDIDO"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "rule-menu",
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "CONSULTA_MENU",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "MENU"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "rule-reclamo",
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "RECLAMO_SOPORTE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "RECLAMO"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "rule-unknown",
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "UNKNOWN",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "UNKNOWN"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "rule-documental",
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "CONSULTA_DOCUMENTAL",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "DOCUMENTAL"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        216336,
+        -59424
+      ],
+      "id": "8548e21e-9eff-41ec-ae63-87fad041c55d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => ({json:{\n  timestamp:new Date().toISOString(),\n  status:item.json.status ?? 'success',\n  worker:item.json.worker ?? 'N/D',\n  respuesta:item.json.respuesta ?? '',\n  requires_human:Boolean(item.json.requires_human)\n}}));"
+      },
+      "id": "6181e9d5-e4f0-4b5c-ad6a-dd7bf2eabbda",
+      "name": "Preparar respuesta final",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        217072,
+        -59712
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const data = item.json;\n  const ts = data.timestamp || new Date().toISOString();\n  const worker = data.worker || 'UNKNOWN';\n  const status = data.status || 'success';\n  const hitl = data.requires_human ?? false;\n  const logString = `[${ts}] | WORKER: ${worker} | STATUS: ${status} | HITL: ${hitl}`;\n\n  return {\n    json: {\n      ...data,\n      log: logString\n    }\n  };\n});"
+      },
+      "id": "31742adb-1e31-4dd0-acdc-786207a6bfe9",
+      "name": "Log de ejecución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        217248,
+        -59712
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "hitl-status",
+              "name": "status",
+              "value": "needs_human",
+              "type": "string"
+            },
+            {
+              "id": "hitl-worker",
+              "name": "worker",
+              "value": "HITL",
+              "type": "string"
+            },
+            {
+              "id": "hitl-resp",
+              "name": "respuesta",
+              "value": "La solicitud necesita revisión humana por riesgo alto, baja confianza o intención no reconocida.",
+              "type": "string"
+            },
+            {
+              "id": "hitl-req",
+              "name": "requires_human",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "hitl-request-id",
+              "name": "hitl_request_id",
+              "value": "={{ 'HITL-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "hitl-expires-at",
+              "name": "hitl_expires_at",
+              "value": "={{ new Date(Date.now() + 30 * 60 * 1000).toISOString() }}",
+              "type": "string"
+            },
+            {
+              "id": "hitl-decision",
+              "name": "human_decision",
+              "value": "PENDING",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "df8db446-ff11-4246-a8b8-e1fccab4c304",
+      "name": "Preparar HITL / Unknown",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        216656,
+        -59888
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "user": {
+          "__rl": true,
+          "value": "U0CA4R8ANTT",
+          "mode": "list",
+          "cachedResultName": "Marcelo (@mtroncoso29)"
+        },
+        "message": "=🚨 REVISIÓN HUMANA REQUERIDA\nSolicitud: {{ $('Normalizar clasificacion Router').item.json.original_input }}\nÁrea: {{ $('Normalizar clasificacion Router').item.json.intent }} | Confianza: {{ Math.round($('Normalizar clasificacion Router').item.json.confidence * 100) }}% | Riesgo: {{ $('Normalizar clasificacion Router').item.json.risk }}\nCódigo: {{ $('Preparar HITL / Unknown').item.json.hitl_request_id }}\n\nAprobar: continuar con el envío automático al cliente.\nRechazar: derivar a revisión humana y contacto directo.\nLa solicitud vence a los 30 minutos.",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "captureResponder": true,
+        "approvers": [
+          "U0CA4R8ANTT"
+        ],
+        "unauthorizedReplyText": "Solo Marcelo puede aprobar o rechazar esta solicitud.",
+        "options": {
+          "includeLinkToWorkflow": false
+        },
+        "resource": "message",
+        "responseType": "approval",
+        "postDecisionBehavior": "showOutcome",
+        "text": "=🚨 REVISIÓN HUMANA REQUERIDA\nSolicitud: {{ $('Normalizar clasificacion Router').item.json.original_input }}\nÁrea: {{ $('Normalizar clasificacion Router').item.json.intent }} | Confianza: {{ Math.round($('Normalizar clasificacion Router').item.json.confidence * 100) }}% | Riesgo: {{ $('Normalizar clasificacion Router').item.json.risk }}\nCódigo: {{ $('Preparar HITL / Unknown').item.json.hitl_request_id }}\n\nAprobar: continuar con el envío automático al cliente.\nRechazar: derivar a revisión humana y contacto directo.\nLa solicitud vence a los 30 minutos."
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        216960,
+        -59888
+      ],
+      "id": "26fdf792-9d48-4b57-969b-9512f313ee32",
+      "name": "Respuesta  a Slack1",
+      "webhookId": "a60ebd5e-60cd-41f5-aacd-bc05f8830f06",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "tDnwUOrR1q7RGRkM",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/tDnwUOrR1q7RGRkM",
+          "cachedResultName": "Worker_Registrar_Pedido"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_input": "={{ $json.original_input }}"
+          },
+          "matchingColumns": [
+            "original_input"
+          ],
+          "schema": [
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        216768,
+        -59728
+      ],
+      "name": "Call Worker_Registrar_Pedido",
+      "id": "f71d3fc2-9af7-4370-ba57-a4c641da0abe"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ibfeJgvWT0nhOvZW",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ibfeJgvWT0nhOvZW",
+          "cachedResultName": "Worker_Atencion_Consultas"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_input": "={{ $json.original_input }}"
+          },
+          "matchingColumns": [
+            "original_input"
+          ],
+          "schema": [
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        216768,
+        -59552
+      ],
+      "name": "Call Worker_Atencion_Consultas",
+      "id": "3b85a308-5634-4470-9991-59834493a701"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "7vW1stAUaoAXGhog",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/7vW1stAUaoAXGhog",
+          "cachedResultName": "Worker_Atencion_Reclamos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_input": "={{ $json.original_input }}"
+          },
+          "matchingColumns": [
+            "original_input"
+          ],
+          "schema": [
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        216768,
+        -59376
+      ],
+      "name": "Call Worker_Atencion_Reclamos",
+      "id": "28f1c5c7-86e1-4f42-8cdb-a52440fc935b"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "qdiIQcRt9oVp4FCA",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/qdiIQcRt9oVp4FCA",
+          "cachedResultName": "Worker_Anfitrion"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_input": "={{ $json.original_input }}"
+          },
+          "matchingColumns": [
+            "original_input"
+          ],
+          "schema": [
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        216768,
+        -59184
+      ],
+      "name": "Call Worker_Anfitrion",
+      "id": "8d26f711-0a18-465c-9582-1a276c1d1300"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-session-id",
+              "leftValue": "={{ $json.Session_ID ? true : false }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        214944,
+        -59728
+      ],
+      "id": "041714ed-1ffb-43f7-ae99-87acc9a97167",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Session_ID": "={{ $('Entrada multicanal').item.json.usuario_id }}",
+            "timestamp": "={{ $json.timestamp }}",
+            "original_input": "={{ String($('Entrada multicanal').item.json.mensaje ?? '').slice(0, 4000) }}",
+            "Resumen_Consolidado": "Primera interacción del usuario.",
+            "Estado_Caso": "Nuevo",
+            "Datos_Clave": "Sin datos clave registrados."
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "risk",
+              "displayName": "risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "worker",
+              "displayName": "worker",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "respuesta",
+              "displayName": "respuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "requires_human",
+              "displayName": "requires_human",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "human_decision",
+              "displayName": "human_decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha_Actualizacion",
+              "displayName": "Fecha_Actualizacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen_Consolidado",
+              "displayName": "Resumen_Consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado_Caso",
+              "displayName": "Estado_Caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Datos_Clave",
+              "displayName": "Datos_Clave",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        214976,
+        -59488
+      ],
+      "id": "c49f1567-c6c4-48a1-8f68-a228cbaea842",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.timestamp }}",
+            "status": "={{ $json.status }}",
+            "worker": "={{ $json.worker }}",
+            "requires_human": "={{ $json.requires_human }}",
+            "original_input": "={{ $('Normalizar clasificacion Router').item.json.original_input }}",
+            "intent": "={{ $('Normalizar clasificacion Router').item.json.intent }}",
+            "confidence": "={{ $('Normalizar clasificacion Router').item.json.confidence }}",
+            "risk": "={{ $('Normalizar clasificacion Router').item.json.risk }}",
+            "respuesta": "={{ $json.respuesta }}",
+            "Session_ID": "={{ $('Entrada multicanal').item.json.usuario_id }}",
+            "human_decision": "={{ $('If').item.json.human_decision }}",
+            "Fecha_Actualizacion": "={{ $('If').item.json.Fecha_Actualizacion }}"
+          },
+          "matchingColumns": [
+            "Session_ID"
+          ],
+          "schema": [
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "risk",
+              "displayName": "risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "worker",
+              "displayName": "worker",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "respuesta",
+              "displayName": "respuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "requires_human",
+              "displayName": "requires_human",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "human_decision",
+              "displayName": "human_decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha_Actualizacion",
+              "displayName": "Fecha_Actualizacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        217440,
+        -59712
+      ],
+      "id": "b123b652-13ff-45cf-bb67-358ead5bb8a5",
+      "name": "Log de Ejecucion sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Session_ID",
+              "lookupValue": "={{ $('Entrada multicanal').item.json.usuario_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        214768,
+        -59728
+      ],
+      "id": "701badad-3a47-4be9-b652-af20929a6bc0",
+      "name": "Memoria in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Session_ID",
+              "lookupValue": "={{ $('Entrada multicanal').item.json.usuario_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        217264,
+        -59488
+      ],
+      "id": "d9c0a3ef-34c6-41da-a740-b66d2142410f",
+      "name": "Cuenta Log de Ejecucion sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Actualiza el resumen consolidado de la sesión del usuario en Google Sheets cuando la conversación supere los 5 mensajes.",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha_Actualizacion": "={{ $now }}",
+            "Resumen_Consolidado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Resumen_Consolidado', 'Síntesis estructurada del caso en JSON', 'string') }}",
+            "Estado_Caso": "Caso Resumido",
+            "Session_ID": "={{ $('Entrada multicanal').item.json.usuario_id }}"
+          },
+          "matchingColumns": [
+            "Session_ID"
+          ],
+          "schema": [
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha_Actualizacion",
+              "displayName": "Fecha_Actualizacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen_Consolidado",
+              "displayName": "Resumen_Consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado_Caso",
+              "displayName": "Estado_Caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        217856,
+        -58912
+      ],
+      "id": "26405ef7-131c-4b9a-9fb8-339062dec1ad",
+      "name": "Actualiza log in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-count-msgs",
+              "leftValue": "={{ $items('Cuenta Log de Ejecucion sheet1').length }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        217168,
+        -59184
+      ],
+      "id": "21af7c92-650a-49bf-8f03-c70dec4a9b6a",
+      "name": "conversación > 5 mensajes"
+    },
+    {
+      "parameters": {
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        217472,
+        -59200
+      ],
+      "id": "99cca183-c5de-437d-ba3d-8850cb5117cb",
+      "name": "Limit a un registro"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-email-normal",
+              "leftValue": "={{ $('Entrada multicanal').first().json.canal === 'email' || /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(String($('Entrada multicanal').first().json.usuario_id ?? '').trim()) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        217648,
+        -59664
+      ],
+      "id": "0750153c-5ca8-4d0b-8a66-2deab8fa6964",
+      "name": "¿Es respuesta de correo?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-email-hitl",
+              "leftValue": "={{ $('Entrada multicanal').first().json.canal === 'email' || /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(String($('Entrada multicanal').first().json.usuario_id ?? '').trim()) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        217184,
+        -59888
+      ],
+      "id": "f254b166-a1f5-4a05-a689-70d2f9f41267",
+      "name": "¿Es HITL de correo?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-contact-exists",
+              "leftValue": "={{ Boolean($json.id) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        215536,
+        -60048
+      ],
+      "id": "b7bb6976-6fb7-45ad-8ea4-435056be2f49",
+      "name": "Contacto existe en CRM?"
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "operation": "createOrUpdate"
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        216288,
+        -60208
+      ],
+      "id": "cbd22a1f-2a70-44f5-ab17-108127e2b9be",
+      "name": "HubSpot - Update contacto",
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "viDsT9qEaokSqye6",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "operation": "create"
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        216288,
+        -59984
+      ],
+      "id": "e00a3b25-74ca-4baf-924e-72f2fc1f2f84",
+      "name": "HubSpot - Create contacto",
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "viDsT9qEaokSqye6",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "restore-email-text",
+              "name": "text",
+              "value": "={{ $('④ Set — Limpiar Payload').first().json.body_text }}",
+              "type": "string"
+            },
+            {
+              "id": "restore-email-from",
+              "name": "from_email",
+              "value": "={{ $('④ Set — Limpiar Payload').first().json.from_email }}",
+              "type": "string"
+            },
+            {
+              "id": "restore-email-subject",
+              "name": "subject_clean",
+              "value": "={{ $('④ Set — Limpiar Payload').first().json.subject_clean }}",
+              "type": "string"
+            },
+            {
+              "id": "restore-email-channel",
+              "name": "canal",
+              "value": "email",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        216512,
+        -60048
+      ],
+      "id": "cae18d42-4d57-42e0-ae88-ff2c2e3eec02",
+      "name": "⑤ Restaurar Payload Gmail"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        215072,
+        -60336
+      ],
+      "id": "8019d660-df87-4105-96dc-bd316fb5ddd5",
+      "name": "Stop - Auto-reply ignorado"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "condition-valid-email",
+              "leftValue": "={{ /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(String($json.from_email ?? '').trim()) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        215072,
+        -60048
+      ],
+      "id": "b418844f-1156-43dd-ae15-f6ffcb225855",
+      "name": "¿Email válido?"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        215072,
+        -60176
+      ],
+      "id": "be408bcc-d3eb-4b30-8187-bde2429ca406",
+      "name": "Stop - Email inválido"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "draft-normal-to",
+              "name": "to",
+              "value": "={{ $('Entrada multicanal').first().json.usuario_id }}",
+              "type": "string"
+            },
+            {
+              "id": "draft-normal-subject",
+              "name": "subject",
+              "value": "={{ 'Re: ' + ($('Entrada multicanal').first().json.asunto || 'Su solicitud') }}",
+              "type": "string"
+            },
+            {
+              "id": "draft-normal-body",
+              "name": "body",
+              "value": "={{ $('Preparar respuesta final').first().json.respuesta }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        217856,
+        -59680
+      ],
+      "id": "e1544c0d-49bc-4a63-9d2b-44c9aca99093",
+      "name": "Preparar envío de respuesta Gmail"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        218032,
+        -59680
+      ],
+      "id": "3d539471-c5d0-447b-84cc-0401c3157247",
+      "name": "Gmail - Enviar respuesta automática",
+      "webhookId": "gmail-send-normal-response-webhook",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "47YZOyE3fJxMkCAe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "draft-hitl-to",
+              "name": "to",
+              "value": "={{ $('Entrada multicanal').first().json.usuario_id }}",
+              "type": "string"
+            },
+            {
+              "id": "draft-hitl-subject",
+              "name": "subject",
+              "value": "={{ 'Revisión humana: ' + ($('Entrada multicanal').first().json.asunto || 'Su solicitud') }}",
+              "type": "string"
+            },
+            {
+              "id": "draft-hitl-body",
+              "name": "body",
+              "value": "={{ $('HITL - Preparar decisión Slack').first().json.respuesta + '\\n\\nSolicitud original: ' + $('Entrada multicanal').first().json.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        217520,
+        -59904
+      ],
+      "id": "66de403b-1119-43c1-b60d-f2545d9aeca6",
+      "name": "Preparar borrador HITL Gmail"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "slack-clean-text",
+              "name": "text",
+              "value": "={{ $('Preparar respuesta final').first().json.respuesta }}",
+              "type": "string"
+            },
+            {
+              "id": "slack-clean-thread",
+              "name": "thread_ts",
+              "value": "={{ $('Entrada multicanal').first().json.thread_ts }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        218000,
+        -59296
+      ],
+      "id": "a08b3c06-eee5-4a8c-9171-d8bd898ec90e",
+      "name": "Preparar payload mínimo Slack"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        215184,
+        -59584
+      ],
+      "id": "f01ffb28-61c6-46a8-af56-59e6a604a546",
+      "name": "Modelo Router OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente analítico de inteligencia artificial especializado en síntesis de servicio al cliente para la empresa GustoBot.\n\nTu única función es analizar el historial completo de interacción con el usuario, extraer un resumen consolidado con los puntos más importantes del caso, y utilizar la herramienta de Google Sheets disponible para actualizar el registro.\n\n[HISTORIAL COMPLETO DE LA CONVERSACIÓN]\n{{ $('Cuenta Log de Ejecucion sheet1').all().map((item, index) => `Interacción ${index + 1}:\n- Cliente: ${item.json.original_input || 'N/A'}\n- Respuesta GustoBot: ${item.json.respuesta || 'N/A'}`).join('\\n\\n') }}\n[FIN DEL HISTORIAL]\n\nREGLAS DE SALIDA Y FORMATO:\n1. Responde ÚNICAMENTE con un objeto JSON válido que cumpla estrictamente con la siguiente estructura:\n\n{\n  \"asunto_principal\": \"<Escribe en una frase corta el tema o motivo central de la conversación>\",\n  \"puntos_clave\": [\n    \"<Detalle relevante 1 (ej: productos solicitados, dirección o preferencia especificada)>\",\n    \"<Detalle relevante 2 (ej: inconveniente reportado o estatus de la consulta)>\"\n  ],\n  \"accion_requerida\": \"<Indica el siguiente paso operativo o estado final del caso, ej: Pendiente de entrega, Caso cerrado, Requiere seguimiento>\"\n}\n\n2. EJECUCIÓN OBLIGATORIA DE LA HERRAMIENTA:\n   - Después de generar el análisis, debes invocar obligatoriamente la herramienta conectada (\"Actualiza log in Google Sheets\").\n   - Pasa como filtro de búsqueda (Matching Column) el ID de sesión del usuario: {{ $('Entrada multicanal').item.json.usuario_id }}\n   - Envía el JSON generado en el campo correspondiente para actualizar el resumen consolidado de la sesión.",
+        "options": {
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        217680,
+        -59200
+      ],
+      "id": "8dd762a6-6a8f-4293-8d70-3ddd804c9a00",
+      "name": "AI Agent Analitico"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        217680,
+        -58928
+      ],
+      "id": "bc8310ae-909e-4928-9eb2-1fb480c71173",
+      "name": "Modelo Analitico OpenAI Chat",
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres el Router de una mesa de ayuda de la empresa GustoBot.\n\n[INICIO DE CONTEXTO COMPARTIDO]\nID de Sesión: {{ $json.Session_ID }}\nEstado previo del caso: {{$json.Estado_Caso }}\nResumen acumulado de la relación: {{ String($json.Resumen_Consolidado ?? '').slice(-4000) }}\nDatos clave del cliente: {{ String($json.Datos_Clave ?? '').slice(0, 1500) }}\n[FIN DE CONTEXTO COMPARTIDO]\n\nMensaje actual del usuario:\n{{ String($('Entrada multicanal').item.json.mensaje ?? '').slice(0, 4000) }}\n\nTu única tarea es clasificar el mensaje entrante utilizando el contexto anterior si es necesario. NO resuelvas el problema ni respondas al cliente.\n\nIntents permitidos:\n- REGISTRAR_PEDIDO: Cuando el usuario solicita comprar productos, armar un pedido o menciona cantidades de comida.\n- CONSULTA_MENU: Preguntas sobre precios, disponibilidad o información de la carta de productos.\n- CONSULTA_DOCUMENTAL: Preguntas sobre políticas, normas, procedimientos, devoluciones, envíos, medios de pago, garantías, horarios de atención o cualquier FAQ institucional que figure en el manual de la empresa.\n- RECLAMO_SOPORTE: Reclamos por pedidos erróneos, demoras, comida en mal estado o solicitudes de ayuda.\n- UNKNOWN: Mensajes ambiguos, saludos aislados o fuera de alcance.\n\nRisk (Nivel de riesgo):\n- LOW: Saludos, preguntas sobre el menú o pedidos de comida estándar (incluyendo listas de productos largos o desestructurados). Todo pedido habitual debe ser LOW.\n- MEDIUM: Solicitudes levemente ambiguas, cambios menores sobre un pedido en curso, o reclamos operativos estándar (tales como demoras, pedidos que no llegaron, ítems faltantes o errores comunes de entrega).\n- HIGH: Únicamente situaciones críticas de salud, seguridad o agresión extrema: alergias alimentarias severas, contaminación cruzada, intoxicación, amenazas graves, lenguaje ofensivo explícito o fraude. (Nota: un reclamo operativo de retraso o falta de entrega NO es HIGH, debe ser MEDIUM).\n\nConfidence: Número decimal entre 0 y 1 que indique la seguridad de la clasificación.\n\nREGLA OBLIGATORIA: Responde ÚNICAMENTE con un objeto JSON válido, sin bloques de código Markdown (como ```json), sin explicaciones ni texto adicional. Utiliza exactamente la siguiente estructura:\n{\n  \"intent\": \"REGISTRAR_PEDIDO\",\n  \"confidence\": 0.95,\n  \"risk\": \"LOW\"\n}",
+        "messages": {
+          "messageValues": []
+        }
+      },
+      "id": "89554b40-52fa-4a15-b504-e285ab885f60",
+      "name": "Router IA",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        215200,
+        -59744
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Sos el asistente de conocimiento organizacional de GustoBot.\n\nPregunta del cliente:\n{{ $json.original_input }}\n\nFragmentos recuperados:\n{{ $json.context }}\n\nRespondé usando exclusivamente los fragmentos incluidos arriba. Si no contienen una respuesta explícita a la pregunta, responde exactamente: \"No sé: no figura en la documentación disponible.\" No inventes políticas, plazos, requisitos, tarifas, derechos legales ni ejemplos; tampoco ofrezcas una política modelo ni pidas que el usuario aporte el texto.\n\nDistingue políticas que traten temas parecidos. En particular, no confundas reembolsos por fallas o defectos con el derecho de arrepentimiento de compra. Responde breve, en español rioplatense, y cita al final la sección/título y la fuente disponibles en los metadatos.",
+        "messages": {
+          "messageValues": []
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        217296,
+        -58992
+      ],
+      "id": "b3145ed5-d423-49a7-b317-c2bf74748af9",
+      "name": "Responder consulta documental"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        217296,
+        -58800
+      ],
+      "id": "b9ee3bcd-f5b0-4798-aac6-ad5cec34c0e8",
+      "name": "Modelo RAG OpenAI Chat",
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": {
+          "__rl": true,
+          "value": "document_chunks",
+          "mode": "list",
+          "cachedResultName": "document_chunks"
+        },
+        "prompt": "={{ $json.query }}",
+        "options": {
+          "queryName": "match_document_chunks"
+        }
+      },
+      "id": "31953ca2-a889-43fa-9ebf-8badc4fdb0de",
+      "name": "Vector Store Supabase - Recuperar documentos",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        216528,
+        -58976
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "t9ooeyY4jMueUlYS",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const original_input = String($input.first().json.original_input || '').trim();\nconst normalized = original_input.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase();\nlet query = original_input;\nif (/\\b(arrepent\\w*|arrepient\\w*|desist\\w*|cancel\\w*)\\b/.test(normalized)) {\n  query += '\\nDerecho de arrepentimiento legal, cancelación de compra, devolución sin uso, plazo de 10 días corridos desde la entrega, artículo 34 de la Ley 24.240.';\n}\nreturn [{ json: { original_input, query } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        216368,
+        -58976
+      ],
+      "id": "1d9b67d8-9c41-4695-a654-6b26dd997545",
+      "name": "Preparar consulta documental"
+    },
+    {
+      "parameters": {
+        "jsCode": "const documents = $input.all()\n  .map(item => item.json.document || item.json)\n  .filter(document => typeof (document.pageContent || document.content) === 'string')\n  .map(document => ({\n    text: String(document.pageContent || document.content).trim(),\n    metadata: document.metadata || {},\n  }))\n  .filter(document => document.text.length > 0);\nconst unique = [...new Map(documents.map(document => [document.text, document])).values()];\nconst context = unique.map((document, index) => {\n  const metadata = document.metadata;\n  const title = metadata.pdf && metadata.pdf.info && metadata.pdf.info.Title;\n  const source = metadata.fuente || title || metadata.source || 'Documento de conocimiento';\n  return `[Fragmento ${index + 1} | Fuente: ${source}]\\n${document.text}`;\n}).join('\\n\\n');\nreturn [{\n  json: {\n    original_input: $('Preparar consulta documental').first().json.original_input,\n    context,\n    has_context: unique.length > 0,\n    documents_count: unique.length,\n  },\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        216816,
+        -58976
+      ],
+      "id": "ae1ebb3f-71d9-42c8-9b8e-d65be3b47829",
+      "name": "Preparar contexto documental"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "has-retrieved-context",
+              "leftValue": "={{ $json.has_context }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        217056,
+        -58976
+      ],
+      "id": "c41e7a14-a7c3-467e-bfd8-39db4ec82b69",
+      "name": "¿Hay contexto documental?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "no-context-answer",
+              "name": "text",
+              "value": "No sé: no figura en la documentación disponible.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        217120,
+        -58672
+      ],
+      "id": "4216f5f4-108f-4277-97f8-82b1482a32fd",
+      "name": "Sin contexto documental"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d62e8ec8-57e8-4a79-ad10-027e498f2393",
+              "name": "status",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "0c173a20-5aac-42ad-b5d7-3094d2e1628e",
+              "name": "worker",
+              "value": "RAG_Documental",
+              "type": "string"
+            },
+            {
+              "id": "1c174844-09e0-4903-876a-fc2aedf824f9",
+              "name": "respuesta",
+              "value": "={{ $json.text ?? $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "78f33ccd-53a3-49cc-bd42-5e6e372aa820",
+              "name": "requires_human",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        217552,
+        -58672
+      ],
+      "id": "be2f4572-0727-474c-80bb-83699ad02303",
+      "name": "Formatear respuesta RAG"
+    },
+    {
+      "parameters": {
+        "content": "## Rama RAG documental\nIntent CONSULTA_DOCUMENTAL -> búsqueda Supabase -> validación de contexto -> respuesta grounded.\n\n- Los documentos se descargan desde Google Drive, se fragmentan en n8n y se indexan con embeddings OpenAI en Supabase (`document_chunks`).\n- Top-K = 4: recupera contexto útil y mantiene acotados los tokens.\n- No se aplica un Minimum Score fijo: el umbral 0.70 dejó la búsqueda vacía para consultas válidas. La RPC ordena por similitud y limita a los mejores 4.\n- Las consultas sobre arrepentimiento se amplían con términos legales relevantes para recuperar Policy 5.2 sin confundirla con reembolsos por fallas (Policy 5.1).\n- Si no hay fragmentos, el flujo responde directamente: \"No sé: no figura en la documentación disponible.\"",
+        "height": 362,
+        "width": 420,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        216656,
+        -58800
+      ],
+      "id": "00a9323c-6980-4c11-81af-0fb1cfe2306f",
+      "name": "Nota - RAG"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1cvpNiEXw8ExzD4ZUOwpKy7CJuarBQbzx",
+          "mode": "id",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1cvpNiEXw8ExzD4ZUOwpKy7CJuarBQbzx",
+          "cachedResultName": "Base de conocimiento GustoBot"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        213680,
+        -59328
+      ],
+      "id": "b1b7db43-6310-4e6a-aa94-13769728bb12",
+      "name": "Drive Trigger - Nuevo documento",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "7LUlaiAt8Hce7aZS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        214032,
+        -59248
+      ],
+      "id": "306487a8-33f3-4d5a-9f17-2b01d32dcadd",
+      "name": "Drive - Descargar documento",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "7LUlaiAt8Hce7aZS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "document_chunks",
+          "mode": "list",
+          "cachedResultName": "document_chunks"
+        },
+        "options": {
+          "queryName": "match_document_chunks"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        215744,
+        -59248
+      ],
+      "id": "48e67424-d85d-43ef-9bc5-718e7cbe9fdc",
+      "name": "Supabase - Indexar documento",
+      "credentials": {
+        "supabaseApi": {
+          "id": "t9ooeyY4jMueUlYS",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "fuente",
+                "value": "={{ $json.nombre }}"
+              },
+              {
+                "name": "drive_file_id",
+                "value": "={{ $json.drive_file_id }}"
+              },
+              {
+                "name": "content_hash",
+                "value": "={{ $json.content_hash }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        215856,
+        -59040
+      ],
+      "id": "a6c8aad0-0d12-4ef9-9938-8bba0417a787",
+      "name": "Cargador de documento"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        215904,
+        -58896
+      ],
+      "id": "fd559482-a79b-4f4f-8845-b8c8b65d303f",
+      "name": "Fragmentador (Chunking)"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "28f422d5-7232-4656-b34a-5d437bde3791",
+      "name": "Embeddings Ingesta",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        215728,
+        -59040
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Ingesta documental (Google Drive -> Supabase)\nCada archivo nuevo o modificado se descarga y se calcula su hash SHA-256. Los repetidos dentro de la misma ejecución se agrupan.\n\nLas cargas que ya existen también pasan por similitud semántica y aprobación humana para permitir reemplazos o renombrados controlados. Cuando la similitud detecta una posible versión anterior (>= 0.88), el flujo se pausa y solicita aprobación humana por Slack antes de indexar o borrar. Aprobar indexa la nueva versión y luego elimina únicamente los chunks de la versión anterior identificada. Rechazar conserva la base vectorial actual sin modificarla. Si no hay similitud suficiente, se indexa como documento nuevo y no se borran versiones previas automáticamente.\n\nCarpeta: https://drive.google.com/drive/folders/1cvpNiEXw8ExzD4ZUOwpKy7CJuarBQbzx",
+        "height": 260,
+        "width": 460,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        214208,
+        -59552
+      ],
+      "id": "e1fcb1f2-86e7-4e21-9a76-ffe6de4c5ea7",
+      "name": "Nota - Ingesta"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1cvpNiEXw8ExzD4ZUOwpKy7CJuarBQbzx",
+          "mode": "id",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1cvpNiEXw8ExzD4ZUOwpKy7CJuarBQbzx",
+          "cachedResultName": "Base de conocimiento GustoBot"
+        },
+        "event": "fileUpdated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        213680,
+        -59120
+      ],
+      "id": "278736d4-6b83-4801-8a7e-96a23bee6354",
+      "name": "Drive Trigger - Documento modificado",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "7LUlaiAt8Hce7aZS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "norm-file-id",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "norm-file-name",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        213872,
+        -59248
+      ],
+      "id": "f7297be5-9a60-4694-b01c-7ccd47d42274",
+      "name": "Normalizar archivo"
+    },
+    {
+      "parameters": {
+        "jsCode": "function sha256(d){\nconst K=[],H=[];\nfor(let n=2;K.length<64;n++){let p=true;for(let i=2;i*i<=n;i++)if(n%i===0){p=false;break;}if(!p)continue;K.push(Math.floor((Math.cbrt(n)%1)*4294967296)>>>0);if(H.length<8)H.push(Math.floor((Math.sqrt(n)%1)*4294967296)>>>0);}\nconst len=d.length,total=((len+9+63)>>6)<<6;\nconst m=new Uint8Array(total);m.set(d);m[len]=0x80;\nconst dv=new DataView(m.buffer);\ndv.setUint32(total-8,Math.floor(len/536870912));dv.setUint32(total-4,(len<<3)>>>0);\nconst w=new Uint32Array(64);\nconst r=(x,n)=>(x>>>n)|(x<<(32-n));\nfor(let o=0;o<total;o+=64){\nfor(let i=0;i<16;i++)w[i]=dv.getUint32(o+i*4);\nfor(let i=16;i<64;i++){const a=r(w[i-15],7)^r(w[i-15],18)^(w[i-15]>>>3),b=r(w[i-2],17)^r(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+a+w[i-7]+b)>>>0;}\nlet [A,B,C,D,E,F,G,I]=H;\nfor(let i=0;i<64;i++){const t1=(I+(r(E,6)^r(E,11)^r(E,25))+((E&F)^(~E&G))+K[i]+w[i])>>>0;const t2=((r(A,2)^r(A,13)^r(A,22))+((A&B)^(A&C)^(B&C)))>>>0;I=G;G=F;F=E;E=(D+t1)>>>0;D=C;C=B;B=A;A=(t1+t2)>>>0;}\nH[0]=(H[0]+A)>>>0;H[1]=(H[1]+B)>>>0;H[2]=(H[2]+C)>>>0;H[3]=(H[3]+D)>>>0;H[4]=(H[4]+E)>>>0;H[5]=(H[5]+F)>>>0;H[6]=(H[6]+G)>>>0;H[7]=(H[7]+I)>>>0;\n}\nreturn H.map(x=>x.toString(16).padStart(8,'0')).join('');\n}\nconst base = $('Normalizar archivo').all();\nconst items = $input.all();\nconst out = [];\nfor (let i = 0; i < items.length; i++) {\n  const buffer = await this.helpers.getBinaryDataBuffer(i, 'data');\n  const content_hash = sha256(new Uint8Array(buffer));\n  out.push({\n    json: { drive_file_id: base[i].json.id, nombre: base[i].json.name, content_hash },\n    binary: items[i].binary,\n  });\n}\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        214192,
+        -59248
+      ],
+      "id": "6b45f35e-8837-43b9-b8a0-de76b667a1f4",
+      "name": "Calcular hash"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "document_chunks",
+        "limit": 1,
+        "filterType": "string",
+        "filterString": "=and=(metadata->>drive_file_id.eq.{{ $json.drive_file_id }},metadata->>content_hash.eq.{{ $json.content_hash }})"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        214352,
+        -59248
+      ],
+      "id": "2e9d6051-2e81-4d75-8043-96ceecdcc232",
+      "name": "Buscar contenido idéntico",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "t9ooeyY4jMueUlYS",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const vistos = new Set();\nconst out = [];\nfor (const a of $('Calcular hash').all()) {\n  // Las cargas existentes también pasan a similitud y HITL para permitir reemplazos o renombrados aprobados.\n  const cargaKey = `${a.json.drive_file_id}:${a.json.content_hash}:${String(a.json.nombre || '')}`;\n  if (vistos.has(cargaKey)) continue;\n  vistos.add(cargaKey);\n  out.push({ json: a.json, binary: a.binary });\n}\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        214496,
+        -59248
+      ],
+      "id": "14321e76-e1bb-4e42-9782-567e667ba46f",
+      "name": "Filtrar duplicados"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        214656,
+        -59248
+      ],
+      "id": "a7394136-1e2a-4ec8-b224-c42eb6bbb4fe",
+      "name": "Extraer texto PDF"
+    },
+    {
+      "parameters": {
+        "jsCode": "const archivos = $('Filtrar duplicados').all();\nconst textos = $input.all();\nif (archivos.length !== textos.length) {\n  throw new Error(`La cantidad de textos extraídos (${textos.length}) no coincide con los archivos (${archivos.length}).`);\n}\nreturn archivos.map((a, i) => {\n  const t = String((textos[i] && textos[i].json && textos[i].json.text) || '').replace(/\\s+/g, ' ').trim();\n  if (!t) throw new Error(`No se pudo extraer texto del PDF \"${a.json.nombre}\"; se conserva la versión ya indexada.`);\n  return { json: { ...a.json, query: t.slice(0, 1000) }, binary: a.binary };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        214816,
+        -59248
+      ],
+      "id": "cfce596e-e274-4f5a-a49f-16ac76cd1769",
+      "name": "Primer fragmento"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": {
+          "__rl": true,
+          "value": "document_chunks",
+          "mode": "list",
+          "cachedResultName": "document_chunks"
+        },
+        "prompt": "={{ $json.query }}",
+        "topK": 1,
+        "options": {
+          "queryName": "match_document_chunks"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        214976,
+        -59248
+      ],
+      "id": "a96d588b-c469-4c73-95da-a3bd2b2004fc",
+      "name": "Buscar documento similar",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "t9ooeyY4jMueUlYS",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const UMBRAL = 0.88;\nconst archivos = $('Primer fragmento').all();\nconst similares = {};\nfor (const r of $input.all()) {\n  const idx = r.pairedItem && r.pairedItem.item !== undefined ? r.pairedItem.item : (Array.isArray(r.pairedItem) ? r.pairedItem[0].item : undefined);\n  const doc = r.json.document || {};\n  const score = Number(r.json.score);\n  const id = doc.metadata && doc.metadata.drive_file_id;\n  if (idx === undefined || !id || !(score >= UMBRAL)) continue;\n  similares[idx] = { id, score };\n}\nreturn archivos.map((a, i) => ({\n  json: {\n    ...a.json,\n    reemplazar_id: similares[i] ? similares[i].id : '__ninguno__',\n    reemplazo_score: similares[i] ? similares[i].score : 0,\n    requiere_revision_reemplazo: Boolean(similares[i]),\n  },\n  binary: a.binary,\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        215248,
+        -59248
+      ],
+      "id": "ec1a337e-b9a1-472f-8a0c-0ba11795f170",
+      "name": "Resolver reemplazos"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "92f0aaee-55dd-4923-8d76-7e7b05ec42d9",
+      "name": "Embeddings Búsqueda",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        215056,
+        -59056
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "document_chunks",
+        "filterType": "string",
+        "filterString": "=metadata->>drive_file_id=eq.{{ $json.reemplazar_id }}"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        215424,
+        -59248
+      ],
+      "id": "8dcffcd9-f905-4a34-bf19-3f1265cd6622",
+      "name": "Borrar chunks anteriores",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "t9ooeyY4jMueUlYS",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Resolver reemplazos').all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        215584,
+        -59248
+      ],
+      "id": "e90c1b57-d62e-4fc6-bc00-480ee79241af",
+      "name": "Restaurar archivos"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Resolver reemplazos').all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        216096,
+        -59248
+      ],
+      "id": "109570df-390f-4028-b7de-43f897e359bd",
+      "name": "Restaurar contexto para limpieza"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "bd21e997-0f0e-4f72-a845-22577cf7e07a",
+      "name": "Embeddings2",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        216528,
+        -58800
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Session_ID": "={{ $('Entrada multicanal').item.json.usuario_id }}",
+            "timestamp": "={{ new Date().toISOString() }}",
+            "original_input": "={{ String($('Entrada multicanal').item.json.mensaje ?? '').slice(0, 4000) }}",
+            "Resumen_Consolidado": "Solicitud pendiente de aprobación humana por Slack.",
+            "Estado_Caso": "={{ 'HITL_PENDING|' + $json.hitl_request_id + '|' + $json.hitl_expires_at }}",
+            "Datos_Clave": "={{ 'request_id=' + $json.hitl_request_id + ';canal=' + $('Entrada multicanal').item.json.canal + ';expires=' + $json.hitl_expires_at }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "risk",
+              "displayName": "risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "worker",
+              "displayName": "worker",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "respuesta",
+              "displayName": "respuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "requires_human",
+              "displayName": "requires_human",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "human_decision",
+              "displayName": "human_decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha_Actualizacion",
+              "displayName": "Fecha_Actualizacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen_Consolidado",
+              "displayName": "Resumen_Consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado_Caso",
+              "displayName": "Estado_Caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Datos_Clave",
+              "displayName": "Datos_Clave",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        216864,
+        -60112
+      ],
+      "id": "d46654cf-0dc6-47a7-91f2-b53c8a2c2afa",
+      "name": "HITL - Registrar solicitud",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "hitl-approval-command",
+              "leftValue": "={{ /^(APROBAR|RECHAZAR)\\s+HITL\\s+[A-Z0-9-]+/i.test(String($json.mensaje ?? '')) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        214768,
+        -59552
+      ],
+      "id": "408ba30d-8147-482f-ba42-3599b9dee4f8",
+      "name": "¿Es aprobación HITL?"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = String($json.mensaje || '').trim();\nconst match = raw.match(/^(APROBAR|RECHAZAR)\\s+HITL\\s+([A-Z0-9-]+)/i);\nif (!match) throw new Error('Comando HITL inválido. Usá APROBAR HITL <código> o RECHAZAR HITL <código>.');\nreturn [{json: {\n  hitl_request_id: match[2].toUpperCase(),\n  human_decision: match[1].toUpperCase() === 'APROBAR' ? 'APPROVED' : 'REJECTED',\n  canal: $json.canal,\n  usuario_id: $json.usuario_id,\n  mensaje: raw,\n  received_at: new Date().toISOString(),\n}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        215312,
+        -59472
+      ],
+      "id": "2ce13835-d471-4680-a2f8-30c5712686d4",
+      "name": "HITL - Interpretar aprobación"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        215520,
+        -59472
+      ],
+      "id": "fd164be7-13f1-4435-aaa8-cb29c7387114",
+      "name": "HITL - Buscar solicitudes",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const requestId = $('HITL - Interpretar aprobación').first().json.hitl_request_id;\nconst decision = $('HITL - Interpretar aprobación').first().json.human_decision;\nconst now = Date.now();\nconst rows = $input.all().map(item => item.json);\nconst match = rows.reverse().find(row => String(row.Estado_Caso || '').startsWith(`HITL_PENDING|${requestId}|`));\nif (!match) {\n  return [{json: {status: 'not_found', respuesta: `No encontré una solicitud HITL pendiente con el código ${requestId}.`, requires_human: false}}];\n}\nconst expires = String(match.Estado_Caso).split('|')[2];\nif (!expires || Date.parse(expires) < now) {\n  return [{json: {status: 'expired', respuesta: `La solicitud ${requestId} venció después de 30 minutos.`, requires_human: false}}];\n}\nreturn [{json: {\n  status: decision === 'APPROVED' ? 'approved' : 'rejected',\n  worker: 'HITL',\n  respuesta: decision === 'APPROVED'\n    ? `Solicitud ${requestId} aprobada. Revisá y enviá la respuesta propuesta del caso original.`\n    : `Solicitud ${requestId} rechazada. El caso queda pendiente de corrección.`,\n  requires_human: false,\n  human_decision: decision,\n  hitl_request_id: requestId,\n  session_id: match.Session_ID || '',\n}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        215728,
+        -59472
+      ],
+      "id": "c5a48459-6dbf-495d-8c3a-8a80b290f11b",
+      "name": "HITL - Resolver aprobación"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $('Entrada multicanal').first().json.slack_channel_id || 'C0C9MH644BZ' }}",
+          "mode": "id"
+        },
+        "text": "={{ $('HITL - Preparar decisión Slack').first().json.respuesta }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $json.thread_ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        216096,
+        -59392
+      ],
+      "id": "d78a5251-808f-41e6-99f0-fe415a046524",
+      "name": "HITL - Responder aprobación",
+      "webhookId": "c97eb359-94a6-49ea-8586-c3661ae7f597",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y",
+          "mode": "list",
+          "cachedResultName": "Logs_Ejecucion_GustoBot",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Log_ejecucion",
+          "cachedResultUrl": "[https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit#gid=0)"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Estado_Caso": "={{ 'HITL_' + $json.human_decision + '|' + $json.hitl_request_id }}",
+            "human_decision": "={{ $json.human_decision }}",
+            "Fecha_Actualizacion": "={{ $json.received_at || $now }}",
+            "Session_ID": "={{ $json.session_id }}"
+          },
+          "matchingColumns": [
+            "Session_ID"
+          ],
+          "schema": [
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha_Actualizacion",
+              "displayName": "Fecha_Actualizacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen_Consolidado",
+              "displayName": "Resumen_Consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado_Caso",
+              "displayName": "Estado_Caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        216032,
+        -59616
+      ],
+      "id": "5c814146-b77e-48de-863a-11be7fc6f4d0",
+      "name": "HITL - Actualizar decisión",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "valid-hitl-decision",
+              "leftValue": "={{ ['approved', 'rejected'].includes($json.status) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        215872,
+        -59472
+      ],
+      "id": "9ff26416-4269-4390-a4e5-825fb2de3881",
+      "name": "¿Aprobación HITL válida?"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json.data || {};\nconst expires = $('Preparar HITL / Unknown').first().json.hitl_expires_at;\nconst approved = data.approved === true;\nconst respondedAt = data.respondedAt || new Date().toISOString();\nconst expired = !expires || Date.parse(expires) < Date.parse(respondedAt);\nconst decision = expired ? 'EXPIRED' : (approved ? 'APPROVED' : 'REJECTED');\nreturn [{json: {\n  status: expired ? 'expired' : (approved ? 'approved' : 'rejected'),\n  worker: 'HITL',\n  respuesta: expired\n    ? 'La solicitud de revisión humana venció después de 30 minutos.'\n    : (approved\n      ? 'La solicitud fue aprobada por el responsable en Slack y continuará por el flujo automático.'\n      : 'La solicitud fue rechazada y queda derivada a revisión humana y contacto directo.'),\n  requires_human: false,\n  human_decision: decision,\n  hitl_request_id: $('Preparar HITL / Unknown').first().json.hitl_request_id,\n  session_id: $('Entrada multicanal').first().json.usuario_id,\n  received_at: respondedAt,\n  responder_id: data.responder && data.responder.id ? data.responder.id : '',\n}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        217360,
+        -60144
+      ],
+      "id": "7b559936-e9a6-4635-ae27-91bea0ad3ed0",
+      "name": "HITL - Preparar decisión Slack"
+    },
+    {
+      "parameters": {
+        "jsCode": "const decision = $('HITL - Preparar decisión Slack').first().json;\nconst classification = $('Normalizar clasificacion Router').first().json;\nconst input = $('Entrada multicanal').first().json;\nreturn [{json: {\n  ...classification,\n  original_input: classification.original_input || input.mensaje,\n  canal: input.canal,\n  usuario_id: input.usuario_id,\n  asunto: input.asunto,\n  thread_ts: input.thread_ts,\n  session_id: input.session_id || input.usuario_id,\n  human_decision: decision.human_decision,\n  hitl_request_id: decision.hitl_request_id,\n}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        216528,
+        -59184
+      ],
+      "id": "bd265b81-e5e5-46f5-91c1-65369129d231",
+      "name": "HITL - Restaurar solicitud aprobada"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "hitl-approved",
+              "leftValue": "={{ $json.human_decision === 'APPROVED' }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        216480,
+        -59616
+      ],
+      "id": "2f378524-c096-4b79-8a1b-346cb7250d6f",
+      "name": "¿HITL aprobó envío automático?"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a98f8e19-73ce-47d8-98e6-816e2cddcaac",
+      "name": "Embeddings12",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        144576,
+        -66240
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "875ea253-233d-425b-9b85-9eb17eb2509c",
+      "name": "Embeddings13",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        172864,
+        -65040
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "requires-replacement-review",
+              "leftValue": "={{ $json.requiere_revision_reemplazo === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        215424,
+        -59040
+      ],
+      "id": "eb38f153-abb3-42f3-9f5c-7926223e02ea",
+      "name": "¿Requiere aprobación de reemplazo?"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "user": {
+          "__rl": true,
+          "value": "U0CA4R8ANTT",
+          "mode": "list",
+          "cachedResultName": "Marcelo (@mtroncoso29)"
+        },
+        "message": "=⚠️ REVISIÓN DE REEMPLAZO DOCUMENTAL\nArchivo nuevo: {{ $('Resolver reemplazos').item.json.nombre }}\nArchivo anterior detectado: {{ $('Resolver reemplazos').item.json.reemplazar_id }}\nSimilitud: {{ Math.round($('Resolver reemplazos').item.json.reemplazo_score * 100) }}%\n\nAprobar: indexar la nueva versión y eliminar los chunks anteriores.\nRechazar: conservar la base vectorial actual sin modificarla.",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "captureResponder": true,
+        "approvers": [
+          "U0CA4R8ANTT"
+        ],
+        "unauthorizedReplyText": "Solo Marcelo puede aprobar este reemplazo.",
+        "options": {
+          "includeLinkToWorkflow": false
+        },
+        "resource": "message",
+        "responseType": "approval",
+        "postDecisionBehavior": "showOutcome",
+        "text": "=⚠️ REVISIÓN DE REEMPLAZO DOCUMENTAL\nArchivo nuevo: {{ $('Resolver reemplazos').item.json.nombre }}\nArchivo anterior detectado: {{ $('Resolver reemplazos').item.json.reemplazar_id }}\nSimilitud: {{ Math.round($('Resolver reemplazos').item.json.reemplazo_score * 100) }}%\n\nAprobar: indexar la nueva versión y eliminar los chunks anteriores.\nRechazar: conservar la base vectorial actual sin modificarla."
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        215680,
+        -58912
+      ],
+      "id": "edb20120-c822-4d65-9137-22dcdc0a6317",
+      "name": "HITL - Aprobar reemplazo documental",
+      "webhookId": "a60ebd5e-60cd-41f5-aacd-bc05f8830f06",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "replacement-approved",
+              "leftValue": "={{ $json.data && $json.data.approved === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        215936,
+        -58912
+      ],
+      "id": "196ea40d-9b06-4cde-a736-d4d0d704c533",
+      "name": "¿Reemplazo documental aprobado?"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        216192,
+        -58800
+      ],
+      "id": "4bab8aea-b957-4c29-a7e0-3db3f1692923",
+      "name": "Conservar base actual - reemplazo rechazado"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Embeddings": {
+      "ai_embedding": [
+        []
+      ]
+    },
+    "Embeddings1": {
+      "ai_embedding": [
+        []
+      ]
+    },
+    "Chat de Slack": {
+      "main": [
+        [
+          {
+            "node": "Entrada multicanal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger (Entrante)": {
+      "main": [
+        [
+          {
+            "node": "① IF — ¿Es Auto-reply?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "① IF — ¿Es Auto-reply?": {
+      "main": [
+        [
+          {
+            "node": "Stop - Auto-reply ignorado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "④ Set — Limpiar Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "④ Set — Limpiar Payload": {
+      "main": [
+        [
+          {
+            "node": "¿Email válido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Email válido?": {
+      "main": [
+        [
+          {
+            "node": "② Look up — Buscar Contacto CRM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop - Email inválido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "② Look up — Buscar Contacto CRM": {
+      "main": [
+        [
+          {
+            "node": "Contacto existe en CRM?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta  a Slack": {
+      "main": [
+        [
+          {
+            "node": "Cuenta Log de Ejecucion sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es respuesta de correo?": {
+      "main": [
+        [
+          {
+            "node": "Preparar envío de respuesta Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar payload mínimo Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar envío de respuesta Gmail": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Enviar respuesta automática",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Enviar respuesta automática": {
+      "main": [
+        [
+          {
+            "node": "Cuenta Log de Ejecucion sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar payload mínimo Slack": {
+      "main": [
+        [
+          {
+            "node": "Respuesta  a Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar clasificacion Router": {
+      "main": [
+        [
+          {
+            "node": "¿Requiere HITL?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Requiere HITL?": {
+      "main": [
+        [
+          {
+            "node": "Preparar HITL / Unknown",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Call Worker_Registrar_Pedido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Worker_Atencion_Consultas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Worker_Atencion_Reclamos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Worker_Anfitrion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar consulta documental",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar respuesta final": {
+      "main": [
+        [
+          {
+            "node": "Log de ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log de ejecución": {
+      "main": [
+        [
+          {
+            "node": "Log de Ejecucion sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar HITL / Unknown": {
+      "main": [
+        [
+          {
+            "node": "HITL - Registrar solicitud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta  a Slack1": {
+      "main": [
+        [
+          {
+            "node": "HITL - Preparar decisión Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es HITL de correo?": {
+      "main": [
+        [
+          {
+            "node": "Preparar borrador HITL Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HITL - Responder aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar borrador HITL Gmail": {
+      "main": [
+        [
+          {
+            "node": "③ Create Draft — Borrador HITL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Worker_Registrar_Pedido": {
+      "main": [
+        [
+          {
+            "node": "Preparar respuesta final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Worker_Atencion_Consultas": {
+      "main": [
+        [
+          {
+            "node": "Preparar respuesta final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Worker_Atencion_Reclamos": {
+      "main": [
+        [
+          {
+            "node": "Preparar respuesta final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Worker_Anfitrion": {
+      "main": [
+        [
+          {
+            "node": "Preparar respuesta final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Router IA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Router IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log de Ejecucion sheet": {
+      "main": [
+        [
+          {
+            "node": "¿Es respuesta de correo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoria in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cuenta Log de Ejecucion sheet1": {
+      "main": [
+        [
+          {
+            "node": "conversación > 5 mensajes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualiza log in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Analitico",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "conversación > 5 mensajes": {
+      "main": [
+        [
+          {
+            "node": "Limit a un registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit a un registro": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Analitico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HubSpot - Update contacto": {
+      "main": [
+        [
+          {
+            "node": "⑤ Restaurar Payload Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HubSpot - Create contacto": {
+      "main": [
+        [
+          {
+            "node": "⑤ Restaurar Payload Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⑤ Restaurar Payload Gmail": {
+      "main": [
+        [
+          {
+            "node": "Entrada multicanal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contacto existe en CRM?": {
+      "main": [
+        [
+          {
+            "node": "HubSpot - Update contacto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HubSpot - Create contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Router OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Router IA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Analitico OpenAI Chat": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Analitico",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router IA": {
+      "main": [
+        [
+          {
+            "node": "Normalizar clasificacion Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar consulta documental": {
+      "main": [
+        [
+          {
+            "node": "Vector Store Supabase - Recuperar documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar contexto documental": {
+      "main": [
+        [
+          {
+            "node": "¿Hay contexto documental?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay contexto documental?": {
+      "main": [
+        [
+          {
+            "node": "Responder consulta documental",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin contexto documental",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder consulta documental": {
+      "main": [
+        [
+          {
+            "node": "Formatear respuesta RAG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sin contexto documental": {
+      "main": [
+        [
+          {
+            "node": "Formatear respuesta RAG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear respuesta RAG": {
+      "main": [
+        [
+          {
+            "node": "Preparar respuesta final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo RAG OpenAI Chat": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Responder consulta documental",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive Trigger - Nuevo documento": {
+      "main": [
+        [
+          {
+            "node": "Normalizar archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive Trigger - Documento modificado": {
+      "main": [
+        [
+          {
+            "node": "Normalizar archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar archivo": {
+      "main": [
+        [
+          {
+            "node": "Drive - Descargar documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive - Descargar documento": {
+      "main": [
+        [
+          {
+            "node": "Calcular hash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular hash": {
+      "main": [
+        [
+          {
+            "node": "Buscar contenido idéntico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar contenido idéntico": {
+      "main": [
+        [
+          {
+            "node": "Filtrar duplicados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar duplicados": {
+      "main": [
+        [
+          {
+            "node": "Extraer texto PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer texto PDF": {
+      "main": [
+        [
+          {
+            "node": "Primer fragmento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Primer fragmento": {
+      "main": [
+        [
+          {
+            "node": "Buscar documento similar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar documento similar": {
+      "main": [
+        [
+          {
+            "node": "Resolver reemplazos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Búsqueda": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Buscar documento similar",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolver reemplazos": {
+      "main": [
+        [
+          {
+            "node": "¿Requiere aprobación de reemplazo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restaurar archivos": {
+      "main": [
+        [
+          {
+            "node": "Supabase - Indexar documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Borrar chunks anteriores": {
+      "main": [
+        [
+          {
+            "node": "Restaurar archivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restaurar contexto para limpieza": {
+      "main": [
+        [
+          {
+            "node": "Borrar chunks anteriores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase - Indexar documento": {
+      "main": []
+    },
+    "Cargador de documento": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase - Indexar documento",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fragmentador (Chunking)": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Cargador de documento",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ingesta": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase - Indexar documento",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Vector Store Supabase - Recuperar documentos",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entrada multicanal": {
+      "main": [
+        [
+          {
+            "node": "¿Es aprobación HITL?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es aprobación HITL?": {
+      "main": [
+        [
+          {
+            "node": "HITL - Interpretar aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Memoria in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Interpretar aprobación": {
+      "main": [
+        [
+          {
+            "node": "HITL - Buscar solicitudes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Buscar solicitudes": {
+      "main": [
+        [
+          {
+            "node": "HITL - Resolver aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Resolver aprobación": {
+      "main": [
+        [
+          {
+            "node": "¿Aprobación HITL válida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Registrar solicitud": {
+      "main": [
+        [
+          {
+            "node": "Respuesta  a Slack1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Supabase - Recuperar documentos": {
+      "main": [
+        [
+          {
+            "node": "Preparar contexto documental",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Actualizar decisión": {
+      "main": [
+        [
+          {
+            "node": "¿HITL aprobó envío automático?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Aprobación HITL válida?": {
+      "main": [
+        [
+          {
+            "node": "HITL - Actualizar decisión",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HITL - Responder aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Preparar decisión Slack": {
+      "main": [
+        [
+          {
+            "node": "HITL - Actualizar decisión",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿HITL aprobó envío automático?": {
+      "main": [
+        [
+          {
+            "node": "HITL - Restaurar solicitud aprobada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "¿Es HITL de correo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Restaurar solicitud aprobada": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Requiere aprobación de reemplazo?": {
+      "main": [
+        [
+          {
+            "node": "HITL - Aprobar reemplazo documental",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Restaurar archivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Aprobar reemplazo documental": {
+      "main": [
+        [
+          {
+            "node": "¿Reemplazo documental aprobado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Reemplazo documental aprobado?": {
+      "main": [
+        [
+          {
+            "node": "Restaurar contexto para limpieza",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Conservar base actual - reemplazo rechazado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "e73e89e7-4d24-4058-8b65-bd552a1d1059",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
+  },
+  "nodeGroups": [],
+  "id": "jgxK7CQJkn3s0l4t",
+  "tags": []
+}
