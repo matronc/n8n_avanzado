@@ -1,0 +1,645 @@
+{
+  "name": "Checkpoint 6 - Slack Channel Module",
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
+  },
+  "nodeGroups": [],
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const match = Object.entries(item.binary ?? {}).find(([, file]) =>\n    (file.mimeType ?? '').toLowerCase().startsWith('audio/') ||\n    /\\.(ogg|oga|opus|mp3|wav|m4a|webm|aac|flac)$/i.test(file.fileName ?? '')\n  );\n  if (!match) throw new Error('Slack audio attachment was not present in binary data.');\n  return { json: item.json, binary: { data: match[1] } };\n});"
+      },
+      "id": "78779857-86be-419d-afb1-ecebca8ddb72",
+      "name": "Slack - Extract audio binary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        310.0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => ({ json: item.json }));"
+      },
+      "id": "3010b30a-3db8-4ef6-ba95-2d9d3349538f",
+      "name": "Privacy - Drop incoming audio",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        310.0
+      ]
+    },
+    {
+      "parameters": {
+        "trigger": [
+          "message",
+          "file_share"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0C9MH644BZ",
+          "mode": "list",
+          "cachedResultName": "gestor-pedidos"
+        },
+        "downloadFiles": true,
+        "options": {
+          "userIds": [
+            "U0CA4S3TCDP"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        190.0
+      ],
+      "id": "df98970b-a9ed-447f-917e-06defe6ee56b",
+      "name": "Chat de Slack",
+      "webhookId": "913caa95-fef5-4ac3-9d3e-a79ec0c47195",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => ({ json: item.json }));"
+      },
+      "id": "2220e099-2286-4d3c-a217-7d5dd06e3ba2",
+      "name": "Privacy - Drop failed input audio",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        70.0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "824ac843-01e8-4eaa-b55d-9bdf11d3fe97",
+              "leftValue": "={{ typeof $json.text === 'string' ? $json.text.trim() : '' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9deb7cb3-b9ad-4e90-bb2a-aaac740600b5",
+      "name": "IF - Transcription valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        360,
+        190.0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b9ed681a-4c7e-40d7-bd6a-fb28f8820820",
+              "leftValue": "={{ String($json.text ?? '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ac6fb062-628c-42bb-9d2e-18420b74b0ec",
+      "name": "IF - Slack text",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        70.0
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $('Chat de Slack').first().json.channel }}",
+          "mode": "id"
+        },
+        "text": "No pude transcribir el audio. Envía una nota de voz más clara o escribe tu consulta.",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Chat de Slack').first().json.ts ?? '' }}"
+            }
+          }
+        }
+      },
+      "id": "d01455c6-3fe4-4a9e-b559-764676e278e3",
+      "name": "Slack - Audio transcription fallback",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        720,
+        70.0
+      ],
+      "webhookId": "97132f27-a5c3-4cf9-bfef-0e970a468710",
+      "credentials": {
+        "slackApi": {
+          "id": "PHcr43Mb8P966pB8",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "058ddb9d-3972-4166-a052-0f076eb8b366",
+      "name": "NoOp - Ignore unsupported Slack file",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        70.0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "es"
+        }
+      },
+      "id": "c86f682b-3198-4a93-be18-146fd04a4fa5",
+      "name": "OpenAI Whisper - Transcribir audio Slack",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        -360,
+        310.0
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "slack-voice-text",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "slack-voice-user",
+              "name": "user",
+              "value": "={{ $('Chat de Slack').first().json.user ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "slack-voice-channel",
+              "name": "canal",
+              "value": "slack",
+              "type": "string"
+            },
+            {
+              "id": "slack-voice-channel-id",
+              "name": "channel",
+              "value": "={{ $('Chat de Slack').first().json.channel ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "slack-voice-thread",
+              "name": "ts",
+              "value": "={{ $('Chat de Slack').first().json.ts ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "slack-voice-input-type",
+              "name": "tipo_entrada",
+              "value": "audio",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fb5f6589-664b-484f-bdf0-569c981137df",
+      "name": "Slack - Prepare voice input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        310.0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14cd9093-2e26-4129-b6ca-46f38467bf7b",
+              "leftValue": "={{ Object.values($binary ?? {}).some(file => (file.mimeType ?? '').toLowerCase().startsWith('audio/') || /\\.(ogg|oga|opus|mp3|wav|m4a|webm|aac|flac)$/i.test(file.fileName ?? '')) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0036c9f1-19ec-4638-936f-6ad4f072d391",
+      "name": "IF - Slack audio",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1080,
+        190.0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "r2J1TG0XqjmYF9FX",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/r2J1TG0XqjmYF9FX",
+          "cachedResultName": "Checkpoint 6 Final - RAG + Voice AI Telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "mensaje": "={{ String($json.mensaje ?? \"\") }}",
+            "original_input": "={{ String($json.original_input ?? \"\") }}",
+            "usuario_id": "={{ String($json.usuario_id ?? \"\") }}",
+            "canal": "={{ String($json.canal ?? \"\") }}",
+            "tipo_entrada": "={{ String($json.tipo_entrada ?? \"\") }}",
+            "chat_id": "={{ String($json.chat_id ?? \"\") }}",
+            "Session_ID": "={{ String($json.Session_ID ?? \"\") }}",
+            "source_message_id": "={{ String($json.source_message_id ?? \"\") }}",
+            "asunto": "={{ String($json.asunto ?? \"\") }}",
+            "thread_ts": "={{ String($json.thread_ts ?? \"\") }}",
+            "slack_channel_id": "={{ String($json.slack_channel_id ?? \"\") }}"
+          },
+          "matchingColumns": [
+            "mensaje"
+          ],
+          "schema": [
+            {
+              "id": "mensaje",
+              "displayName": "mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "usuario_id",
+              "displayName": "usuario_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "tipo_entrada",
+              "displayName": "tipo_entrada",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "source_message_id",
+              "displayName": "source_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "asunto",
+              "displayName": "asunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "thread_ts",
+              "displayName": "thread_ts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "slack_channel_id",
+              "displayName": "slack_channel_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "c9e75b52-79b8-4f6c-85fe-db1df43fbf99",
+      "name": "Call - Core Conversation Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        1440,
+        190.0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Checkpoint 6 - Slack Channel Module\nCanal de entrada y validación local. Envía al workflow central un payload normalizado; la respuesta se procesa en el workflow central.",
+        "height": 130,
+        "width": 430,
+        "color": 5
+      },
+      "id": "16eb2e35-f5cf-4bce-bcd0-eef7fb8a8fdb",
+      "name": "Module - Checkpoint 6 - Slack Channel Module",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        -310
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item=$json; const text=String(item.mensaje ?? item.text ?? item.body_text ?? item.snippet ?? '').trim(); const user=String(item.usuario_id ?? item.user ?? item.user_id ?? ''); return [{json:{mensaje:text,original_input:text,usuario_id:user,canal:'slack',tipo_entrada:String(item.tipo_entrada ?? 'texto'),chat_id:'',Session_ID:String(item.Session_ID ?? item.session_id ?? (user ? `slack:${user}` : '')),source_message_id:String(item.source_message_id ?? item.ts ?? item.event_ts ?? ''),asunto:String(item.asunto ?? ''),thread_ts:String(item.thread_ts ?? item.ts ?? ''),slack_channel_id:String(item.slack_channel_id ?? item.channel ?? item.channel_id ?? '')}}];"
+      },
+      "id": "e7461680-235a-48ea-a995-e40ee088e875",
+      "name": "Prepare - Core Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1080,
+        190.0
+      ]
+    }
+  ],
+  "connections": {
+    "Chat de Slack": {
+      "main": [
+        [
+          {
+            "node": "IF - Slack audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Slack audio": {
+      "main": [
+        [
+          {
+            "node": "Slack - Extract audio binary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF - Slack text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Slack text": {
+      "main": [
+        [
+          {
+            "node": "Prepare - Core Payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp - Ignore unsupported Slack file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack - Extract audio binary": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Whisper - Transcribir audio Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Whisper - Transcribir audio Slack": {
+      "main": [
+        [
+          {
+            "node": "Privacy - Drop incoming audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Privacy - Drop failed input audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Privacy - Drop incoming audio": {
+      "main": [
+        [
+          {
+            "node": "IF - Transcription valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Privacy - Drop failed input audio": {
+      "main": [
+        [
+          {
+            "node": "Slack - Audio transcription fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Transcription valid": {
+      "main": [
+        [
+          {
+            "node": "Slack - Prepare voice input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack - Audio transcription fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack - Prepare voice input": {
+      "main": [
+        [
+          {
+            "node": "Prepare - Core Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare - Core Payload": {
+      "main": [
+        [
+          {
+            "node": "Call - Core Conversation Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "id": "0469febf51ac4ccd",
+  "versionId": "ebd48020-6205-42a9-8a79-592f11c4555d",
+  "tags": []
+}

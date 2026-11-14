@@ -1,0 +1,474 @@
+{
+  "name": "Checkpoint 6 - Telegram Voice Module",
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
+  },
+  "nodeGroups": [],
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(() => ({ json: { chat_id: $('Telegram Voice - Trigger').first().json.message.chat.id } }));"
+      },
+      "id": "76d8df29-11d9-4949-8050-96e6f5cc09ce",
+      "name": "Telegram Voice - Drop failed audio",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "es"
+        }
+      },
+      "id": "c5e97086-1cb9-4b2f-830f-aaa02a2fe154",
+      "name": "Telegram Voice - Whisper es",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        1140,
+        0
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "cffe1ea9-f50e-4b95-85e3-41c24b6db91a",
+      "name": "Telegram Voice - Get File",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        760,
+        0
+      ],
+      "webhookId": "198a2122-575e-472e-82ef-c95c11ea2276",
+      "credentials": {
+        "telegramApi": {
+          "id": "EdDPfHyWHFeAgpqn",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ !!$json.message?.voice?.file_id }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a0c3af92-3987-4bd7-9bca-0d8efc20b8a5",
+      "name": "Telegram Voice - IF voice input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        380,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ String($json.text ?? '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a526c67b-2ee1-4e19-b4c1-412ff8504012",
+      "name": "Telegram Voice - IF transcription valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const trigger = $('Telegram Voice - Trigger').first().json;\nconst text = String($json.text ?? '').trim();\nif (!text) throw new Error('La transcripción de Telegram está vacía.');\nreturn [{ json: { mensaje: text, original_input: text, tipo_entrada: 'audio', canal: 'telegram', usuario_id: `telegram:${trigger.message.chat.id}`, chat_id: trigger.message.chat.id, Session_ID: `telegram:${trigger.message.chat.id}`, source_message_id: trigger.message.message_id ?? '' } }];"
+      },
+      "id": "702210d2-b4ec-42d6-b117-8c404a6d18dc",
+      "name": "Telegram Voice - Prepare multichannel",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "c2335a8e-6fe2-4217-9f20-1c45f3a39651",
+      "name": "Telegram Voice - Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "e53ceb86-7922-4c3b-a75b-bce61bc03343",
+      "credentials": {
+        "telegramApi": {
+          "id": "EdDPfHyWHFeAgpqn",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Voice - Trigger').first().json.message.chat.id }}",
+        "text": "No pude interpretar la nota de voz. Enviá un audio más claro o escribí tu consulta.",
+        "additionalFields": {}
+      },
+      "id": "47f0b941-391a-49ab-bccc-bf2c36634b5a",
+      "name": "Telegram Voice - Input fallback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1900,
+        360
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "EdDPfHyWHFeAgpqn",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "r2J1TG0XqjmYF9FX",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/r2J1TG0XqjmYF9FX",
+          "cachedResultName": "Checkpoint 6 Final - RAG + Voice AI Telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "mensaje": "={{ String($json.mensaje ?? \"\") }}",
+            "original_input": "={{ String($json.original_input ?? \"\") }}",
+            "usuario_id": "={{ String($json.usuario_id ?? \"\") }}",
+            "canal": "={{ String($json.canal ?? \"\") }}",
+            "tipo_entrada": "={{ String($json.tipo_entrada ?? \"\") }}",
+            "chat_id": "={{ String($json.chat_id ?? \"\") }}",
+            "Session_ID": "={{ String($json.Session_ID ?? \"\") }}",
+            "source_message_id": "={{ String($json.source_message_id ?? \"\") }}",
+            "asunto": "={{ String($json.asunto ?? \"\") }}",
+            "thread_ts": "={{ String($json.thread_ts ?? \"\") }}",
+            "slack_channel_id": "={{ String($json.slack_channel_id ?? \"\") }}"
+          },
+          "matchingColumns": [
+            "mensaje"
+          ],
+          "schema": [
+            {
+              "id": "mensaje",
+              "displayName": "mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "usuario_id",
+              "displayName": "usuario_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "tipo_entrada",
+              "displayName": "tipo_entrada",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "source_message_id",
+              "displayName": "source_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "asunto",
+              "displayName": "asunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "thread_ts",
+              "displayName": "thread_ts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "slack_channel_id",
+              "displayName": "slack_channel_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "06d04bd3-22c3-4287-820b-da7b088aaa61",
+      "name": "Call - Core Conversation Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        2280,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Telegram Voice\nEntrada de voz, descarga temporal, Whisper en español, validación y llamada al workflow central. El binario solo circula dentro de este módulo.",
+        "height": 240,
+        "width": 560,
+        "color": 5
+      },
+      "id": "integrated-telegram-note-v2",
+      "name": "Module - Telegram Voice",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -520
+      ]
+    }
+  ],
+  "connections": {
+    "Telegram Voice - Trigger": {
+      "main": [
+        [
+          {
+            "node": "Telegram Voice - IF voice input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Voice - IF voice input": {
+      "main": [
+        [
+          {
+            "node": "Telegram Voice - Get File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Voice - Input fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Voice - Get File": {
+      "main": [
+        [
+          {
+            "node": "Telegram Voice - Whisper es",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Voice - Whisper es": {
+      "main": [
+        [
+          {
+            "node": "Telegram Voice - IF transcription valid",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Voice - Drop failed audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Voice - IF transcription valid": {
+      "main": [
+        [
+          {
+            "node": "Telegram Voice - Prepare multichannel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Voice - Drop failed audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Voice - Prepare multichannel": {
+      "main": [
+        [
+          {
+            "node": "Call - Core Conversation Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Voice - Drop failed audio": {
+      "main": [
+        [
+          {
+            "node": "Telegram Voice - Input fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "id": "1c5b010db88b4031",
+  "versionId": "7e94f717-e84e-47dc-9242-5244d03cccd6",
+  "tags": []
+}

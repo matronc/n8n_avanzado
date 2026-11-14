@@ -1,0 +1,672 @@
+{
+  "name": "Checkpoint 6 - Gmail Channel Module",
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
+  },
+  "nodeGroups": [],
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "restore-email-text",
+              "name": "text",
+              "value": "={{ $('④ Set — Limpiar Payload').first().json.body_text }}",
+              "type": "string"
+            },
+            {
+              "id": "restore-email-from",
+              "name": "from_email",
+              "value": "={{ $('④ Set — Limpiar Payload').first().json.from_email }}",
+              "type": "string"
+            },
+            {
+              "id": "restore-email-subject",
+              "name": "subject_clean",
+              "value": "={{ $('④ Set — Limpiar Payload').first().json.subject_clean }}",
+              "type": "string"
+            },
+            {
+              "id": "restore-email-channel",
+              "name": "canal",
+              "value": "email",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        900,
+        190.0
+      ],
+      "id": "b8f178fe-fe21-4b23-b331-7c3f4e0ef1e4",
+      "name": "⑤ Restaurar Payload Gmail"
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "operation": "create"
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        540,
+        70.0
+      ],
+      "id": "1784d79a-297c-4ce1-b7c2-27933a22ff2e",
+      "name": "HubSpot - Create contacto",
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "viDsT9qEaokSqye6",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "operation": "search",
+        "filterGroupsUi": {
+          "filterGroupsValues": [
+            {
+              "filtersUi": {
+                "filterValues": [
+                  {
+                    "propertyName": "email",
+                    "value": "={{ $json.from_email }}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        -180,
+        310.0
+      ],
+      "id": "8f1ae9fd-c1f8-48ff-82fd-5278ccb12bd0",
+      "name": "② Look up — Buscar Contacto CRM",
+      "alwaysOutputData": true,
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "viDsT9qEaokSqye6",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-clean-1",
+              "name": "from_email",
+              "value": "={{ $json.from?.value?.[0]?.address ?? $json.from ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "set-clean-2",
+              "name": "subject_clean",
+              "value": "={{ $json.subject ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "set-clean-3",
+              "name": "body_text",
+              "value": "={{ $json.textPlain ?? $json.text ?? $json.snippet ?? '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -900,
+        310.0
+      ],
+      "id": "6877e14b-c39a-470b-aa2c-f80d986605b0",
+      "name": "④ Set — Limpiar Payload"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-autoreply-1",
+              "leftValue": "={{ $json.subject ?? '' }}",
+              "rightValue": "Auto-reply",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "cond-autoreply-2",
+              "leftValue": "={{ $json.subject ?? '' }}",
+              "rightValue": "Out of office",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "cond-autoreply-3",
+              "leftValue": "={{ $json.subject ?? '' }}",
+              "rightValue": "Undeliverable",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "cond-autoreply-4",
+              "leftValue": "={{ $json.from?.value?.[0]?.address ?? $json.from ?? '' }}",
+              "rightValue": "no-reply@",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1260,
+        190.0
+      ],
+      "id": "a3074660-cbd6-4fe0-b295-173bbea9b27c",
+      "name": "① IF — ¿Es Auto-reply?"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        70.0
+      ],
+      "id": "6eca34c1-0537-40c8-a44c-d54881bd716c",
+      "name": "Stop - Email inválido"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "condition-valid-email",
+              "leftValue": "={{ /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(String($json.from_email ?? '').trim()) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -540,
+        190.0
+      ],
+      "id": "32dd372c-82ea-4774-b06a-594b7718c1f4",
+      "name": "¿Email válido?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-contact-exists",
+              "leftValue": "={{ Boolean($json.id) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        180,
+        190.0
+      ],
+      "id": "e5d3ebae-172d-448d-a0e2-73891064c7e5",
+      "name": "Contacto existe en CRM?"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "readStatus": "unread"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1620,
+        190.0
+      ],
+      "id": "d4b8ddfc-ac53-499d-b8ce-e7847f574462",
+      "name": "Gmail Trigger (Entrante)",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "47YZOyE3fJxMkCAe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "operation": "createOrUpdate"
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        540,
+        310.0
+      ],
+      "id": "1c964857-80bc-4945-9938-6431e7bfed12",
+      "name": "HubSpot - Update contacto",
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "viDsT9qEaokSqye6",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        70.0
+      ],
+      "id": "8e2b2d3a-d9ec-4082-abc0-151e9dfbeb18",
+      "name": "Stop - Auto-reply ignorado"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "r2J1TG0XqjmYF9FX",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/r2J1TG0XqjmYF9FX",
+          "cachedResultName": "Checkpoint 6 Final - RAG + Voice AI Telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "mensaje": "={{ String($json.mensaje ?? \"\") }}",
+            "original_input": "={{ String($json.original_input ?? \"\") }}",
+            "usuario_id": "={{ String($json.usuario_id ?? \"\") }}",
+            "canal": "={{ String($json.canal ?? \"\") }}",
+            "tipo_entrada": "={{ String($json.tipo_entrada ?? \"\") }}",
+            "chat_id": "={{ String($json.chat_id ?? \"\") }}",
+            "Session_ID": "={{ String($json.Session_ID ?? \"\") }}",
+            "source_message_id": "={{ String($json.source_message_id ?? \"\") }}",
+            "asunto": "={{ String($json.asunto ?? \"\") }}",
+            "thread_ts": "={{ String($json.thread_ts ?? \"\") }}",
+            "slack_channel_id": "={{ String($json.slack_channel_id ?? \"\") }}"
+          },
+          "matchingColumns": [
+            "mensaje"
+          ],
+          "schema": [
+            {
+              "id": "mensaje",
+              "displayName": "mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "original_input",
+              "displayName": "original_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "usuario_id",
+              "displayName": "usuario_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "tipo_entrada",
+              "displayName": "tipo_entrada",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "source_message_id",
+              "displayName": "source_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "asunto",
+              "displayName": "asunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "thread_ts",
+              "displayName": "thread_ts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            },
+            {
+              "id": "slack_channel_id",
+              "displayName": "slack_channel_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": false,
+              "removed": false,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "ee7d4f46-4f8f-48c3-91b6-aec05affa189",
+      "name": "Call - Core Conversation Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        1620,
+        190.0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Checkpoint 6 - Gmail Channel Module\nCanal de entrada y validación local. Envía al workflow central un payload normalizado; la respuesta se procesa en el workflow central.",
+        "height": 130,
+        "width": 430,
+        "color": 5
+      },
+      "id": "ed764c18-13f9-46d0-b363-7dbba486a473",
+      "name": "Module - Checkpoint 6 - Gmail Channel Module",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1620,
+        -310
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item=$json; const text=String(item.mensaje ?? item.text ?? item.body_text ?? item.snippet ?? '').trim(); const email=String(item.usuario_id ?? item.from_email ?? item.from ?? ''); return [{json:{mensaje:text,original_input:text,usuario_id:email,canal:'email',tipo_entrada:'texto',chat_id:'',Session_ID:String(item.Session_ID ?? item.session_id ?? (email ? `email:${email}` : '')),source_message_id:String(item.source_message_id ?? item.id ?? item.messageId ?? ''),asunto:String(item.asunto ?? item.subject_clean ?? item.subject ?? ''),thread_ts:String(item.thread_ts ?? item.threadId ?? ''),slack_channel_id:''}}];"
+      },
+      "id": "5189e095-8eb3-44ab-95f5-7ee9659ec8b9",
+      "name": "Prepare - Core Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        190.0
+      ]
+    }
+  ],
+  "connections": {
+    "Gmail Trigger (Entrante)": {
+      "main": [
+        [
+          {
+            "node": "① IF — ¿Es Auto-reply?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "① IF — ¿Es Auto-reply?": {
+      "main": [
+        [
+          {
+            "node": "Stop - Auto-reply ignorado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "④ Set — Limpiar Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "④ Set — Limpiar Payload": {
+      "main": [
+        [
+          {
+            "node": "¿Email válido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Email válido?": {
+      "main": [
+        [
+          {
+            "node": "② Look up — Buscar Contacto CRM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop - Email inválido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "② Look up — Buscar Contacto CRM": {
+      "main": [
+        [
+          {
+            "node": "Contacto existe en CRM?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HubSpot - Update contacto": {
+      "main": [
+        [
+          {
+            "node": "⑤ Restaurar Payload Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HubSpot - Create contacto": {
+      "main": [
+        [
+          {
+            "node": "⑤ Restaurar Payload Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⑤ Restaurar Payload Gmail": {
+      "main": [
+        [
+          {
+            "node": "Prepare - Core Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contacto existe en CRM?": {
+      "main": [
+        [
+          {
+            "node": "HubSpot - Update contacto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HubSpot - Create contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare - Core Payload": {
+      "main": [
+        [
+          {
+            "node": "Call - Core Conversation Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "id": "4306c60b683149ae",
+  "versionId": "5bf64820-aecd-43ba-b728-dc179f92e972",
+  "tags": []
+}
