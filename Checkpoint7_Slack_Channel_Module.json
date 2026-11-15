@@ -1,5 +1,5 @@
 {
-  "name": "Checkpoint 6 - Slack Channel Module",
+  "name": "Checkpoint 7 - Slack Channel Module",
   "pinData": {},
   "settings": {
     "executionOrder": "v1",
@@ -54,11 +54,7 @@
           "cachedResultName": "gestor-pedidos"
         },
         "downloadFiles": true,
-        "options": {
-          "userIds": [
-            "U0CA4S3TCDP"
-          ]
-        }
+        "options": {}
       },
       "type": "n8n-nodes-base.slackTrigger",
       "typeVersion": 1,
@@ -75,6 +71,51 @@
           "name": "Slack account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ignore-slack-bot-events",
+              "leftValue": "={{ !$json.bot_id && !$json.bot_profile && $json.user !== 'U0CA4S3TCDP' && !['bot_message', 'message_changed', 'message_deleted'].includes($json.subtype ?? '') }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f46ee2e2-f768-40c1-bc60-8abc22ce4728",
+      "name": "IF - Ignore Slack bot events",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1260,
+        190.0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "12d056d2-8b2e-4ab7-bd4b-56f70c84a0a9",
+      "name": "NoOp - Ignore Slack bot event",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1080,
+        430.0
+      ]
     },
     {
       "parameters": {
@@ -320,7 +361,7 @@
           "value": "r2J1TG0XqjmYF9FX",
           "mode": "list",
           "cachedResultUrl": "/workflow/r2J1TG0XqjmYF9FX",
-          "cachedResultName": "Checkpoint 6 Final - RAG + Voice AI Telegram"
+          "cachedResultName": "Checkpoint 7 Final - RAG + Voice AI Telegram"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -470,13 +511,13 @@
     },
     {
       "parameters": {
-        "content": "## Checkpoint 6 - Slack Channel Module\nCanal de entrada y validación local. Envía al workflow central un payload normalizado; la respuesta se procesa en el workflow central.",
+        "content": "## Checkpoint 7 - Slack Channel Module\nCanal de entrada y validación local. Envía al workflow central un payload normalizado; la respuesta se procesa en el workflow central.",
         "height": 130,
         "width": 430,
         "color": 5
       },
       "id": "16eb2e35-f5cf-4bce-bcd0-eef7fb8a8fdb",
-      "name": "Module - Checkpoint 6 - Slack Channel Module",
+      "name": "Module - Checkpoint 7 - Slack Channel Module",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
@@ -503,7 +544,25 @@
       "main": [
         [
           {
+            "node": "IF - Ignore Slack bot events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Ignore Slack bot events": {
+      "main": [
+        [
+          {
             "node": "IF - Slack audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp - Ignore Slack bot event",
             "type": "main",
             "index": 0
           }

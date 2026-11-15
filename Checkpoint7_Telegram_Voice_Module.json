@@ -1,5 +1,5 @@
 {
-  "name": "Checkpoint 6 - Telegram Voice Module",
+  "name": "Checkpoint 7 - Telegram Voice Module",
   "pinData": {},
   "settings": {
     "executionOrder": "v1",
@@ -202,7 +202,7 @@
           "value": "r2J1TG0XqjmYF9FX",
           "mode": "list",
           "cachedResultUrl": "/workflow/r2J1TG0XqjmYF9FX",
-          "cachedResultName": "Checkpoint 6 Final - RAG + Voice AI Telegram"
+          "cachedResultName": "Checkpoint 7 Final - RAG + Voice AI Telegram"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",

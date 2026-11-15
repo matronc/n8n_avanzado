@@ -3,62 +3,23 @@
   "nodes": [
     {
       "parameters": {
-        "model": "openai/gpt-oss-20b",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
-      "position": [
-        -304,
-        1328
-      ],
-      "id": "42b13fdc-800c-4b99-b4b3-cccd6e27c249",
-      "name": "Groq Chat Model3",
-      "credentials": {
-        "groqApi": {
-          "id": "6eReWjCTpmf2SxR0",
-          "name": "Groq account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "const raw = $json.text ?? $json.output ?? $json.response ?? '';\nlet d;\ntry {\n  const clean = String(raw).replace(/^```json\\s*/i, '').replace(/```$/,'').trim();\n  d = JSON.parse(clean);\n} catch (e) {\n  // Si no es un JSON, asumimos que el agente respondió con texto plano conversacional\n  d = {\n    status: 'success',\n    worker: 'CONSULTAS',\n    respuesta: String(raw),\n    requires_human: false\n  };\n}\nreturn [{ json: {\n  status: d.status ?? 'success',\n  worker: d.worker ?? 'CONSULTAS',\n  respuesta: d.respuesta ?? '',\n  requires_human: Boolean(d.requires_human)\n} }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        336,
-        1120
-      ],
-      "id": "0ee1b0f1-1056-4f59-8f33-b7dfe3aec3f7",
-      "name": "Contrato de salida3"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.original_input }}",
-        "options": {
-          "systemMessage": "[ROL Y ÁMBITO]\nEres el Agente Anfitrión de \"GustoBot\", el asistente virtual del restaurante. Te activas únicamente cuando el mensaje del usuario es ambiguo, fuera de contexto o clasificado como \"UNKNOWN\" (saludos generales, comentarios fuera de tema o consultas no reconocidas).\n\nTu objetivo es dar una bienvenida cálida, empatizar y guiarlos amablemente hacia los servicios principales del restaurante para que el sistema pueda ayudarles.\n\n[REGLAS DE OPERACIÓN]\n1. Saluda amablemente y preséntate como el asistente de \"GustoBot\".\n2. Reconoce la entrada del usuario con cortesía y explícale brevemente las opciones disponibles en el restaurante:\n   - 🍜 **Consultar el Menú:** Platos de comida china, rápida, bebestibles, precios e ingredientes.\n   - 🛒 **Realizar un Pedido:** Registrar una nueva orden de comida.\n   - 📦 **Estado de Pedido:** Ver en qué etapa se encuentra una orden.\n   - 🛠️ **Soporte y Reclamos:** Reportar inconvenientes con un pedido anterior.\n3. Invita al usuario a formular su mensaje o pregunta enfocada en una de estas opciones para asistirlo de inmediato.\n\n[ESTILO Y COMUNICACIÓN]\n- Mantén un tono sumamente hospitalario, claro, breve y servicial.\n- No utilices lenguaje inclusivo con terminaciones en -e, -x o @.\n- Evita asumir intenciones: haz que el usuario elija o aclare su necesidad de forma natural.",
-          "maxIterations": 5
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3.1,
-      "position": [
-        -304,
-        1120
-      ],
-      "id": "a5e0bbf8-08ff-4509-998a-69e108e7f482",
-      "name": "Agente de Anfitrion"
-    },
-    {
-      "parameters": {
         "workflowInputs": {
           "values": [
             {
               "name": "original_input",
               "type": "any"
+            },
+            {
+              "name": "canal",
+              "type": "string"
+            },
+            {
+              "name": "tipo_entrada",
+              "type": "string"
+            },
+            {
+              "name": "human_decision",
+              "type": "string"
             }
           ]
         }
@@ -71,37 +32,93 @@
         -512,
         1120
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.text ?? $json.output ?? $json.response ?? '';\nreturn [{json:{status:'success',worker:'ANFITRION',respuesta:String(raw),requires_human:false,evidence:[],human_decision:String($('Start').first().json.human_decision??'')}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        1072
+      ],
+      "id": "a74f96fa-985e-4815-8600-4b89c31b807c",
+      "name": "Contrato de salida3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.original_input + ($json.tipo_entrada === \"audio\" ? \"\\n\\nCanal de respuesta: audio (Slack).\" : \"\") }}",
+        "options": {
+          "systemMessage": "[GUARDRAIL DE SEGURIDAD Y ALCANCE - MÁXIMA PRIORIDAD]\n- Atiende únicamente saludos y mensajes realmente ambiguos con una pregunta breve para aclarar qué necesita la persona. No intentes resolver una solicitud operativa que no comprendes.\n- No consultes ni afirmes el estado de pedidos, disponibilidad, ingredientes, precios, políticas, pagos o tiempos: no tienes herramientas ni evidencia para verificarlos. Puedes indicar qué tipo de consulta puede hacer el usuario, sin asegurar que una opción está disponible.\n- Si el mensaje menciona alergia o riesgo de salud/seguridad, enfermedad, objeto extraño, reembolso o compensación, fraude/cobro disputado, amenaza/reclamo legal, o cancelar/cambiar un pedido o reclamo, no redactes una respuesta sustantiva ni indiques una resolución. Pide disculpas brevemente e informa que una persona del equipo continuará la atención.\n- No inventes acciones ya realizadas, confirmaciones, compromisos ni datos del restaurante. Si falta contexto, pregunta; si el tema es sensible, deriva.\n\n[ROL Y ÁMBITO]\nEres el Agente Anfitrión de \"GustoBot\", el asistente virtual del restaurante. Te activas cuando el mensaje es ambiguo, está fuera de contexto o se clasifica como UNKNOWN.\n\nTu objetivo es dar una bienvenida cálida, empatizar y guiar amablemente a la persona hacia los servicios principales del restaurante.\n\n[REGLAS DE OPERACIÓN]\n1. Saluda amablemente y preséntate como el asistente de GustoBot.\n2. Explica brevemente que puedes ayudar con el menú, realizar un pedido, consultar el estado de un pedido o recibir un reclamo operativo.\n3. Si no queda clara la necesidad, haz una pregunta breve. No afirmes que una opción, ingrediente, precio o acción está disponible o fue ejecutada sin evidencia.\n4. Ante salud, seguridad, alergias, reembolsos, dinero o reclamos legales, no des una respuesta sustantiva; informa que una persona continuará la atención.\n\n[ESTILO Y COMUNICACIÓN]\n- Mantén un tono hospitalario, claro, breve y servicial.\n- No utilices lenguaje inclusivo con terminaciones en -e, -x o @.\n- Evita asumir intenciones: invita a la persona a aclarar qué necesita.\n\n[RESPUESTAS DE VOZ] Si el mensaje indica \"Canal de respuesta: audio (Slack).\", responde en español claro con un máximo de 200 caracteres, sin enlaces, viñetas ni emojis.",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -256,
+        1072
+      ],
+      "id": "b1ffaf9d-d8d9-44a6-8fca-43018fcc85bb",
+      "name": "Agente de Anfitrión"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -256,
+        1248
+      ],
+      "id": "794dd8ec-a08e-432a-b172-5c4819ac668a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
-    "Groq Chat Model3": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Agente de Anfitrion",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Agente de Anfitrion": {
+    "Start": {
       "main": [
         [
           {
-            "node": "Contrato de salida3",
+            "node": "Agente de Anfitrión",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Start": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de Anfitrión",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de Anfitrión": {
       "main": [
         [
           {
-            "node": "Agente de Anfitrion",
+            "node": "Contrato de salida3",
             "type": "main",
             "index": 0
           }
@@ -114,8 +131,9 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "8cf1ae52-83e6-429c-8bad-bf98f406651f",
+  "versionId": "82bc536f-fb29-4e46-97eb-10902855864f",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
   },
   "nodeGroups": [],

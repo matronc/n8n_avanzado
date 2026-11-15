@@ -1,5 +1,5 @@
 {
-  "name": "Checkpoint 6 - Gmail Channel Module",
+  "name": "Checkpoint 7 - Gmail Channel Module",
   "pinData": {},
   "settings": {
     "executionOrder": "v1",
@@ -354,7 +354,7 @@
           "value": "r2J1TG0XqjmYF9FX",
           "mode": "list",
           "cachedResultUrl": "/workflow/r2J1TG0XqjmYF9FX",
-          "cachedResultName": "Checkpoint 6 Final - RAG + Voice AI Telegram"
+          "cachedResultName": "Checkpoint 7 Final - RAG + Voice AI Telegram"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -504,13 +504,13 @@
     },
     {
       "parameters": {
-        "content": "## Checkpoint 6 - Gmail Channel Module\nCanal de entrada y validación local. Envía al workflow central un payload normalizado; la respuesta se procesa en el workflow central.",
+        "content": "## Checkpoint 7 - Gmail Channel Module\nCanal de entrada y validación local. Envía al workflow central un payload normalizado; la respuesta se procesa en el workflow central.",
         "height": 130,
         "width": 430,
         "color": 5
       },
       "id": "ed764c18-13f9-46d0-b363-7dbba486a473",
-      "name": "Module - Checkpoint 6 - Gmail Channel Module",
+      "name": "Module - Checkpoint 7 - Gmail Channel Module",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [

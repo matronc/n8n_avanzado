@@ -3,179 +3,66 @@
   "nodes": [
     {
       "parameters": {
-        "descriptionType": "manual",
-        "toolDescription": "Úsalo para registrar el pedido de un cliente en Google Sheets cuando se mencione el producto o la intención de compra.",
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c",
-          "mode": "list",
-          "cachedResultName": "Pedidos_GustoBot",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Pedidos",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "Fecha_Hora": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha_Hora', ``, 'string') }}",
-            "Nombre_Cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_Cliente', ``, 'string') }}",
-            "Contacto_Telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contacto_Telefono', ``, 'string') }}",
-            "Correo_Electronico": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Correo_Electronico', ``, 'string') }}",
-            "Canal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Canal', ``, 'string') }}",
-            "Pedido_Detalle": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pedido_Detalle', ``, 'string') }}",
-            "Notas_Especiales": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notas_Especiales', ``, 'string') }}",
-            "Estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado', ``, 'string') }}"
-          },
-          "matchingColumns": [],
-          "schema": [
+        "workflowInputs": {
+          "values": [
             {
-              "id": "Fecha_Hora",
-              "displayName": "Fecha_Hora",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "name": "original_input",
+              "type": "any"
             },
             {
-              "id": "Nombre_Cliente",
-              "displayName": "Nombre_Cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "name": "canal",
+              "type": "string"
             },
             {
-              "id": "Contacto_Telefono",
-              "displayName": "Contacto_Telefono",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "name": "tipo_entrada",
+              "type": "string"
             },
             {
-              "id": "Correo_Electronico",
-              "displayName": "Correo_Electronico",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Canal",
-              "displayName": "Canal",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Pedido_Detalle",
-              "displayName": "Pedido_Detalle",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Notas_Especiales",
-              "displayName": "Notas_Especiales",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Estado",
-              "displayName": "Estado",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "name": "human_decision",
+              "type": "string"
             }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheetsTool",
-      "typeVersion": 4.7,
-      "position": [
-        -160,
-        48
-      ],
-      "id": "f25e873d-bb41-41e0-871b-c35d6448b528",
-      "name": "Registrar_Pedido_Google_Sheets",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "021fhpPV07Yb1Noj",
-          "name": "Google Sheets account 4"
+          ]
         }
-      }
+      },
+      "id": "2e15964f-c47a-4f0f-b190-81f08e947d58",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -512,
+        -192
+      ]
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.original_input }}",
+        "text": "={{ $json.original_input + ($json.tipo_entrada === \"audio\" ? \"\\n\\nCanal de respuesta: audio; mantené la respuesta breve y fiel.\" : \"\") }}",
         "options": {
-          "systemMessage": "[ROL Y ÁMBITO]\nEres un Agente de Triaje y Gestión de Pedidos para el restaurante \"GustoBot\". Tu único ámbito es interpretar solicitudes de clientes en Slack, verificar la disponibilidad de los productos en la carta, validar la completitud de la información de contacto y registrar la orden limpia para que la cocina la procese.\n\nNO tienes autorización para: prometer tiempos exactos de entrega, aplicar descuentos no autorizados, cancelar pedidos previamente registrados, procesar cobros directos, modificar la carta de productos ni comprometer decisiones comerciales.\n\n[OBJETIVO OPERATIVO]\nConvertir cada solicitud válida en un registro estructurado con: fecha/hora, nombre completo del cliente, teléfono de contacto, correo electrónico, canal de origen, lista de productos válidos con sus cantidades, notas especiales y estado inicial de la orden.\n\n[REGLAS DE VALIDACIÓN Y USO DE HERRAMIENTAS]\n\n1. **VERIFICACIÓN OBLIGATORIA DE MENÚ:**\n   - Antes de registrar cualquier pedido, DEBES verificar que los productos solicitados existan en la carta oficial de GustoBot (Comida China, Hamburguesas, Papas Fritas, Bebidas, etc.).\n   - **NUNCA registres un producto que NO exista en el menú (ejemplo: \"Salchipapas\", \"Pizza\", \"Tacos\").**\n   - Si el cliente pide un producto no disponible:\n     * **NO ejecutes la herramienta `Registrar_Pedido_Google_Sheets`.**\n     * Informa amablemente que no disponen de ese producto en la carta y ofrece alternativas cercanas (ej: *\"Lamentablemente no contamos con Salchipapas en nuestro menú, pero tenemos papas fritas grandes o combos de comida china e hamburguesas. ¿Te gustaría ordenar alguno de ellos?\"*).\n\n2. **RESTRICCIÓN DE COMPLETITUD DE DATOS MÍNIMOS:**\n   - Para poder invocar la herramienta `Registrar_Pedido_Google_Sheets`, el mensaje del cliente DEBE contener obligatoriamente:\n     1. Al menos un producto VÁLIDO del menú.\n     2. El Nombre del cliente.\n     3. Un Número de teléfono de contacto (o correo electrónico).\n   - Si los productos son válidos pero **NO proporciona Nombre o Teléfono**, NO ejecutes la herramienta bajo ninguna circunstancia (NO uses \"No informado\").\n   - En su lugar, responde cortésmente solicitando los datos faltantes (ej: *\"¡Con gusto tomo tu pedido de 2 hamburguesas dobles! Para registrarlo, ¿me indicas tu nombre y un número de teléfono de contacto?\"*).\n\n3. **CONFIRMACIÓN FINAL:**\n   - Una vez que la herramienta `Registrar_Pedido_Google_Sheets` haya sido ejecutada con éxito, genera UNA SOLA respuesta de confirmación final para el cliente con el resumen de la orden y FINALIZA la ejecución.\n\n[PROTOCOLO DE ESCALAMIENTO / GUARDRAILS]\n- Si el cliente reporta alergias alimentarias severas, contaminación cruzada, reclamos por pedidos anteriores o solicita cambios en órdenes activas, responde respetuosamente: \"Tu caso requiere atención personalizada. Un operador humano del equipo tomará tu solicitud a la brevedad.\" y NO ejecutes registros automáticos.\n- Si el mensaje contiene lenguaje ofensivo o solicitudes fuera del ámbito gastronómico, detén el procesamiento y deriva a un operador.\n- Limítate a responder en la conversación de Slack.\n\n[ESTILO Y COMUNICACIÓN]\n- Escribe en español neutro, claro, amable y profesional.\n- No uses lenguaje inclusivo con terminaciones en -e, -x o @.\n- Sé breve, directo y enfocado en la eficiencia operativa.",
-          "maxIterations": 5
+          "systemMessage": "[ROL Y ÁMBITO]\nEres el especialista de pedidos de GustoBot. Verifica los productos en el menú oficial y prepara pedidos claros para registro. No cobres, no cambies precios, no canceles/modifiques órdenes existentes y no prometas tiempos.\n\n[SEGURIDAD Y VALIDACIÓN]\n- Verifica cada producto y su disponibilidad con Menu_Google_Sheets1. No inventes productos, precios, ingredientes ni disponibilidad.\n- No proceses pedidos con alergias severas, anafilaxia, riesgo de contaminación cruzada, posible intoxicación u otra señal de salud/seguridad. No garantices inocuidad; deriva a una persona.\n- Para iniciar un pedido, resume los productos y cantidades verificados y solicita el nombre y un teléfono o correo si faltan. No lo registres todavía ni digas que quedó registrado.\n- Solo prepara el registro si el mensaje actual comienza exactamente con `CONFIRMO PEDIDO:` y repite el pedido completo; los productos están verificados y hay nombre, contacto y detalle inequívocos. Un `sí`, `confirmo` o una confirmación de mensajes previos no basta.\n- La escritura la ejecuta un paso determinístico posterior solo cuando comprueba el prefijo y los campos obligatorios. No llames a una herramienta de escritura ni afirmes que el pedido se registró.\n- Si falta un dato, la evidencia del menú o se requiere intervención humana, devuelve `registro_solicitado:false`, `requires_human:true` cuando corresponda y explica qué debe completar la persona.\n\n[SALIDA]\nDevuelve exclusivamente un objeto JSON válido, sin Markdown, con esta estructura: {\"registro_solicitado\":false,\"requires_human\":false,\"respuesta\":\"Resumen o pregunta para el cliente\",\"pedido\":{\"Nombre_Cliente\":\"\",\"Contacto_Telefono\":\"\",\"Correo_Electronico\":\"\",\"Pedido_Detalle\":\"\",\"Notas_Especiales\":\"\"},\"evidence\":[{\"source\":\"Menu_Google_Sheets1\",\"quote\":\"cita textual de la fila consultada\"}]}. Usa `registro_solicitado:true` solo para una confirmación explícita, completa y verificada. La cita de evidence debe provenir de la herramienta; no la inventes. Mantén la respuesta breve en español.",
+          "maxIterations": 5,
+          "returnIntermediateSteps": true
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -304,
-        -192
+        -272,
+        -256
       ],
-      "id": "1a73ba52-dd68-4ef3-b9c0-7c636e7ed9ca",
+      "id": "55d35dd9-1acf-4548-99a5-1a4fabc51bd5",
       "name": "Agente de Pedidos"
     },
     {
       "parameters": {
-        "model": "openai/gpt-oss-20b",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
-      "position": [
-        -336,
-        32
-      ],
-      "id": "0ef06558-7d8b-4e1c-8f44-5861dc3853c0",
-      "name": "Groq Chat Model1",
-      "credentials": {
-        "groqApi": {
-          "id": "6eReWjCTpmf2SxR0",
-          "name": "Groq account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "const raw = $json.text ?? $json.output ?? $json.response ?? '';\nlet d;\ntry {\n  const clean = String(raw).replace(/^```json\\s*/i, '').replace(/```$/,'').trim();\n  d = JSON.parse(clean);\n} catch (e) {\n  // Si no es un JSON, tratamos el texto plano como un mensaje exitoso del agente\n  d = {\n    status: 'success',\n    worker: 'PEDIDOS',\n    respuesta: String(raw),\n    requires_human: false\n  };\n}\n\nreturn [{ json: {\n  status: d.status ?? 'success',\n  worker: d.worker ?? 'PEDIDOS',\n  respuesta: d.respuesta ?? '',\n  requires_human: Boolean(d.requires_human)\n} }];"
+        "jsCode": "const j=$json;\nreturn [{json:{\n  status:String(j.status??'error'),\n  worker:String(j.worker??'PEDIDOS'),\n  respuesta:String(j.respuesta??'No pude completar el pedido. No se registró.'),\n  requires_human:Boolean(j.requires_human),\n  pedido_registrado:Boolean(j.pedido_registrado),\n  evidence:Array.isArray(j.evidence)?j.evidence:[],\n  human_decision:String(j.human_decision??''),\n}}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        64,
-        -192
+        96,
+        -256
       ],
-      "id": "2d4500c6-5bb0-4134-8384-33db1e845dd6",
+      "id": "fe62176a-a970-4fe1-928e-bd36c83b0419",
       "name": "Contrato de salida"
     },
     {
@@ -201,10 +88,10 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        32,
-        48
+        64,
+        -16
       ],
-      "id": "2026d7ba-c66d-4aae-921c-e427504e5adc",
+      "id": "839cca3d-10fb-49cb-af00-1e328731b5d3",
       "name": "Menu_Google_Sheets1",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -215,33 +102,240 @@
     },
     {
       "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "original_input",
-              "type": "any"
-            }
-          ]
-        }
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
       },
-      "id": "2e15964f-c47a-4f0f-b190-81f08e947d58",
-      "typeVersion": 1.1,
-      "name": "Start",
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
       "position": [
-        -512,
+        -272,
+        -80
+      ],
+      "id": "045a9dc0-2f45-41b3-8578-1e9ec118e552",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c",
+          "mode": "list",
+          "cachedResultName": "Pedidos_GustoBot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIauiqRS1dviM6BVISADNyYmST6LbD9NcoHLTNf_B1c/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha_Hora": "={{ $json.pedido.Fecha_Hora }}",
+            "Nombre_Cliente": "={{ $json.pedido.Nombre_Cliente }}",
+            "Contacto_Telefono": "={{ $json.pedido.Contacto_Telefono }}",
+            "Correo_Electronico": "={{ $json.pedido.Correo_Electronico }}",
+            "Canal": "={{ $json.pedido.Canal }}",
+            "Pedido_Detalle": "={{ $json.pedido.Pedido_Detalle }}",
+            "Notas_Especiales": "={{ $json.pedido.Notas_Especiales }}",
+            "Estado": "={{ $json.pedido.Estado }}"
+          },
+          "matchingColumns": [
+            "Session_ID"
+          ],
+          "schema": [
+            {
+              "id": "Fecha_Hora",
+              "displayName": "Fecha_Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "Nombre_Cliente",
+              "displayName": "Nombre_Cliente",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "Contacto_Telefono",
+              "displayName": "Contacto_Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "Correo_Electronico",
+              "displayName": "Correo_Electronico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "Canal",
+              "displayName": "Canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "Pedido_Detalle",
+              "displayName": "Pedido_Detalle",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "Notas_Especiales",
+              "displayName": "Notas_Especiales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        570,
+        160
+      ],
+      "id": "58c199cf-0ccf-44e7-9e39-43a46cbb6a98",
+      "name": "Pedidos - Registrar confirmación explícita",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "021fhpPV07Yb1Noj",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const raw=$json.output??$json.text??$json.response??'';\nconst input=String($('Start').first().json.original_input??'');\nconst human_decision=String($('Start').first().json.human_decision??'');\nlet result;\ntry {\n  result=typeof raw==='object'&&raw!==null?raw:JSON.parse(String(raw).replace(/^```json\\s*/i,'').replace(/```$/,'').trim());\n} catch(error) {\n  return {json:{status:'error',worker:'PEDIDOS',requires_human:true,respuesta:'No pude validar el pedido con seguridad y no lo registré. Una persona revisará la solicitud.',evidence:[],human_decision}};\n}\nfunction isError(value) {\n  if (value && typeof value==='object' && !Array.isArray(value) && (value.error || value.success===false)) return true;\n  const text=typeof value==='string'?value:JSON.stringify(value??'');\n  return /^\\s*(error|failed|failure)\\b/i.test(text) || /\\b(no output data|no rows returned)\\b/i.test(text);\n}\nfunction isRow(value) {\n  return Boolean(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length&&!isError(value));\n}\nfunction rowsFromObservation(observation,depth=0) {\n  if(depth>6||observation==null||isError(observation)) return [];\n  let value=observation;\n  if(typeof value==='string') {\n    try { value=JSON.parse(value); } catch { return []; }\n  }\n  if(Array.isArray(value)) return value.flatMap(item=>rowsFromObservation(item,depth+1));\n  if(!value||typeof value!=='object') return [];\n  const keys=Object.keys(value);\n  if(keys.length===1&&['response','output','json'].includes(keys[0])) return rowsFromObservation(value[keys[0]],depth+1);\n  for(const key of ['data','results','rows']) {\n    if(keys.length<=2&&value[key]!==undefined) return rowsFromObservation(value[key],depth+1);\n  }\n  return isRow(value)?[value]:[];\n}\nconst evidence=[];\nfor (const step of Array.isArray($json.intermediateSteps)?$json.intermediateSteps:[]) {\n  const tool=String(step?.action?.tool??'');\n  if (tool!=='Menu_Google_Sheets1') continue;\n  for (const row of rowsFromObservation(step.observation)) evidence.push({source:tool,quote:JSON.stringify(row)});\n}\nconst evidenceValid=evidence.length>0;\nconst requestedHuman=Boolean(result.requires_human);\nconst order=result.pedido&&typeof result.pedido==='object'?result.pedido:{};\nconst explicit=/^\\s*CONFIRMO PEDIDO:/.test(input);\nconst name=String(order.Nombre_Cliente??'').trim();\nconst phone=String(order.Contacto_Telefono??'').trim();\nconst email=String(order.Correo_Electronico??'').trim();\nconst details=String(order.Pedido_Detalle??'').trim();\nconst contact=Boolean(phone||email);\nconst ready=explicit&&result.registro_solicitado===true&&!requestedHuman&&Boolean(name)&&contact&&Boolean(details)&&evidenceValid;\nif(ready) {\n  order.Fecha_Hora=new Date().toISOString();\n  order.Canal=String($('Start').first().json.canal??'');\n  order.Estado='Pendiente';\n  order.Notas_Especiales=String(order.Notas_Especiales??'No informado').trim()||'No informado';\n  return {json:{pedido_listo:true,status:'pending_write',worker:'PEDIDOS',requires_human:false,pedido:order,respuesta:'',evidence,human_decision}};\n}\nlet reason='';\nif(requestedHuman) reason='La solicitud requiere revisión humana; no registré el pedido.';\nelse if(!evidenceValid) reason='No pude verificar los productos con evidencia del menú, por lo que no registré el pedido.';\nelse if(!explicit) reason='Para evitar registros por error, todavía no registré el pedido.';\nelse if(!name) reason='Falta el nombre de quien realiza el pedido.';\nelse if(!contact) reason='Falta un teléfono o correo electrónico de contacto.';\nelse if(!details) reason='No pude confirmar los productos y cantidades.';\nelse reason='No pude verificar el pedido con seguridad.';\nconst confirmation=details?` Si está correcto, reenvíalo completo con el prefijo exacto CONFIRMO PEDIDO: ${details}, tu nombre y un teléfono o correo.`:' Reenvía el detalle completo del pedido con el prefijo exacto CONFIRMO PEDIDO:, tu nombre y un teléfono o correo.';\nreturn {json:{pedido_listo:false,status:'awaiting_confirmation',worker:'PEDIDOS',requires_human:requestedHuman||!evidenceValid,pedido:order,respuesta:`${reason}${confirmation}`,evidence,human_decision}};"
+      },
+      "id": "45e8bf79adf743adaff29448cc4fc3b8",
+      "name": "Pedido - Validar confirmación y preparar registro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        90,
         -192
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a86b10e93b7c4114abcebe3afcc8dec1",
+              "leftValue": "={{ $json.pedido_listo === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "08b0bb81936349d3aa55c8672fb99363",
+      "name": "Pedido - ¿Confirmación explícita válida?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        310,
+        -192
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const order=$('Pedido - Validar confirmación y preparar registro').first().json.pedido;\nconst validation=$('Pedido - Validar confirmación y preparar registro').first().json;\nconst result=$json;\nconst resultQuote=result&&typeof result==='object'&&Object.keys(result).length?JSON.stringify(result):'';\nconst resultText=typeof result==='string'?result:resultQuote;\nconst failed=result&&typeof result==='object'&&(result.error||result.success===false) || /^\\s*(error|failed|failure)\\b/i.test(resultText) || /\\b(no output data|no rows returned)\\b/i.test(resultText);\nif(!resultQuote||failed) return {json:{status:'needs_human',worker:'PEDIDOS',requires_human:true,respuesta:'El paso de registro terminó, pero no recibí una fila que permita verificar el resultado. No reenvíes el pedido hasta que una persona compruebe si quedó registrado.',pedido_registrado:false,evidence:validation.evidence,human_decision:validation.human_decision}};\nconst evidence=[...validation.evidence,{source:'Pedidos - Registrar confirmación explícita',quote:resultQuote}];\nreturn {json:{status:'success',worker:'PEDIDOS',requires_human:false,respuesta:`Tu pedido de ${order.Pedido_Detalle} quedó registrado.`,pedido_registrado:true,evidence,human_decision:validation.human_decision}};"
+      },
+      "id": "ed638658de9947358aa8595d4484758e",
+      "name": "Pedido - Confirmación registrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return {json:$json};"
+      },
+      "id": "c77ff93a11514a79a40b8457a5935ae0",
+      "name": "Pedido - Devolver sin registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        550,
+        -80
       ]
     }
   ],
   "pinData": {},
   "connections": {
-    "Registrar_Pedido_Google_Sheets": {
-      "ai_tool": [
+    "Start": {
+      "main": [
         [
           {
             "node": "Agente de Pedidos",
-            "type": "ai_tool",
+            "type": "main",
             "index": 0
           }
         ]
@@ -251,19 +345,8 @@
       "main": [
         [
           {
-            "node": "Contrato de salida",
+            "node": "Pedido - Validar confirmación y preparar registro",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Groq Chat Model1": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Agente de Pedidos",
-            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -280,16 +363,81 @@
         ]
       ]
     },
-    "Start": {
-      "main": [
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
         [
           {
             "node": "Agente de Pedidos",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido - Validar confirmación y preparar registro": {
+      "main": [
+        [
+          {
+            "node": "Pedido - ¿Confirmación explícita válida?",
             "type": "main",
             "index": 0
           }
         ]
       ]
+    },
+    "Pedido - ¿Confirmación explícita válida?": {
+      "main": [
+        [
+          {
+            "node": "Pedidos - Registrar confirmación explícita",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pedido - Devolver sin registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedidos - Registrar confirmación explícita": {
+      "main": [
+        [
+          {
+            "node": "Pedido - Confirmación registrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido - Confirmación registrada": {
+      "main": [
+        [
+          {
+            "node": "Contrato de salida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido - Devolver sin registrar": {
+      "main": [
+        [
+          {
+            "node": "Contrato de salida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contrato de salida": {
+      "main": []
     }
   },
   "active": true,
@@ -297,8 +445,9 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "6e7ca970-bac4-4865-ab24-cbf5deff4d78",
+  "versionId": "c13f5fa5-b7c9-4bb6-a422-e1e20dc35b57",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
   },
   "nodeGroups": [],

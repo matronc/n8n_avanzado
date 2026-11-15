@@ -3,59 +3,72 @@
   "nodes": [
     {
       "parameters": {
-        "model": "openai/gpt-oss-20b",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
-      "position": [
-        -288,
-        896
-      ],
-      "id": "62536c48-a283-42a8-8308-5e63917272f2",
-      "name": "Groq Chat Model2",
-      "credentials": {
-        "groqApi": {
-          "id": "6eReWjCTpmf2SxR0",
-          "name": "Groq account"
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "original_input",
+              "type": "any"
+            },
+            {
+              "name": "canal",
+              "type": "string"
+            },
+            {
+              "name": "tipo_entrada",
+              "type": "string"
+            },
+            {
+              "name": "human_decision",
+              "type": "string"
+            }
+          ]
         }
-      }
+      },
+      "id": "65a434d7-8bff-4e73-b539-68d0a1fd9690",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -496,
+        704
+      ]
     },
     {
       "parameters": {
-        "jsCode": "const raw = $json.text ?? $json.output ?? $json.response ?? '';\nlet d;\ntry {\n  const clean = String(raw).replace(/^```json\\s*/i, '').replace(/```$/,'').trim();\n  d = JSON.parse(clean);\n} catch (e) {\n  // Si no es un JSON, asumimos que el agente respondió con texto plano conversacional\n  d = {\n    status: 'success',\n    worker: 'CONSULTAS',\n    respuesta: String(raw),\n    requires_human: false\n  };\n}\nreturn [{ json: {\n  status: d.status ?? 'success',\n  worker: d.worker ?? 'CONSULTAS',\n  respuesta: d.respuesta ?? '',\n  requires_human: Boolean(d.requires_human)\n} }];"
+        "jsCode": "const raw=$json.text??$json.output??$json.response??'';\nlet d;\ntry {\n  const clean=String(raw).replace(/^```json\\s*/i,'').replace(/```$/,'').trim();\n  d=JSON.parse(clean);\n} catch(error) {\n  return [{json:{status:'error',worker:'RECLAMOS',respuesta:'No pude validar el reclamo con evidencia estructurada. Una persona continuará la atención.',requires_human:true,evidence:[]}}];\n}\nfunction isError(value) {\n  if(value&&typeof value==='object'&&!Array.isArray(value)&&(value.error||value.success===false)) return true;\n  const text=typeof value==='string'?value:JSON.stringify(value??'');\n  return /^\\s*(error|failed|failure)\\b/i.test(text)||/\\b(no output data|no rows returned)\\b/i.test(text);\n}\nfunction isRow(value) {\n  if(!value||typeof value!=='object'||Array.isArray(value)||!Object.keys(value).length||isError(value)) return false;\n  return Object.keys(value).some(key=>!['success','message'].includes(key.toLowerCase()));\n}\nfunction rowsFromObservation(observation,depth=0) {\n  if(depth>6||observation==null||isError(observation)) return [];\n  let value=observation;\n  if(typeof value==='string') {\n    try { value=JSON.parse(value); } catch { return []; }\n  }\n  if(Array.isArray(value)) return value.flatMap(item=>rowsFromObservation(item,depth+1));\n  if(!value||typeof value!=='object') return [];\n  const keys=Object.keys(value);\n  if(keys.length===1&&['response','output','json'].includes(keys[0])) return rowsFromObservation(value[keys[0]],depth+1);\n  for(const key of ['data','results','rows']) {\n    if(keys.length<=2&&value[key]!==undefined) return rowsFromObservation(value[key],depth+1);\n  }\n  return isRow(value)?[value]:[];\n}\nfunction quoteObservation(value) {\n  if(value==null||isError(value)) return '';\n  const quote=typeof value==='string'?value.trim():JSON.stringify(value);\n  return quote&&quote!=='{}'&&quote!=='[]'?quote:'';\n}\nconst evidence=[];\nfor(const step of Array.isArray($json.intermediateSteps)?$json.intermediateSteps:[]) {\n  const tool=String(step?.action?.tool??'');\n  if(tool==='Registrar_Reclamo_Google_Sheets') {\n    const quote=quoteObservation(step.observation);\n    if(quote) evidence.push({source:tool,quote});\n  } else if(tool==='Cosulta_Estado_Reclamo_Google_Sheets'||tool==='Actualizar/Cancelar_Reclamo_Google_Sheets') {\n    for(const row of rowsFromObservation(step.observation)) evidence.push({source:tool,quote:JSON.stringify(row)});\n  }\n}\nconst hasEvidence=evidence.length>0;\nconst hasWriteEvidence=evidence.some(item=>item.source==='Registrar_Reclamo_Google_Sheets');\nconst response=String(d.respuesta??'');\nconst normalizedResponse=response.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');\nconst claimsRegistration=/\\b(tu reclamo (?:ha quedado|quedo|fue|esta) registrado|he registrado (?:el )?reclamo|registre (?:el )?reclamo)\\b/.test(normalizedResponse);\nconst unsupportedRegistration=claimsRegistration&&!hasWriteEvidence;\nreturn [{json:{status:hasEvidence&&!unsupportedRegistration?(d.status??'success'):'needs_human',worker:'RECLAMOS',respuesta:unsupportedRegistration?'No pude verificar el registro con el resultado de la herramienta. Una persona comprobará el caso antes de responder.':response,requires_human:Boolean(d.requires_human)||!hasEvidence||unsupportedRegistration,evidence,human_decision:String($('Start').first().json.human_decision??'')}}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        80,
-        704
+        96,
+        640
       ],
-      "id": "97ef9b01-692a-48cc-8996-18a3af56328b",
+      "id": "c23f0a24-73d6-4ee4-bdfd-bbfaf08960c9",
       "name": "Contrato de salida2"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.original_input }}",
+        "text": "={{ $json.original_input + ($json.tipo_entrada === \"audio\" ? \"\\n\\nCanal de respuesta: audio (Slack).\" : \"\") }}",
         "options": {
-          "systemMessage": "[ROL Y ÁMBITO]\nEres un Agente de Empatía, Gestión de Reclamos y Soporte al Cliente para \"GustoBot\". Tu objetivo es acoger a los clientes con insatisfacciones o problemas con su pedido, registrar o consultar incidentes en la planilla \"Reclamos_GustoBot\" de forma inmediata y ofrecer soluciones claras o derivar a supervisión humana cuando corresponda.\n\nNO tienes autorización para: tomar nuevos pedidos de comida, modificar precios del menú ni procesar transacciones de pago.\n\n[REGLAS DE OPERACIÓN Y USO DE HERRAMIENTAS]\n\n1. **Ingreso Directo e Inmediato de Reclamos:**\n   - Tan pronto como el cliente mencione un problema o insatisfacción junto con su información básica (o si los datos ya vienen en su mensaje), **DEBES invocar OBLIGATORIAMENTE la herramienta `Registrar_Reclamo_Google_Sheets` en esa misma interacción**. No pospongas el registro pidiendo detalles adicionales si el cliente ya expresó un inconveniente.\n   - Mapea estrictamente los parámetros con los nombres exactos de las columnas de la planilla:\n     * `Fecha_Hora`: Timestamp actual en formato ISO.\n     * `Nombre_Cliente`: Nombre brindado por el cliente.\n     * `Contacto_Telefono`: Teléfono o celular de contacto.\n     * `Tipo_Incidente`: Categoría adecuada (ej: *Pedido Erróneo*, *Demora Excesiva*, *Comida en Mal Estado*, *Cobro Incorrecto*, *Otro*).\n     * `Detalle_Reclamo`: La descripción o queja expresada por el cliente.\n     * `Nivel_Urgencia`: Asigna exactamente uno de los valores: `ALTA`, `MEDIA` o `BAJA` (NUNCA envíes parámetros con nombres genéricos como \"Urgencia\").\n       - **ALTA:** Comida en mal estado, reacción alérgica, intoxicación o cobro duplicado/indebido.\n       - **MEDIA:** Pedido incompleto, platos incorrectos/cambiados o demora mayor a 45 minutos.\n       - **BAJA:** Demora leve, observaciones sobre empaque, temperatura o sugerencias.\n     * `Estado_Caso`: Asigna `\"Derivado a Humano\"` si la urgencia es ALTA, o `\"Abierto\"` para urgencias MEDIA o BAJA.\n\n2. **Consulta de Estado de Reclamos:**\n   - Si el cliente pregunta por el estado de un reclamo anterior, utiliza la herramienta `Consultar_Reclamo_Google_Sheets` buscando por su `Nombre_Cliente` o `Contacto_Telefono`.\n   - Informa de manera transparente el estado actual del caso (`Estado_Caso`: Abierto, En Revisión, Derivado a Humano, Resuelto, Cancelado).\n\n3. **Cancelación o Modificación de Reclamos:**\n   - Si el cliente solicita anular o cancelar su reclamo, busca el registro y utiliza la herramienta `Actualizar_Reclamo_Google_Sheets` para cambiar `Estado_Caso` a `\"Cancelado\"`.\n   - Confirma amablemente al cliente que el caso ha sido cerrado a su solicitud.\n\n[ESTILO Y COMUNICACIÓN]\n- Mantén siempre un tono sumamente empático, calmado, profesional, comprensivo y enfocado en dar soluciones rápida y tranquilizadoramente.\n- Discúlplate sinceramente en nombre del restaurante por el inconveniente ocasionado.\n- No utilices lenguaje inclusivo con terminaciones en -e, -x o @.\n- Confirma siempre al cliente de forma explícita que su reclamo o actualización fue ingresado exitosamente al sistema.",
-          "maxIterations": 5
+          "systemMessage": "[ROL]\nEres el especialista de recepción, clasificación y consulta de reclamos de GustoBot. Atiende con empatía, registra reclamos operativos rutinarios y consulta el estado de casos usando únicamente las herramientas conectadas.\n\n[LÍMITES DE AUTORIDAD Y SEGURIDAD]\n- No apruebes ni prometas reembolsos, dinero, cupones o compensaciones. No interpretes normas legales, no admitas responsabilidad y no cierres ni cambies el estado de un reclamo.\n- No registres ni respondas sustantivamente ante alergia severa, anafilaxia, posible intoxicación, enfermedad atribuida a un alimento, cuerpo extraño, amenaza legal, fraude o cobro disputado. Indica con empatía que una persona continuará la atención.\n- Para un reclamo rutinario, usa Registrar_Reclamo_Google_Sheets únicamente con el relato fiel y datos mínimos completos; no añadas inferencias. Si faltan datos, pídelos.\n- Usa las otras herramientas solo para leer estados o antecedentes. Aunque una herramienta conserve un nombre histórico de actualización/cancelación, es solo de lectura y nunca debe usarse para cambiar el caso. Las actualizaciones quedan a cargo de una persona.\n- Confirma el ingreso solo después de que la herramienta de registro termine correctamente. Si no se ejecutó o falló, dilo con claridad. No afirmes que una compensación o resolución fue aprobada.\n\n[ESTILO]\nEspañol claro, empático y breve. Para voz, conserva el límite de 200 caracteres sin añadir hechos.\n\n[SALIDA QA OBLIGATORIA]\nDevuelve solo JSON válido con status, worker=\"RECLAMOS\", respuesta, requires_human y evidence. evidence es un array de objetos {\"source\":\"...\",\"quote\":\"...\"} con una cita textual de la herramienta conectada que respalda la respuesta o el registro. No inventes citas. Si no hay evidencia suficiente, usa evidence:[], requires_human:true y no afirmes que registraste o resolviste el caso.",
+          "maxIterations": 5,
+          "returnIntermediateSteps": true
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -288,
-        704
+        -272,
+        640
       ],
-      "id": "18d1c8b2-143b-4162-a7a2-a8b6b5b4919e",
+      "id": "b9dc4fbe-082a-4a44-8d59-437940466045",
       "name": "Agente de Reclamos"
     },
     {
       "parameters": {
         "descriptionType": "manual",
-        "toolDescription": "Úsala para cambiar el estado de un reclamo existente a Cancelado o Resuelto cuando el cliente lo solicite.",
+        "toolDescription": "Consulta en modo de solo lectura el estado y los antecedentes de un reclamo por identificador, nombre o teléfono. No modifica ni cancela casos.",
         "documentId": {
           "__rl": true,
           "value": "1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA",
@@ -75,10 +88,10 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        64,
-        912
+        80,
+        848
       ],
-      "id": "eade9b46-4ec4-4a05-a201-5bb7915e9552",
+      "id": "d6ed85fc-df6d-4fe4-952f-0c9884374e2a",
       "name": "Cosulta_Estado_Reclamo_Google_Sheets",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -90,7 +103,7 @@
     {
       "parameters": {
         "descriptionType": "manual",
-        "toolDescription": "Úsala cuando el cliente solicite cancelar su reclamo o se requiera cambiar el estado del caso a 'Cancelado' o 'Resuelto'.",
+        "toolDescription": "Herramienta histórica de consulta en modo de solo lectura para localizar el registro de un reclamo que un humano revisará. No cambia estados ni cancela casos.",
         "documentId": {
           "__rl": true,
           "value": "1_oPjJr4P6qhW0N4dm0nlkfc4rVTSDXutRVX_iKy4rVA",
@@ -110,10 +123,10 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        256,
-        912
+        272,
+        848
       ],
-      "id": "66a4fe6f-b5f9-4e62-bb7f-df954455dab8",
+      "id": "7ed0a47a-3f76-4ddc-8ed0-dc5043584fef",
       "name": "Actualizar/Cancelar_Reclamo_Google_Sheets",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -125,7 +138,7 @@
     {
       "parameters": {
         "descriptionType": "manual",
-        "toolDescription": "ÚSALA OBLIGATORIAMENTE en la primera interacción para guardar el reclamo en la planilla Reclamos_GustoBot siempre que el cliente proporcione su nombre, teléfono y mencione un problema con un producto, asignando en Detalle_Reclamo el texto recibido",
+        "toolDescription": "Registra un reclamo operativo rutinario con el relato fiel del cliente y los datos mínimos completos. No usar ante señales de salud/seguridad, riesgo legal, solicitud de dinero, fraude o cobro disputado; esos casos requieren atención humana.",
         "operation": "append",
         "documentId": {
           "__rl": true,
@@ -233,10 +246,10 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        -96,
-        912
+        -80,
+        848
       ],
-      "id": "9b5069d6-aae3-4323-979b-801f627fac64",
+      "id": "d98aae94-557a-4e3a-9bbe-bec85d1b8b05",
       "name": "Registrar_Reclamo_Google_Sheets",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -247,33 +260,38 @@
     },
     {
       "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "original_input",
-              "type": "any"
-            }
-          ]
-        }
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
       },
-      "id": "65a434d7-8bff-4e73-b539-68d0a1fd9690",
-      "typeVersion": 1.1,
-      "name": "Start",
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
       "position": [
-        -496,
-        704
-      ]
+        -272,
+        880
+      ],
+      "id": "828a958c-7325-438b-a2f1-4526677b6b03",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
-    "Groq Chat Model2": {
-      "ai_languageModel": [
+    "Start": {
+      "main": [
         [
           {
             "node": "Agente de Reclamos",
-            "type": "ai_languageModel",
+            "type": "main",
             "index": 0
           }
         ]
@@ -323,12 +341,12 @@
         ]
       ]
     },
-    "Start": {
-      "main": [
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
         [
           {
             "node": "Agente de Reclamos",
-            "type": "main",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -340,8 +358,9 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "2f1fb9f5-896d-4e58-aa78-201e60476a76",
+  "versionId": "735c9d4e-1b65-4f94-83a0-80d5c4df6729",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
   },
   "nodeGroups": [],

@@ -3,40 +3,53 @@
   "nodes": [
     {
       "parameters": {
-        "model": "openai/gpt-oss-20b",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
-      "position": [
-        -288,
-        464
-      ],
-      "id": "a3d0e33c-6d5f-49c8-b65d-a63077da648d",
-      "name": "Groq Chat Model",
-      "credentials": {
-        "groqApi": {
-          "id": "6eReWjCTpmf2SxR0",
-          "name": "Groq account"
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "original_input",
+              "type": "any"
+            },
+            {
+              "name": "canal",
+              "type": "string"
+            },
+            {
+              "name": "tipo_entrada",
+              "type": "string"
+            },
+            {
+              "name": "human_decision",
+              "type": "string"
+            }
+          ]
         }
-      }
+      },
+      "id": "184bfc51-04b3-4c58-ba2f-6665cac53b98",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -496,
+        272
+      ]
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.original_input }}",
+        "text": "={{ $json.original_input + ($json.tipo_entrada === \"audio\" ? \"\\n\\nCanal de respuesta: audio (Slack).\" : \"\") }}",
         "options": {
-          "systemMessage": "[ROL Y ÁMBITO]\nEres un Agente Informativo y de Atención a Consultas para \"GustoBot\". Tu función es responder preguntas sobre el menú, opciones de comida china y rápida, precios, ingredientes, disponibilidad y consultar el estado de pedidos existentes.\n\nNO tienes autorización para: registrar nuevos pedidos, modificar pedidos existentes, procesar cobros ni ofrecer productos fuera del catálogo oficial.\n\n[OBJETIVO OPERATIVO]\n1. **Consultas de Menú y Precios:** Utiliza la herramienta de lectura sobre \"Menu_GustoBot\". Informa platos, precios y disponibilidad.\n2. **Consultas de Ingredientes:** Cuando el cliente pregunte qué trae un plato o pida la lista de ingredientes, consulta la columna \"Ingredientes\" de \"Menu_GustoBot\" y detállalos de forma clara y amable.\n3. **Manejo de Alergias / Requerimientos Médicos:** \n   - Si el cliente solo consulta ingredientes de manera informativa, responde la lista directamente.\n   - Si el cliente declara explícitamente una ALERGIA SEVERA (ej: \"soy alérgico al maní/mariscos\", \"tengo celiaquía\"), indícale: *\"Para tu seguridad ante alergias severas o contaminación cruzada, transferiré tu consulta a un operador humano.\"* y no asumas que la comida es 100% segura.\n4. **Consultas de Estado de Pedido:** Consulta la planilla \"Pedidos_GustoBot\" buscando por el Nombre o Teléfono del usuario y devuelve el estado actual (ej: Nuevo, En preparación, Listo, Entregado).\n\n[ESTILO]\n- Escribe en español neutro, claro, amable y profesional.\n- No uses lenguaje inclusivo con terminaciones en -e, -x o @.\n- Sé breve, directo y utiliza viñetas claras cuando listes ingredientes o precios.",
-          "maxIterations": 5
+          "systemMessage": "[GUARDRAIL DE MAYOR PRIORIDAD]\nNo confirmes inocuidad ni ausencia de alérgenos ante alergia severa/anafilaxia. No decidas reembolsos, dinero, compensaciones ni interpretaciones legales. Ante salud/seguridad, falta de evidencia o conflicto de fuentes, detén la respuesta sustantiva y solicita intervención humana. No afirmes hechos que no aparezcan en el menú vigente o en evidencia documental recibida.\n\n[ROL Y ÁMBITO]\nEres un Agente Informativo y de Atención a Consultas para \"GustoBot\". Tu función es responder preguntas sobre el menú, opciones de comida china y rápida, precios, ingredientes, disponibilidad y consultar el estado de pedidos existentes.\n\nNO tienes autorización para: registrar nuevos pedidos, modificar pedidos existentes, procesar cobros ni ofrecer productos fuera del catálogo oficial.\n\n[OBJETIVO OPERATIVO]\n1. **Consultas de Menú y Precios:** Utiliza la herramienta de lectura sobre \"Menu_GustoBot\". Informa platos, precios y disponibilidad.\n2. **Consultas de Ingredientes:** Cuando el cliente pregunte qué trae un plato o pida la lista de ingredientes, consulta la columna \"Ingredientes\" de \"Menu_GustoBot\" y detállalos de forma clara y amable.\n3. **Consultas vegetarianas/veganas:** No clasifiques un producto como vegetariano o vegano por su nombre ni deduciendo la clasificación solo de una lista de ingredientes. Confírmalo únicamente si una fila del menú lo etiqueta explícitamente como tal en un campo de dieta/categoría o en el nombre oficial del producto. Si la carta no lo especifica, dilo claramente y no afirmes que hay opciones vegetarianas/veganas confirmadas. La ausencia de carne en los ingredientes listados no confirma caldos, aderezos ni método de preparación.\n4. **Manejo de Alergias / Requerimientos Médicos:** \n   - Si el cliente solo consulta ingredientes de manera informativa, responde la lista directamente.\n   - Si el cliente declara explícitamente una ALERGIA SEVERA (ej: \"soy alérgico al maní/mariscos\", \"tengo celiaquía\"), indícale: *\"Para tu seguridad ante alergias severas o contaminación cruzada, transferiré tu consulta a un operador humano.\"* y no asumas que la comida es 100% segura.\n5. **Consultas de Estado de Pedido:** Consulta la planilla \"Pedidos_GustoBot\" buscando por el Nombre o Teléfono del usuario y devuelve el estado actual (ej: Nuevo, En preparación, Listo, Entregado).\n\n[ESTILO]\n- Escribe en español neutro, claro, amable y profesional.\n- No uses lenguaje inclusivo con terminaciones en -e, -x o @.\n- Sé breve, directo y utiliza viñetas claras cuando listes ingredientes o precios.\n\n[RESPUESTAS DE VOZ] Si el mensaje del usuario indica \"Canal de respuesta: audio (Slack).\", responde en español claro con un máximo de 200 caracteres. No uses enlaces, viñetas ni emojis. Redacta una respuesta breve y natural para escuchar. Para mensajes de texto, conserva las reglas de salida existentes.\n\n[SALIDA QA OBLIGATORIA]\nDevuelve solo JSON válido con status, worker=\"CONSULTAS\", respuesta, requires_human y evidence. evidence es un array de objetos {\"source\":\"...\",\"quote\":\"...\"} y debe citar una fila exacta de la herramienta realmente consultada. No inventes citas. La validación también recibirá los resultados intermedios reales de la herramienta y los usará como evidencia; no sustituyas esos resultados por datos recordados. Si la herramienta no devuelve filas, usa evidence:[], requires_human:true y no des una respuesta factual.",
+          "maxIterations": 5,
+          "returnIntermediateSteps": true
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -288,
-        272
+        -272,
+        208
       ],
-      "id": "28fc5beb-0feb-4e3b-bda1-d2ecdd2595d4",
+      "id": "153e45e8-3d91-4bc6-8f34-8438ae0159bd",
       "name": "Agente de Consultas"
     },
     {
@@ -62,10 +75,10 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        -144,
-        464
+        -128,
+        400
       ],
-      "id": "0cb82008-f56f-4566-a209-7660b8e423f5",
+      "id": "f850ca89-e76f-41cb-be23-4084e721bb00",
       "name": "Menu_Google_Sheets",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -76,46 +89,51 @@
     },
     {
       "parameters": {
-        "jsCode": "const raw = $json.text ?? $json.output ?? $json.response ?? '';\nlet d;\ntry {\n  const clean = String(raw).replace(/^```json\\s*/i, '').replace(/```$/,'').trim();\n  d = JSON.parse(clean);\n} catch (e) {\n  // Si no es un JSON, asumimos que el agente respondió con texto plano conversacional\n  d = {\n    status: 'success',\n    worker: 'CONSULTAS',\n    respuesta: String(raw),\n    requires_human: false\n  };\n}\nreturn [{ json: {\n  status: d.status ?? 'success',\n  worker: d.worker ?? 'CONSULTAS',\n  respuesta: d.respuesta ?? '',\n  requires_human: Boolean(d.requires_human)\n} }];"
+        "jsCode": "const raw=$json.text??$json.output??$json.response??'';\nlet d;\ntry {\n  const clean=String(raw).replace(/^```json\\s*/i,'').replace(/```$/,'').trim();\n  d=JSON.parse(clean);\n} catch(error) {\n  return [{json:{status:'error',worker:'CONSULTAS',respuesta:'No pude validar una respuesta con evidencia estructurada. Una persona revisará la consulta.',requires_human:true,evidence:[]}}];\n}\nfunction isError(value) {\n  if(value&&typeof value==='object'&&!Array.isArray(value)&&(value.error||value.success===false)) return true;\n  const text=typeof value==='string'?value:JSON.stringify(value??'');\n  return /^\\s*(error|failed|failure)\\b/i.test(text)||/\\b(no output data|no rows returned)\\b/i.test(text);\n}\nfunction isRow(value) {\n  return Boolean(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length&&!isError(value));\n}\nfunction rowsFromObservation(observation,depth=0) {\n  if(depth>6||observation==null||isError(observation)) return [];\n  let value=observation;\n  if(typeof value==='string') {\n    try { value=JSON.parse(value); } catch { return []; }\n  }\n  if(Array.isArray(value)) return value.flatMap(item=>rowsFromObservation(item,depth+1));\n  if(!value||typeof value!=='object') return [];\n  const keys=Object.keys(value);\n  if(keys.length===1&&['response','output','json'].includes(keys[0])) return rowsFromObservation(value[keys[0]],depth+1);\n  for(const key of ['data','results','rows']) {\n    if(keys.length<=2&&value[key]!==undefined) return rowsFromObservation(value[key],depth+1);\n  }\n  return isRow(value)?[value]:[];\n}\nconst evidence=[];\nfor(const step of Array.isArray($json.intermediateSteps)?$json.intermediateSteps:[]) {\n  const tool=String(step?.action?.tool??'');\n  if(!/menu_google_sheets/i.test(tool)) continue;\n  for(const row of rowsFromObservation(step.observation)) evidence.push({source:tool,quote:JSON.stringify(row)});\n}\nconst hasEvidence=evidence.length>0;\nfunction normalizeText(value) {\n  return String(value??'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase();\n}\nfunction dietaryTypes(row) {\n  const types=new Set();\n  for(const [key,value] of Object.entries(row)) {\n    const normalizedKey=normalizeText(key);\n    const normalizedValue=normalizeText(value);\n    const positive=/^(si|yes|true|1|apto|apta|vegetariano|vegetariana|vegano|vegana|vegetarian|vegan)$/.test(normalizedValue);\n    if(/vegan/.test(normalizedKey)&&positive) types.add('vegan');\n    if(/vegetar/.test(normalizedKey)&&positive) types.add('vegetarian');\n    if(/categoria|category|dieta|diet|tipo/.test(normalizedKey)) {\n      if(/vegan/.test(normalizedValue)) types.add('vegan');\n      if(/vegetar/.test(normalizedValue)) types.add('vegetarian');\n    }\n    if(/nombre|producto|plato|name|product|item|dish/.test(normalizedKey)) {\n      if(/vegan/.test(normalizedValue)) types.add('vegan');\n      if(/vegetar/.test(normalizedValue)) types.add('vegetarian');\n    }\n  }\n  return types;\n}\nfunction explicitlyLabeledProducts(requestedType) {\n  const names=[];\n  for(const item of evidence) {\n    let row;\n    try { row=JSON.parse(item.quote); } catch { continue; }\n    if(!row||typeof row!=='object'||Array.isArray(row)||!dietaryTypes(row).has(requestedType)) continue;\n    const nameEntry=Object.entries(row).find(([key,value])=>/nombre|producto|plato|name|product|item|dish/.test(normalizeText(key))&&typeof value==='string'&&value.trim());\n    if(nameEntry&&!names.includes(nameEntry[1].trim())) names.push(nameEntry[1].trim());\n  }\n  return names;\n}\nconst originalInput=normalizeText($('Start').first().json.original_input??'');\nconst requestedType=/\\bvegan\\w*\\b/.test(originalInput)?'vegan':(/\\bvegetari\\w*\\b/.test(originalInput)?'vegetarian':'');\nlet respuesta=String(d.respuesta??'');\nif(hasEvidence&&requestedType) {\n  const products=explicitlyLabeledProducts(requestedType);\n  respuesta=products.length\n    ? `En la información del menú consultada, estos productos están etiquetados explícitamente como ${requestedType==='vegan'?'veganos':'vegetarianos'}: ${products.join(', ')}.`\n    : `En la información recuperada del menú no veo productos etiquetados explícitamente como ${requestedType==='vegan'?'veganos':'vegetarianos'}. No puedo confirmarlos solo por los ingredientes listados; la carta no especifica todos los componentes ni el método de preparación.`;\n}\nreturn [{json:{status:hasEvidence?(d.status??'success'):'needs_human',worker:'CONSULTAS',respuesta,requires_human:Boolean(d.requires_human)||!hasEvidence,evidence,human_decision:String($('Start').first().json.human_decision??'')}}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        80,
-        272
+        96,
+        208
       ],
-      "id": "6bf6f455-4ca1-43dc-9501-1cfb528ff749",
+      "id": "eee4651d-35c8-43b9-929b-9866cdb5d2a9",
       "name": "Contrato de salida1"
     },
     {
       "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "original_input",
-              "type": "any"
-            }
-          ]
-        }
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
       },
-      "id": "184bfc51-04b3-4c58-ba2f-6665cac53b98",
-      "typeVersion": 1.1,
-      "name": "Start",
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
       "position": [
-        -496,
-        272
-      ]
+        -272,
+        384
+      ],
+      "id": "e8949518-aac7-436d-a821-d424607ed233",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "fV4mCS09x76Yo8BN",
+          "name": "OpenAi account 2"
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
-    "Groq Chat Model": {
-      "ai_languageModel": [
+    "Start": {
+      "main": [
         [
           {
             "node": "Agente de Consultas",
-            "type": "ai_languageModel",
+            "type": "main",
             "index": 0
           }
         ]
@@ -143,12 +161,12 @@
         ]
       ]
     },
-    "Start": {
-      "main": [
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
         [
           {
             "node": "Agente de Consultas",
-            "type": "main",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -160,8 +178,9 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "d32a8db3-53d1-4ca2-9cfd-4b5fa4af9213",
+  "versionId": "21f31779-041e-4e40-bd80-71775d47d33e",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
   },
   "nodeGroups": [],
