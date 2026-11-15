@@ -25,26 +25,26 @@
         },
         "options": {}
       },
-      "id": "b5191689-6ec8-426c-a666-68bbeba49376",
+      "id": "38afdb5f-b42f-4f9b-b8fa-acafe6e0b57c",
       "name": "IF - Enrutar voz con agente",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2160,
-        -240.0
+        1840,
+        1744
       ]
     },
     {
       "parameters": {
         "jsCode": "const first = $input.first();\nif (!first) throw new Error('No se encontró contexto para procesar la solicitud de voz.');\nreturn [{ json: first.json, pairedItem: { item: 0 } }];"
       },
-      "id": "60f1de7d-a742-45f4-8906-67ed5afbd5b7",
+      "id": "efa4b8d9-fe46-496f-b6cf-52aba9a8e354",
       "name": "Seleccionar contexto para voz",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1890,
-        -480.0
+        2096,
+        1504
       ]
     },
     {
@@ -55,16 +55,15 @@
           "systemMessage": "Sos el agente central de enrutamiento de voz de GustoBot. Elegí la ruta de atención según la transcripción y el contexto. No respondas al cliente ni registres pedidos: la ruta seleccionada pasa por los controles de riesgo, la aprobación humana y el worker correspondiente. Los workers y la preparación posterior deben mantener las respuestas de voz en un máximo de 200 caracteres, sin enlaces, viñetas ni emojis.\n\nUsá exactamente una vez la herramienta Seleccionar ruta voz. Su entrada debe ser un string JSON con intent, confidence y risk. Intent permitido: REGISTRAR_PEDIDO para compras o cantidades de comida; CONSULTA_MENU para carta, precios o disponibilidad; CONSULTA_DOCUMENTAL para políticas, normas o preguntas institucionales; RECLAMO_SOPORTE para reclamos o ayuda; UNKNOWN para saludos, ambigüedad o fuera de alcance. Confidence es un número entre 0 y 1.\n\nRisk LOW para saludos, menú y pedidos habituales, incluso largos. MEDIUM para ambigüedad leve, cambios menores y reclamos operativos como demoras o errores de entrega. HIGH para alergias severas, contaminación cruzada, intoxicación, amenazas graves, lenguaje ofensivo explícito o fraude. Ante incertidumbre, no reduzcas el riesgo. La salida de la herramienta determina el siguiente paso; copiá su resultado JSON sin agregar texto. Para entradas de audio, toda respuesta final debe limitarse a 200 caracteres y no incluir enlaces, viñetas ni emojis.",
           "maxIterations": 3,
           "returnIntermediateSteps": true
-        },
-        "agentType": "toolsAgent"
+        }
       },
-      "id": "9b3ec0da-33da-40fa-93b5-36a407214b75",
+      "id": "c209c8a9-8d74-431b-ac6a-6080ea89e44d",
       "name": "AI Agent central - Enrutamiento de voz",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -1620,
-        -120.0
+        2368,
+        1872
       ],
       "onError": "continueErrorOutput"
     },
@@ -78,13 +77,13 @@
         "builtInTools": {},
         "options": {}
       },
-      "id": "b9c817d4-c318-4942-90a0-3474efb503d5",
+      "id": "cc835681-b24f-4b03-a6d0-979192ea2d48",
       "name": "Modelo agente central de voz",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -1620,
-        60.0
+        2368,
+        2048
       ],
       "credentials": {
         "openAiApi": {
@@ -98,26 +97,26 @@
         "description": "Valida y selecciona la ruta que ejecutará el control de riesgo y el Switch de GustoBot. Recibe un string JSON con intent, confidence y risk. No realiza pedidos ni otras acciones.",
         "jsCode": "const route = JSON.parse(query);\nconst intents = ['REGISTRAR_PEDIDO', 'CONSULTA_MENU', 'CONSULTA_DOCUMENTAL', 'RECLAMO_SOPORTE', 'UNKNOWN'];\nconst risks = ['LOW', 'MEDIUM', 'HIGH'];\nif (!route || !intents.includes(route.intent) || !risks.includes(route.risk) || typeof route.confidence !== 'number' || !Number.isFinite(route.confidence) || route.confidence < 0 || route.confidence > 1) {\n  throw new Error('Clasificación de voz inválida: se requiere intent, risk y confidence válidos.');\n}\nreturn JSON.stringify({ intent: route.intent, confidence: route.confidence, risk: route.risk });"
       },
-      "id": "af30446d-2e0c-4f99-b423-957c89b56d95",
+      "id": "518adec4-ea16-4b0e-adbf-0c512e243294",
       "name": "Seleccionar ruta voz",
       "type": "@n8n/n8n-nodes-langchain.toolCode",
       "typeVersion": 1.2,
       "position": [
-        -1620,
-        220.0
+        2368,
+        2208
       ]
     },
     {
       "parameters": {
         "jsCode": "const steps = $json.intermediateSteps;\nif (!Array.isArray(steps) || steps.length !== 1 || steps[0].action?.tool !== 'Seleccionar_ruta_voz' || typeof steps[0].observation !== 'string') {\n  throw new Error('El agente de voz debe invocar exactamente una vez la herramienta de selección de ruta.');\n}\nlet route;\ntry {\n  const observation = JSON.parse(steps[0].observation);\n  if (Array.isArray(observation)) {\n    if (observation.length !== 1 || typeof observation[0]?.response !== 'string') throw new Error('Resultado de herramienta inesperado.');\n    route = JSON.parse(observation[0].response);\n  } else {\n    route = observation;\n  }\n} catch (error) {\n  throw new Error('La herramienta de voz no devolvió una clasificación JSON válida.');\n}\nconst intents = ['REGISTRAR_PEDIDO', 'CONSULTA_MENU', 'CONSULTA_DOCUMENTAL', 'RECLAMO_SOPORTE', 'UNKNOWN'];\nconst risks = ['LOW', 'MEDIUM', 'HIGH'];\nif (!route || Array.isArray(route) || !intents.includes(route.intent) || !risks.includes(route.risk) || typeof route.confidence !== 'number' || !Number.isFinite(route.confidence) || route.confidence < 0 || route.confidence > 1) {\n  throw new Error('La herramienta de voz devolvió una clasificación fuera del contrato.');\n}\nreturn [{ json: { output: JSON.stringify(route) } }];"
       },
-      "id": "5d847bb7-c7b0-4c4b-aa2c-b77a56d85183",
+      "id": "fa9601b8-63f0-467f-80f5-98c234e66ede",
       "name": "Validar ruta del agente de voz",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1350,
-        -120.0
+        2640,
+        1872
       ],
       "onError": "continueErrorOutput"
     },
@@ -139,13 +138,13 @@
           }
         }
       },
-      "id": "20423125-6e35-45d5-a6a5-101e12b70a5a",
+      "id": "07529247-b830-43f1-a9e4-2c000ef2f753",
       "name": "Slack - Error agente de voz",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        2160,
-        -120.0
+        6160,
+        1872
       ],
       "webhookId": "d6fa56d5-501f-438c-bd83-7a8a70469107",
       "credentials": {
@@ -167,10 +166,10 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        -3240,
-        120.0
+        752,
+        2112
       ],
-      "id": "f1fbba5e-8992-4885-a372-c4386b627863",
+      "id": "6cda6816-1020-49ee-bebf-49004ad3eab9",
       "name": "③ Create Draft — Borrador HITL",
       "webhookId": "e2f013ef-f11c-4af5-ae73-97395593bd8e",
       "credentials": {
@@ -201,10 +200,10 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        2970,
-        0.0
+        6960,
+        1984
       ],
-      "id": "f7ed41b9-804b-47af-b2e7-684447319906",
+      "id": "df509e7b-f2e0-4e03-8064-92ddcd47ee2c",
       "name": "Respuesta  a Slack",
       "webhookId": "c97eb359-94a6-49ea-8586-c3661ae7f597",
       "credentials": {
@@ -216,17 +215,15 @@
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
-        "language": "javaScript",
         "jsCode": "const items = $input.all();\nif (items.length <= 1) return items;\nreturn [items[0]];"
       },
-      "id": "e15c1ab4-69f8-4656-8a47-d01c40b2a1ac",
+      "id": "aaabf5f4-4640-4def-a222-6821588ffa33",
       "name": "HITL - Unificar caso entrante",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -680,
-        -240.0
+        3216,
+        1712
       ]
     },
     {
@@ -312,10 +309,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -3510,
-        -360.0
+        480,
+        1632
       ],
-      "id": "d8c6e162-1cc9-4324-9d30-8514cd795d7c",
+      "id": "fbec8228-4b20-4b89-b138-ae99a7624b79",
       "name": "Entrada multicanal"
     },
     {
@@ -325,10 +322,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1080,
-        -120.0
+        2912,
+        1872
       ],
-      "id": "8b20992f-eced-4e15-a5eb-cdea9defcc14",
+      "id": "665d1ee4-f249-47f7-b62e-a9e8f64e67a2",
       "name": "Normalizar clasificacion Router"
     },
     {
@@ -387,10 +384,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -810,
-        -120.0
+        3184,
+        1872
       ],
-      "id": "2265c9f8-5ea9-4050-af21-c7c9d4792574",
+      "id": "06d20524-ff08-4b31-8cff-a7b523e1f971",
       "name": "¿Requiere HITL?"
     },
     {
@@ -524,23 +521,23 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -540,
-        0.0
+        3456,
+        1984
       ],
-      "id": "15e7aa77-e814-4890-93b4-ff62d5c2cc8c",
+      "id": "648241e4-a782-4cdf-9a8a-214e47572dcb",
       "name": "Switch"
     },
     {
       "parameters": {
         "jsCode": "const classification=$('Normalizar clasificacion Router').first().json;\nconst input=$('Entrada multicanal').first().json;\nconst expectedWorkers={REGISTRAR_PEDIDO:'PEDIDOS',CONSULTA_MENU:'CONSULTAS',RECLAMO_SOPORTE:'RECLAMOS',CONSULTA_DOCUMENTAL:'RAG_Documental',UNKNOWN:'ANFITRION'};\nconst expected=expectedWorkers[classification.intent];\nreturn $input.all().map(item => {\n  const actual=String(item.json.worker??'');\n  const mismatch=!expected||actual!==expected;\n  const reason=mismatch?`Incompatibilidad de worker: intención ${classification.intent??'desconocida'}, esperado ${expected??'no definido'}, recibido ${actual||'ausente'}.`:'';\n  return {json:{...item.json,timestamp:new Date().toISOString(),status:mismatch?'needs_human':(item.json.status??'success'),worker:actual||'N/D',respuesta:mismatch?'No pude validar el área que atendió tu solicitud. Una persona del equipo continuará la atención.':(item.json.respuesta??''),requires_human:mismatch||Boolean(item.json.requires_human),evidence:mismatch?[]:item.json.evidence,worker_mismatch_reason:reason,canal:input.canal??'',tipo_entrada:input.tipo_entrada??'',chat_id:input.chat_id??'',risk:classification.risk??'HIGH',confidence:classification.confidence??0,critical_signal:mismatch?'WORKER_CONTRACT_MISMATCH':(classification.critical_signal??''),hitl_reason:reason||classification.hitl_reason||'',human_decision:item.json.human_decision||($('HITL - Restaurar solicitud aprobada').isExecuted?$('HITL - Restaurar solicitud aprobada').first().json.human_decision:'')}};\n});"
       },
-      "id": "740571af-c444-40df-9723-64dbe42cb664",
+      "id": "c091477e-5db0-4a0f-8deb-72dbe900eceb",
       "name": "Preparar respuesta final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1350,
-        -120.0
+        5344,
+        1872
       ]
     },
     {
@@ -606,13 +603,13 @@
         "includeOtherFields": true,
         "options": {}
       },
-      "id": "8b4ef372-840e-4216-9a9e-53c1a8cd4a0f",
+      "id": "2f305ed3-6c5f-4a32-aa4a-e9e4f01fd427",
       "name": "Semáforo + Scorecard QA",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1600,
-        80
+        5600,
+        2064
       ]
     },
     {
@@ -695,26 +692,26 @@
         },
         "options": {}
       },
-      "id": "2e0faf08-5880-48d0-81d0-3a1de9ad2f31",
+      "id": "74b2fdd1-5748-4edf-951e-9fc1fc67c56e",
       "name": "Switch - Semáforo operativo (85+)",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        1830,
-        80
+        5824,
+        2064
       ]
     },
     {
       "parameters": {
         "jsCode": "return $input.all().map(item => {\n  const data = item.json;\n  const ts = data.timestamp || new Date().toISOString();\n  const worker = data.worker || 'UNKNOWN';\n  const status = data.status || 'success';\n  const hitl = data.requires_human ?? false;\n  const logString = `[${ts}] | WORKER: ${worker} | STATUS: ${status} | HITL: ${hitl} | QA: ${data.score_total ?? 'N/D'}/100 | SEMÁFORO: ${data.semaforo ?? 'N/D'}`;\n\n  return {\n    json: {\n      ...data,\n      log: logString\n    }\n  };\n});"
       },
-      "id": "aea9f387-4ad4-433e-8486-a4edbd96d045",
+      "id": "98f34e3d-9a38-4348-bf6e-e8cf196b3df5",
       "name": "Log de ejecución",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1620,
-        -120.0
+        5616,
+        1872
       ]
     },
     {
@@ -798,13 +795,13 @@
         "includeOtherFields": true,
         "options": {}
       },
-      "id": "c63a90c9-ea7f-4efb-a184-347db8589681",
+      "id": "77bcb46d-5c47-4191-8861-8354645c7d07",
       "name": "Preparar HITL / Unknown",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -540,
-        -240.0
+        3472,
+        1664
       ]
     },
     {
@@ -832,10 +829,10 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        270,
-        -120.0
+        4256,
+        1872
       ],
-      "id": "5a59be39-3627-4bbe-b0a3-343009772e71",
+      "id": "8cd03182-82de-470e-9932-42c0e4ee828e",
       "name": "Respuesta  a Slack1",
       "webhookId": "a60ebd5e-60cd-41f5-aacd-bc05f8830f06",
       "credentials": {
@@ -849,9 +846,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "tDnwUOrR1q7RGRkM",
+          "value": "ibfeJgvWT0nhOvZW",
           "mode": "list",
-          "cachedResultUrl": "/workflow/tDnwUOrR1q7RGRkM",
+          "cachedResultUrl": "/workflow/ibfeJgvWT0nhOvZW",
           "cachedResultName": "Worker_Registrar_Pedido"
         },
         "workflowInputs": {
@@ -876,21 +873,23 @@
               "removed": false
             },
             {
-              "id": "tipo_entrada",
-              "displayName": "tipo_entrada",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": false,
-              "removed": false
-            },
-            {
               "id": "canal",
               "displayName": "canal",
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "canBeUsedToMatch": false,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "tipo_entrada",
+              "displayName": "tipo_entrada",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": false
             },
             {
@@ -899,7 +898,8 @@
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "canBeUsedToMatch": false,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": false
             }
           ],
@@ -913,19 +913,19 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -270,
-        480.0
+        3728,
+        2464
       ],
       "name": "Call Worker_Registrar_Pedido",
-      "id": "40f03418-6b09-45cb-ae76-2c7004abb175"
+      "id": "b36e6b86-1c03-4da4-88fb-2a1f2e2711f0"
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "ibfeJgvWT0nhOvZW",
+          "value": "tDnwUOrR1q7RGRkM",
           "mode": "list",
-          "cachedResultUrl": "/workflow/ibfeJgvWT0nhOvZW",
+          "cachedResultUrl": "/workflow/tDnwUOrR1q7RGRkM",
           "cachedResultName": "Worker_Atencion_Consultas"
         },
         "workflowInputs": {
@@ -949,12 +949,23 @@
               "removed": false
             },
             {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
               "id": "tipo_entrada",
               "displayName": "tipo_entrada",
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "canBeUsedToMatch": false,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": false
             },
             {
@@ -963,7 +974,8 @@
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "canBeUsedToMatch": false,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": false
             }
           ],
@@ -977,11 +989,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -270,
-        0.0
+        3728,
+        1984
       ],
       "name": "Call Worker_Atencion_Consultas",
-      "id": "16a6e784-3f8e-469b-81c1-70fcd366fa4e"
+      "id": "7cc621ac-2a4c-483f-832d-5b965ab4b310"
     },
     {
       "parameters": {
@@ -1013,12 +1025,23 @@
               "removed": false
             },
             {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
               "id": "tipo_entrada",
               "displayName": "tipo_entrada",
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "canBeUsedToMatch": false,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": false
             },
             {
@@ -1027,7 +1050,8 @@
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "canBeUsedToMatch": false,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": false
             }
           ],
@@ -1041,11 +1065,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -270,
-        240.0
+        3728,
+        2224
       ],
       "name": "Call Worker_Atencion_Reclamos",
-      "id": "2d68f1a1-9593-4965-aaee-f83f41a0dfc4"
+      "id": "ef46c890-8ea7-4dfe-8cc4-3124826092f3"
     },
     {
       "parameters": {
@@ -1077,12 +1101,23 @@
               "removed": false
             },
             {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
               "id": "tipo_entrada",
               "displayName": "tipo_entrada",
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "canBeUsedToMatch": false,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": false
             },
             {
@@ -1091,7 +1126,8 @@
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "canBeUsedToMatch": false,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": false
             }
           ],
@@ -1105,11 +1141,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -270,
-        -480.0
+        3728,
+        1504
       ],
       "name": "Call Worker_Anfitrion",
-      "id": "bf2160bd-fa0c-44e6-baeb-67e82b7fd18e"
+      "id": "e495f35c-411a-4422-91ad-965369200c4c"
     },
     {
       "parameters": {
@@ -1138,10 +1174,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -2700,
-        -240.0
+        1296,
+        1744
       ],
-      "id": "eefbbe9b-b0b5-4fdd-b421-45be9209f2cd",
+      "id": "628c4c28-5835-4e0f-9e9a-8271028e36a5",
       "name": "If"
     },
     {
@@ -1317,10 +1353,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -2430,
-        -240.0
+        1568,
+        1744
       ],
-      "id": "3ba963b2-6f95-4b12-b7ff-3dd193a4119b",
+      "id": "aa5e342f-3d07-444f-9769-308d1530e9da",
       "name": "Append row in sheet1",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -1495,10 +1531,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1890,
-        -120.0
+        5888,
+        1872
       ],
-      "id": "d4d5a792-08fc-42aa-945a-217550d4ac40",
+      "id": "91c9b57f-d01c-4fd4-9357-9120a9d6b7e6",
       "name": "Log de Ejecucion sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -1536,10 +1572,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -2970,
-        -240.0
+        1024,
+        1744
       ],
-      "id": "75ce8b6b-484e-492a-a95c-d19e40468d69",
+      "id": "80e679b9-fe13-4b24-b974-42d5f2bc1d44",
       "name": "Memoria in sheet",
       "alwaysOutputData": true,
       "credentials": {
@@ -1578,10 +1614,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        3240,
-        -240.0
+        7232,
+        1744
       ],
-      "id": "06ae0153-2ddc-487c-93ae-9f79563c7a9b",
+      "id": "fcb655e8-e8b6-4d2c-86fe-df5811c272ab",
       "name": "Cuenta Log de Ejecucion sheet1",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -1667,10 +1703,10 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        4050,
-        120.0
+        8304,
+        1968
       ],
-      "id": "d9a86fde-545f-473c-b95a-144272f5436d",
+      "id": "54d583bc-f8ab-487b-bca4-3fbfc4ab04a2",
       "name": "Actualiza log in Google Sheets",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -1706,10 +1742,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        3510,
-        -240.0
+        7504,
+        1744
       ],
-      "id": "4849f6b5-161c-480c-813e-0b7c48876fd6",
+      "id": "8a150525-5d6e-48ea-905c-c62e38d39deb",
       "name": "conversación > 5 mensajes"
     },
     {
@@ -1719,10 +1755,10 @@
       "type": "n8n-nodes-base.limit",
       "typeVersion": 1,
       "position": [
-        3780,
-        -240.0
+        7776,
+        1744
       ],
-      "id": "518d9b68-b7f8-4559-be06-d3059cbe01f3",
+      "id": "05620d4e-4020-4263-b2c0-2cc8d7fd2673",
       "name": "Limit a un registro"
     },
     {
@@ -1753,10 +1789,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2160,
-        -360.0
+        6160,
+        1632
       ],
-      "id": "ad261546-9e1f-405f-bcd9-fa022eb49111",
+      "id": "556533c7-95e9-4ed4-ad4c-5751c6c7ec1a",
       "name": "¿Es respuesta de correo?"
     },
     {
@@ -1788,10 +1824,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2430,
-        0.0
+        6416,
+        1984
       ],
-      "id": "5d33e688-7fdf-4616-bbfa-5046cb2c58ea",
+      "id": "d3ac7f4e-a293-42a2-bb4f-1d5d98f1fa9e",
       "name": "Preparar envío de respuesta Gmail"
     },
     {
@@ -1805,10 +1841,10 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        2700,
-        120.0
+        6688,
+        2112
       ],
-      "id": "10913b4c-22b4-4d59-b49e-1261186fa778",
+      "id": "bfd24368-f4ee-4128-9f4e-513b2429f8d6",
       "name": "Gmail - Enviar respuesta automática",
       "webhookId": "gmail-send-normal-response-webhook",
       "credentials": {
@@ -1847,10 +1883,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3510,
-        120.0
+        480,
+        2112
       ],
-      "id": "aef40dcb-de2b-4e7a-a146-6a93cfec5f40",
+      "id": "900cbe05-9ad5-4286-b003-a93df1901ae8",
       "name": "Preparar borrador HITL Gmail"
     },
     {
@@ -1876,10 +1912,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2700,
-        -360.0
+        6688,
+        1632
       ],
-      "id": "783a073e-f479-4170-8c90-f310aa58c034",
+      "id": "8fd0a8d3-b7b4-46fe-9e5f-1d3a695358f8",
       "name": "Preparar payload mínimo Slack"
     },
     {
@@ -1895,10 +1931,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -1890,
-        120.0
+        2096,
+        2112
       ],
-      "id": "9f9aabf9-6364-4682-8156-14fef0cf3e21",
+      "id": "0de75190-0922-45e9-a59a-506d9b1219c3",
       "name": "Modelo Router OpenAI",
       "credentials": {
         "openAiApi": {
@@ -1918,10 +1954,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        4050,
-        -240.0
+        8048,
+        1744
       ],
-      "id": "17e026a8-112c-45b7-93a4-ac815cdb0f61",
+      "id": "e9bbb8d6-a034-45cd-b8e8-b9366252b558",
       "name": "AI Agent Analitico"
     },
     {
@@ -1937,10 +1973,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        4050,
-        280.0
+        8048,
+        1952
       ],
-      "id": "f5c9e14f-cd8c-4259-abeb-dcd23181fd15",
+      "id": "92aa1b8c-626b-4628-9be4-10e41c1507ad",
       "name": "Modelo Analitico OpenAI Chat",
       "credentials": {
         "openAiApi": {
@@ -1957,13 +1993,13 @@
           "messageValues": []
         }
       },
-      "id": "d58948f9-bab2-4287-bfae-292c0f51d7de",
+      "id": "22d552bf-ddab-4363-929a-4f13ecabe92e",
       "name": "Router IA",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        -1890,
-        -240.0
+        2096,
+        1744
       ]
     },
     {
@@ -1977,10 +2013,10 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        810,
-        0.0
+        4800,
+        1984
       ],
-      "id": "0d21af6f-0225-40fb-8a02-7af053a77af9",
+      "id": "3cb1440c-68e7-4a6f-8b4f-85cc3f9e07a0",
       "name": "Responder consulta documental"
     },
     {
@@ -1996,10 +2032,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        810,
-        180.0
+        4800,
+        2160
       ],
-      "id": "712c7194-3515-4fdc-b805-d01bd53b1ef4",
+      "id": "500f9cdf-539c-4176-bcc2-89d74afa6b19",
       "name": "Modelo RAG OpenAI Chat",
       "credentials": {
         "openAiApi": {
@@ -2022,13 +2058,13 @@
           "queryName": "match_document_chunks"
         }
       },
-      "id": "38e7d2e4-68dc-4bd4-8788-4633f6b8b4cc",
+      "id": "7cf5cdc3-e02c-422e-bfd5-fd3887a9bd90",
       "name": "Vector Store Supabase - Recuperar documentos",
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.1,
       "position": [
-        0,
-        0.0
+        4000,
+        1984
       ],
       "alwaysOutputData": true,
       "credentials": {
@@ -2045,10 +2081,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -270,
-        -240.0
+        3728,
+        1744
       ],
-      "id": "762b79cd-e307-467c-baa0-546d93e43c8e",
+      "id": "2569a0be-c915-4b82-8aac-e2d7c37f3add",
       "name": "Preparar consulta documental"
     },
     {
@@ -2058,10 +2094,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        270,
-        120.0
+        4256,
+        2112
       ],
-      "id": "98abb337-0ad7-4e26-b98a-1a57ca5cac6e",
+      "id": "d7d0b3be-1f57-4ee3-a06f-0e5fb62f37e3",
       "name": "Preparar contexto documental"
     },
     {
@@ -2092,10 +2128,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        540,
-        0.0
+        4528,
+        1984
       ],
-      "id": "170a01b3-7711-4904-9004-751aabb8fe64",
+      "id": "02912fdc-4711-4a0f-9bb8-86d0bd750418",
       "name": "¿Hay contexto documental?"
     },
     {
@@ -2106,10 +2142,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        810,
-        -240.0
+        4800,
+        1744
       ],
-      "id": "b5258e57-37f9-42fc-b435-6985ce895bed",
+      "id": "0dc4e630-174b-43c9-b850-d6f0c8ec4f3b",
       "name": "Sin contexto documental"
     },
     {
@@ -2159,10 +2195,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1080,
-        -120.0
+        5072,
+        1872
       ],
-      "id": "99828b6b-23da-4eac-bf4b-b03406bc7143",
+      "id": "e74caa23-e858-4594-b7af-317fa3e2329b",
       "name": "Formatear respuesta RAG"
     },
     {
@@ -2175,23 +2211,23 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1000,
-        -1500
+        4992,
+        480
       ],
-      "id": "50cb28c6-3e83-4db4-a916-e9f5ff4a226a",
+      "id": "1f4bccc2-4e58-48b3-a674-09d0fa4b9baa",
       "name": "Nota - RAG"
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "5a357725-535d-40ef-b1b1-4ea1b75534c0",
+      "id": "0f83b6e1-49f6-4826-9ee7-51fb02fbafe9",
       "name": "Embeddings2",
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        0,
-        180.0
+        4000,
+        2160
       ],
       "credentials": {
         "openAiApi": {
@@ -2373,10 +2409,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -270,
-        -720.0
+        3728,
+        1264
       ],
-      "id": "2b5cf838-8829-4fed-a96f-6b8173f7530a",
+      "id": "1772d7eb-faab-4e77-be13-1672f7db31d9",
       "name": "HITL - Registrar solicitud",
       "alwaysOutputData": true,
       "credentials": {
@@ -2414,10 +2450,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -3240,
-        -360.0
+        752,
+        1632
       ],
-      "id": "e7579076-b107-4920-9ddd-9284e3bff61f",
+      "id": "8cd22af1-2947-4b76-b44b-ab5c03c2de36",
       "name": "¿Es aprobación HITL?"
     },
     {
@@ -2427,10 +2463,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2970,
-        0.0
+        1024,
+        1984
       ],
-      "id": "501accf3-e1a9-4ae0-92c9-427902206d53",
+      "id": "9d580487-6daf-46ce-ad49-ce34a074a37f",
       "name": "HITL - Interpretar aprobación"
     },
     {
@@ -2454,10 +2490,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -2700,
-        0.0
+        1296,
+        1984
       ],
-      "id": "25118e39-f1c3-44e4-bd72-bbf275b690d1",
+      "id": "738552f4-40d2-44bf-a079-a0dc0bca4755",
       "name": "HITL - Buscar solicitudes",
       "alwaysOutputData": true,
       "credentials": {
@@ -2474,10 +2510,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2430,
-        0.0
+        1568,
+        1984
       ],
-      "id": "d55e597a-5f1c-40a6-b7b9-f74067916597",
+      "id": "d439d330-40d2-44c7-9cd7-58546d2d950b",
       "name": "HITL - Resolver aprobación"
     },
     {
@@ -2497,10 +2533,10 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        -1890,
-        240.0
+        2096,
+        2224
       ],
-      "id": "a75ae85d-37ab-4688-83a4-ffb7ae58155c",
+      "id": "700279aa-3da8-4319-8e1f-b78d7bbe1529",
       "name": "HITL - Responder aprobación",
       "webhookId": "c97eb359-94a6-49ea-8586-c3661ae7f597",
       "credentials": {
@@ -2580,18 +2616,15 @@
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         },
-        "options": {},
-        "matchingColumns": [
-          "Session_ID"
-        ]
+        "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1890,
-        0.0
+        2096,
+        1984
       ],
-      "id": "e195f1a9-7257-486e-9c2f-bc6214bda6d4",
+      "id": "b429226f-b071-4249-970c-055e26d77abc",
       "name": "HITL - Update decision",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -2628,10 +2661,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -2160,
-        0.0
+        1840,
+        1984
       ],
-      "id": "0531405c-f678-4a22-aef3-d3668e85b061",
+      "id": "28598cf6-055e-4e62-9c94-d3d90acd712a",
       "name": "¿Aprobación HITL válida?"
     },
     {
@@ -2641,10 +2674,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        540,
-        -240.0
+        4528,
+        1744
       ],
-      "id": "91fd9f99-7f63-45a3-baa6-382e2854ddad",
+      "id": "4bb63b1a-066d-4927-aa6b-09e04def4fff",
       "name": "HITL - Prepare decision"
     },
     {
@@ -2654,10 +2687,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3780,
-        -120.0
+        208,
+        1872
       ],
-      "id": "7afa08c3-347f-4c8c-999c-175d9b547bf2",
+      "id": "891e20f5-945b-404c-8ec7-6979ec5a712e",
       "name": "HITL - Restaurar solicitud aprobada"
     },
     {
@@ -2667,7 +2700,7 @@
             "caseSensitive": true,
             "leftValue": "",
             "typeValidation": "strict",
-            "version": 2
+            "version": 3
           },
           "conditions": [
             {
@@ -2688,23 +2721,23 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -4050,
-        0.0
+        -64,
+        1984
       ],
-      "id": "4eac5eec-5b1c-472f-9019-6d32df1449af",
+      "id": "b864e93d-536b-4002-8a87-2fbe68830042",
       "name": "¿HITL aprobó envío automático?"
     },
     {
       "parameters": {
         "jsCode": "return $input.all().map(item => {\n  if (typeof item.json.text !== 'string') throw new Error('El redactor de voz no devolvió texto.');\n  if (/(^|\\n)\\s*[-–—]\\s+/u.test(item.json.text)) throw new Error('La respuesta de voz contiene viñetas.');\n  const respuesta = item.json.text.replace(/\\s+/g, ' ').trim();\n  const original = $('Capturar respuesta original para voz').first().json.respuesta_original;\n  if (!respuesta || Array.from(respuesta).length > 200) throw new Error('La respuesta de voz está vacía o supera los 200 caracteres.');\n  if (respuesta === 'No puedo resumir esta respuesta con seguridad.') throw new Error('El redactor no pudo resumir la respuesta con seguridad.');\n  if (/[0-9０-９]/u.test(respuesta) || /\\b(?:CLP|CL|ml)\\b/i.test(respuesta) || /\\$/.test(respuesta)) throw new Error('La respuesta de voz contiene cifras o unidades sin expresar en palabras.');\n  if (/https?:\\/\\/|www\\.|\\b[a-z0-9-]+\\.(?:com|cl|org|net|io)\\b|\\[[^\\]]+\\]\\([^)]+\\)/i.test(respuesta) || /[*_\\x60~>#•]/u.test(respuesta) || /[\\p{Extended_Pictographic}\\p{Emoji_Presentation}\\uFE0F\\u200D]/u.test(respuesta)) throw new Error('La respuesta de voz contiene enlaces, formato o emojis.');\n  if (/[?¿]/.test(original) && !/\\?/.test(respuesta)) throw new Error('La respuesta de voz omitió la pregunta de la respuesta original.');\n  return { json: { respuesta_voz: respuesta } };\n});"
       },
-      "id": "c2b0c962-a086-4263-a2cc-e1e13a1a8402",
+      "id": "e9ae07a1-0614-48a9-8d07-b4cc5c7a27b5",
       "name": "Prepare Slack voice response (200 characters)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2970,
-        240.0
+        6960,
+        2224
       ],
       "notesInFlow": true,
       "onError": "continueErrorOutput",
@@ -2714,13 +2747,13 @@
       "parameters": {
         "jsCode": "return $input.all().map(item => {\n  if (typeof item.json.respuesta !== 'string' || !item.json.respuesta.trim()) throw new Error('No hay respuesta original para convertir en voz.');\n  return { json: { respuesta_original: item.json.respuesta } };\n});"
       },
-      "id": "026db49e-0cc6-4024-abc8-2788a1e3f2c6",
+      "id": "d337335a-bdbf-4161-9af6-31ba0c513768",
       "name": "Capturar respuesta original para voz",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1890,
-        120.0
+        5664,
+        2480
       ],
       "onError": "continueErrorOutput"
     },
@@ -2732,13 +2765,13 @@
           "messageValues": []
         }
       },
-      "id": "65d28799-0ded-4951-b481-08b32082d7ce",
+      "id": "067d8f66-6604-479d-9cdc-f38ea6cf969d",
       "name": "Redactar respuesta natural para voz",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        2160,
-        120.0
+        6032,
+        2432
       ],
       "onError": "continueErrorOutput"
     },
@@ -2767,13 +2800,13 @@
         },
         "options": {}
       },
-      "id": "d916218e-de04-46e9-95a7-f1a7866b7a23",
+      "id": "ed4bdeda-2959-4c89-bb66-de7f7c03fc19",
       "name": "IF - Resumen supera 200 caracteres",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2430,
-        240.0
+        6480,
+        2224
       ]
     },
     {
@@ -2784,13 +2817,13 @@
           "messageValues": []
         }
       },
-      "id": "628650bc-327e-4595-8d53-0ddb7138d543",
+      "id": "b45f54bf-3e68-427c-8988-7e8c1859c8c2",
       "name": "Reintentar resumen breve para voz",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        2700,
-        360.0
+        6688,
+        2352
       ],
       "onError": "continueErrorOutput"
     },
@@ -2804,13 +2837,13 @@
         "builtInTools": {},
         "options": {}
       },
-      "id": "10b37f98-4c66-4214-8190-86f77dd52a74",
+      "id": "acb1b2ec-04b3-48af-b5cd-be371740c9f9",
       "name": "Modelo redactor de voz",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        2700,
-        540.0
+        7056,
+        2656
       ],
       "credentials": {
         "openAiApi": {
@@ -2837,13 +2870,13 @@
           }
         }
       },
-      "id": "5227e933-346c-4b11-81db-00b0d36bcf14",
+      "id": "0bf99f6f-0f1f-4898-8729-6befe54d57d4",
       "name": "Slack - Respuesta original por error de voz",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        3240,
-        240.0
+        7232,
+        2224
       ],
       "webhookId": "e853dd5a-fb00-4ea6-9aa4-57b046068105",
       "credentials": {
@@ -2876,13 +2909,13 @@
         },
         "requestOptions": {}
       },
-      "id": "d7706a7a-df30-4149-8ce3-f88c9f57a119",
+      "id": "93c5ae57-379c-400a-a2e3-8bc2d9959539",
       "name": "ElevenLabs - Generate Slack voice",
       "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
       "typeVersion": 1,
       "position": [
-        3240,
-        0.0
+        7232,
+        1984
       ],
       "credentials": {
         "elevenLabsApi": {
@@ -2903,13 +2936,13 @@
           "title": "GustoBot voice response"
         }
       },
-      "id": "035104a7-4f97-480e-b57d-fce86a73730b",
+      "id": "b9c14bee-c01d-4adb-8d37-467eec906171",
       "name": "Slack - Upload voice reply",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        3510,
-        0.0
+        7504,
+        1984
       ],
       "webhookId": "7222799f-9e44-4132-8eef-dc8719d320c7",
       "credentials": {
@@ -2924,13 +2957,13 @@
       "parameters": {
         "jsCode": "return $input.all().map(item => ({ json: item.json }));"
       },
-      "id": "4e3b91d4-178b-4b3f-b12d-e41ca0827f9a",
+      "id": "24581d6c-96f4-40dc-a25b-dfdaae950a73",
       "name": "Privacy - Drop generated audio",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3780,
-        0.0
+        7776,
+        1984
       ]
     },
     {
@@ -2951,13 +2984,13 @@
           }
         }
       },
-      "id": "421a3e5e-39a4-4b51-80b6-ee983b4f2089",
+      "id": "ee1f9671-49a8-4d47-ac5e-65a923a180a5",
       "name": "Slack - Text fallback for voice reply",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        4050,
-        0.0
+        8016,
+        2176
       ],
       "webhookId": "100d9ce0-a657-4634-9d84-0dcc4c731c59",
       "credentials": {
@@ -2992,24 +3025,24 @@
         },
         "options": {}
       },
-      "id": "99141c5a-7f0d-497a-bdc3-effd63bd5891",
+      "id": "abda0a86-e01f-41be-b78b-ddf0c2be6a42",
       "name": "IF - Suppress automatic reply",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2430,
-        -240.0
+        6416,
+        1744
       ]
     },
     {
       "parameters": {},
-      "id": "b07a247d-0822-48cd-ac26-b15b803c2b31",
+      "id": "9dd86860-e7d0-49c8-9b2a-87e4e40507ac",
       "name": "NoOp - Voice reply already sent",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        2700,
-        -120.0
+        6688,
+        1872
       ]
     },
     {
@@ -3037,13 +3070,13 @@
         },
         "options": {}
       },
-      "id": "5079abd4-778c-4efe-8451-ecd259e070ec",
+      "id": "962673b5-d344-485f-b47f-e110c6940f6a",
       "name": "IF - Slack audio response",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1620,
-        120.0
+        5296,
+        2528
       ]
     },
     {
@@ -3052,13 +3085,13 @@
         "text": "No pude generar una respuesta de voz para tu consulta. Podés volver a intentarlo o escribir tu mensaje.",
         "additionalFields": {}
       },
-      "id": "508f4ef2-2213-4cdd-9621-153b9a38e046",
+      "id": "e9f7b755-25ae-40c3-89c8-def96360a7fd",
       "name": "Telegram Voice - Fallback",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2970,
-        -240.0
+        6960,
+        1744
       ],
       "webhookId": "4bf5fcb3-f9c8-43d9-a651-6496bec779bc",
       "credentials": {
@@ -3073,6 +3106,7 @@
         "conditions": {
           "options": {
             "caseSensitive": true,
+            "leftValue": "",
             "typeValidation": "strict",
             "version": 2
           },
@@ -3091,26 +3125,26 @@
         },
         "options": {}
       },
-      "id": "integrated-telegram-output-if",
+      "id": "a1f964ef-a4c1-4653-9a72-ed62c656f45a",
       "name": "Telegram Voice - IF - Respuesta Telegram",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1620,
-        -360.0
+        5616,
+        1632
       ]
     },
     {
       "parameters": {
         "jsCode": "const respuesta = String($json.respuesta ?? '').trim();\nif (!respuesta) throw new Error('No hay respuesta final para Telegram.');\nreturn [{ json: { respuesta_original: respuesta } }];"
       },
-      "id": "integrated-telegram-capture-response",
+      "id": "8712ab10-d593-4964-a9f2-7c33e6ff4076",
       "name": "Telegram Voice - Capturar respuesta final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1890,
-        -360.0
+        5888,
+        1632
       ],
       "onError": "continueErrorOutput"
     },
@@ -3122,13 +3156,13 @@
           "messageValues": []
         }
       },
-      "id": "integrated-telegram-redactor",
+      "id": "8705474e-07ee-4dbe-b47a-d636cfe29540",
       "name": "Telegram Voice - Redactar respuesta voz (200 caracteres)",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        2700,
-        720.0
+        6688,
+        2704
       ],
       "onError": "continueErrorOutput"
     },
@@ -3136,13 +3170,13 @@
       "parameters": {
         "jsCode": "const text=String($json.text ?? $json.output ?? '').replace(/\\s+/g,' ').trim();\nif (!text || Array.from(text).length > 200) throw new Error('La respuesta de Telegram debe tener entre 1 y 200 caracteres.');\nif (/https?:\\/\\/|www\\.|(^|\\s)[-*?]\\s|[\\p{Extended_Pictographic}\\p{Emoji_Presentation}\\uFE0F\\u200D]/u.test(text)) throw new Error('La respuesta contiene enlaces, viñetas o emojis.');\nreturn [{json:{text}}];"
       },
-      "id": "integrated-telegram-output-validator",
+      "id": "47060a8c-60c8-41fb-a9fb-1ac6f5e62977",
       "name": "Telegram Voice - Validar salida de voz (200 caracteres)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2430,
-        -480.0
+        6416,
+        1504
       ],
       "onError": "continueErrorOutput"
     },
@@ -3166,39 +3200,41 @@
         },
         "requestOptions": {}
       },
-      "id": "integrated-telegram-output-eleven",
+      "id": "32aac478-d29f-4461-b1c9-6b5851e264c1",
       "name": "Telegram Voice - ElevenLabs - Respuesta Telegram",
       "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
       "typeVersion": 1,
       "position": [
-        2700,
-        -600.0
+        6688,
+        1392
       ],
-      "onError": "continueErrorOutput",
       "credentials": {
         "elevenLabsApi": {
+          "id": "R3ztKarSSQVViGRW",
           "name": "ElevenLabs account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
         "operation": "sendAudio",
         "chatId": "={{ $('Preparar respuesta final').first().json.chat_id }}",
         "binaryData": true,
-        "binaryPropertyName": "data",
         "additionalFields": {}
       },
-      "id": "integrated-telegram-output-send",
+      "id": "7ba2355a-813b-4824-b596-3d45513b07c4",
       "name": "Telegram Voice - Telegram - Send Audio integrado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2970,
-        -480.0
+        6960,
+        1504
       ],
+      "webhookId": "8d18b9ab-9489-41ab-8f40-8d7dd3da7575",
       "credentials": {
         "telegramApi": {
+          "id": "EdDPfHyWHFeAgpqn",
           "name": "Telegram account"
         }
       }
@@ -3207,13 +3243,13 @@
       "parameters": {
         "jsCode": "return $input.all().map(item => ({ json: { telegram_audio_discarded: true } }));"
       },
-      "id": "integrated-telegram-output-drop",
+      "id": "915820a3-7431-4049-8a78-7792d9272a70",
       "name": "Telegram Voice - Privacy - Descartar audio Telegram",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3240,
-        -480.0
+        7232,
+        1504
       ]
     },
     {
@@ -3221,59 +3257,48 @@
         "workflowInputs": {
           "values": [
             {
-              "name": "mensaje",
-              "type": "string"
+              "name": "mensaje"
             },
             {
-              "name": "original_input",
-              "type": "string"
+              "name": "original_input"
             },
             {
-              "name": "usuario_id",
-              "type": "string"
+              "name": "usuario_id"
             },
             {
-              "name": "canal",
-              "type": "string"
+              "name": "canal"
             },
             {
-              "name": "tipo_entrada",
-              "type": "string"
+              "name": "tipo_entrada"
             },
             {
-              "name": "chat_id",
-              "type": "string"
+              "name": "chat_id"
             },
             {
-              "name": "Session_ID",
-              "type": "string"
+              "name": "Session_ID"
             },
             {
-              "name": "source_message_id",
-              "type": "string"
+              "name": "source_message_id"
             },
             {
-              "name": "asunto",
-              "type": "string"
+              "name": "asunto"
             },
             {
-              "name": "thread_ts",
-              "type": "string"
+              "name": "thread_ts"
             },
             {
-              "name": "slack_channel_id",
-              "type": "string"
+              "name": "slack_channel_id"
             }
           ]
         }
       },
-      "id": "b645a718-ed17-4f3e-925c-3eadbe0995ea",
+      "id": "9b97258a-ce34-4a81-9cd9-bf90099995df",
       "typeVersion": 1.1,
       "name": "Start - Channel Module Payload",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
-        -4050,
-        -240.0
+        -64,
+        1744
       ]
     },
     {
@@ -3281,13 +3306,13 @@
         "mode": "runOnceForEachItem",
         "jsCode": "const input=$('Entrada multicanal').first().json;\nconst classification=$('Normalizar clasificacion Router').first().json;\nreturn {json:{\n  channel:String(input.canal??'').trim().toLowerCase(),\n  user_id:String(input.usuario_id??''),\n  chat_id:String(input.chat_id??''),\n  slack_channel_id:String(input.slack_channel_id??''),\n  thread_ts:String(input.thread_ts??''),\n  subject:`Revisión humana: ${String(input.asunto??'Su solicitud').slice(0,160)}`,\n  ack_text:'Recibimos tu mensaje y lo derivamos a una persona del equipo para su revisión. Te contactaremos por este canal.',\n  critical_signal:classification.critical_signal??'',\n}};"
       },
-      "id": "0e77f597688b47c88ec47c65ad19659c",
+      "id": "788ff697-37ba-422d-9e8f-e07f69d2f626",
       "name": "HITL - Preparar acuse neutral",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1310,
-        -1120
+        5296,
+        864
       ]
     },
     {
@@ -3315,13 +3340,13 @@
         },
         "options": {}
       },
-      "id": "65aec0ea0adf48ed875593e229020588",
+      "id": "74cc654d-03a8-4dbe-8790-5325cddc91f1",
       "name": "HITL - ¿Acuse por Gmail?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1540,
-        -1120
+        5536,
+        864
       ]
     },
     {
@@ -3349,13 +3374,13 @@
         },
         "options": {}
       },
-      "id": "5fd0837fa33c4ac8bcddfe564432b528",
+      "id": "e43995cb-2635-40e6-bac1-e0cc9ec3723f",
       "name": "HITL - ¿Acuse por Telegram?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1770,
-        -980
+        5760,
+        1008
       ]
     },
     {
@@ -3363,10 +3388,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        2010,
-        -1120
+        6000,
+        864
       ],
-      "id": "08d29926a7a74bb0a2a2b1ee88d7a2a7",
+      "id": "37ac9f10-306e-410c-81c8-5e514a23f1c2",
       "name": "HITL - Esperar decisión sin acuse previo"
     },
     {
@@ -3375,13 +3400,13 @@
         "text": "={{ $json.ack_text }}",
         "additionalFields": {}
       },
-      "id": "68443620fb7d4761a3b62f002b0ef7c7",
+      "id": "80481ef5-7e3f-414b-8b3e-752f48a450a3",
       "name": "HITL - Enviar acuse neutral Telegram",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2010,
-        -980
+        6000,
+        1008
       ],
       "webhookId": "4bf5fcb3-f9c8-43d9-a651-6496bec779bc",
       "credentials": {
@@ -3396,13 +3421,13 @@
         "mode": "runOnceForEachItem",
         "jsCode": "const decision=String($json.human_decision??'REJECTED');\nlet respuesta='El caso permanece asignado a una persona del equipo para continuar la atención.';\nif(decision==='APPROVED') respuesta='El caso requiere atención humana y queda derivado a una persona del equipo para continuar la atención.';\nelse if(decision==='REJECTED') respuesta='La respuesta automática fue rechazada. El caso queda derivado a una persona del equipo para continuar la atención.';\nelse if(decision==='EXPIRED') respuesta='La solicitud de aprobación venció. El caso queda derivado a una persona del equipo para continuar la atención.';\nreturn {json:{...$json,status:'needs_human',worker:'HITL',requires_human:true,human_decision:decision,respuesta}};"
       },
-      "id": "6c257ebece244915a04007fd03fc5518",
+      "id": "94b0fa77-cf51-42f4-bb76-845070bde66d",
       "name": "HITL - Mantener caso en atención humana",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1320,
-        -780
+        5312,
+        1200
       ]
     },
     {
@@ -3415,10 +3440,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2000,
-        250
+        5888,
+        2592
       ],
-      "id": "df45517c-33b9-4c15-96d2-51f840e7b4a1",
+      "id": "03b82132-2532-42b4-b1db-267088088dd9",
       "name": "Nota - Semáforo y Scorecard QA"
     },
     {
@@ -3446,28 +3471,26 @@
         },
         "options": {}
       },
-      "id": "8e4a0f4e-9018-47d1-82bb-a8c68549c724",
+      "id": "ba8174af-79c5-42da-8208-1e35e61ba873",
       "name": "IF - HITL ya aprobado",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2070,
-        80
+        6064,
+        2064
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
-        "language": "javaScript",
         "jsCode": "const items = $input.all();\nif (items.length === 0) return [];\nconst latest = items.reduce((best, candidate) => {\n  const bestTime = Date.parse(String(best.json.timestamp ?? ''));\n  const candidateTime = Date.parse(String(candidate.json.timestamp ?? ''));\n  if (!Number.isFinite(bestTime) && !Number.isFinite(candidateTime)) return candidate;\n  if (!Number.isFinite(bestTime)) return candidate;\n  if (Number.isFinite(candidateTime) && candidateTime >= bestTime) return candidate;\n  return best;\n}, items[0]);\nreturn [latest];"
       },
-      "id": "6e759dfc-3253-4161-b67a-0b54117c345c",
+      "id": "bffe29b2-6e39-45d4-ac3a-f3f921936c3d",
       "name": "Memoria - Seleccionar último registro",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2840,
-        -360.0
+        1152,
+        1632
       ]
     },
     {
@@ -3495,13 +3518,13 @@
         },
         "options": {}
       },
-      "id": "d8367858-61cd-443c-a8ea-28ec57a9ae65",
+      "id": "8303fd10-8d8c-453a-9d3f-2ebcbea04e10",
       "name": "IF - Approved but QA blocks send",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2280,
-        220.0
+        6272,
+        2208
       ]
     },
     {
@@ -3529,18 +3552,105 @@
         },
         "options": {}
       },
-      "id": "1fcc487b-6c80-4e7b-a5d8-921e2f8294ee",
+      "id": "42231b7b-bb39-47f3-b36a-efce040105e2",
       "name": "HITL - ¿Avisar seguimiento humano en Slack?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2470,
-        420
+        6464,
+        2400
       ]
     }
   ],
   "pinData": {},
   "connections": {
+    "IF - Enrutar voz con agente": {
+      "main": [
+        [
+          {
+            "node": "Seleccionar contexto para voz",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Router IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seleccionar contexto para voz": {
+      "main": [
+        [
+          {
+            "node": "AI Agent central - Enrutamiento de voz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent central - Enrutamiento de voz": {
+      "main": [
+        [
+          {
+            "node": "Validar ruta del agente de voz",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack - Error agente de voz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo agente central de voz": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent central - Enrutamiento de voz",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seleccionar ruta voz": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent central - Enrutamiento de voz",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar ruta del agente de voz": {
+      "main": [
+        [
+          {
+            "node": "Normalizar clasificacion Router",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack - Error agente de voz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Respuesta  a Slack": {
       "main": [
         [
@@ -3552,51 +3662,22 @@
         ]
       ]
     },
-    "¿Es respuesta de correo?": {
+    "HITL - Unificar caso entrante": {
       "main": [
         [
           {
-            "node": "Preparar envío de respuesta Gmail",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "IF - Suppress automatic reply",
+            "node": "Preparar HITL / Unknown",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Preparar envío de respuesta Gmail": {
+    "Entrada multicanal": {
       "main": [
         [
           {
-            "node": "Gmail - Enviar respuesta automática",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Gmail - Enviar respuesta automática": {
-      "main": [
-        [
-          {
-            "node": "Cuenta Log de Ejecucion sheet1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Preparar payload mínimo Slack": {
-      "main": [
-        [
-          {
-            "node": "Respuesta  a Slack",
+            "node": "¿Es aprobación HITL?",
             "type": "main",
             "index": 0
           }
@@ -3626,17 +3707,6 @@
         [
           {
             "node": "Switch",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HITL - Unificar caso entrante": {
-      "main": [
-        [
-          {
-            "node": "Preparar HITL / Unknown",
             "type": "main",
             "index": 0
           }
@@ -3704,6 +3774,41 @@
         ]
       ]
     },
+    "Switch - Semáforo operativo (85+)": {
+      "main": [
+        [
+          {
+            "node": "Log de ejecución",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF - Slack audio response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Voice - IF - Respuesta Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF - HITL ya aprobado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF - HITL ya aprobado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Log de ejecución": {
       "main": [
         [
@@ -3731,17 +3836,6 @@
         [
           {
             "node": "HITL - Prepare decision",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Preparar borrador HITL Gmail": {
-      "main": [
-        [
-          {
-            "node": "③ Create Draft — Borrador HITL",
             "type": "main",
             "index": 0
           }
@@ -3843,17 +3937,6 @@
         ]
       ]
     },
-    "Memoria - Seleccionar último registro": {
-      "main": [
-        [
-          {
-            "node": "If",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Cuenta Log de Ejecucion sheet1": {
       "main": [
         [
@@ -3898,99 +3981,74 @@
         ]
       ]
     },
+    "¿Es respuesta de correo?": {
+      "main": [
+        [
+          {
+            "node": "Preparar envío de respuesta Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF - Suppress automatic reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar envío de respuesta Gmail": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Enviar respuesta automática",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Enviar respuesta automática": {
+      "main": [
+        [
+          {
+            "node": "Cuenta Log de Ejecucion sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar borrador HITL Gmail": {
+      "main": [
+        [
+          {
+            "node": "③ Create Draft — Borrador HITL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar payload mínimo Slack": {
+      "main": [
+        [
+          {
+            "node": "Respuesta  a Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Modelo Router OpenAI": {
       "ai_languageModel": [
         [
           {
             "node": "Router IA",
             "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF - Enrutar voz con agente": {
-      "main": [
-        [
-          {
-            "node": "Seleccionar contexto para voz",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Router IA",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Seleccionar contexto para voz": {
-      "main": [
-        [
-          {
-            "node": "AI Agent central - Enrutamiento de voz",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Modelo agente central de voz": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent central - Enrutamiento de voz",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Seleccionar ruta voz": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent central - Enrutamiento de voz",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent central - Enrutamiento de voz": {
-      "main": [
-        [
-          {
-            "node": "Validar ruta del agente de voz",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Slack - Error agente de voz",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Validar ruta del agente de voz": {
-      "main": [
-        [
-          {
-            "node": "Normalizar clasificacion Router",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Slack - Error agente de voz",
-            "type": "main",
             "index": 0
           }
         ]
@@ -4012,6 +4070,39 @@
         [
           {
             "node": "Normalizar clasificacion Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder consulta documental": {
+      "main": [
+        [
+          {
+            "node": "Formatear respuesta RAG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo RAG OpenAI Chat": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Responder consulta documental",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Supabase - Recuperar documentos": {
+      "main": [
+        [
+          {
+            "node": "Preparar contexto documental",
             "type": "main",
             "index": 0
           }
@@ -4058,17 +4149,6 @@
         ]
       ]
     },
-    "Responder consulta documental": {
-      "main": [
-        [
-          {
-            "node": "Formatear respuesta RAG",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Sin contexto documental": {
       "main": [
         [
@@ -4091,17 +4171,6 @@
         ]
       ]
     },
-    "Modelo RAG OpenAI Chat": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Responder consulta documental",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Embeddings2": {
       "ai_embedding": [
         [
@@ -4113,11 +4182,16 @@
         ]
       ]
     },
-    "Entrada multicanal": {
+    "HITL - Registrar solicitud": {
       "main": [
         [
           {
-            "node": "¿Es aprobación HITL?",
+            "node": "HITL - Preparar acuse neutral",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Respuesta  a Slack1",
             "type": "main",
             "index": 0
           }
@@ -4175,33 +4249,6 @@
         ]
       ]
     },
-    "HITL - Registrar solicitud": {
-      "main": [
-        [
-          {
-            "node": "HITL - Preparar acuse neutral",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Respuesta  a Slack1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Vector Store Supabase - Recuperar documentos": {
-      "main": [
-        [
-          {
-            "node": "Preparar contexto documental",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "¿Aprobación HITL válida?": {
       "main": [
         [
@@ -4214,6 +4261,28 @@
         [
           {
             "node": "HITL - Responder aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Prepare decision": {
+      "main": [
+        [
+          {
+            "node": "¿HITL aprobó envío automático?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL - Restaurar solicitud aprobada": {
+      "main": [
+        [
+          {
+            "node": "Switch",
             "type": "main",
             "index": 0
           }
@@ -4238,22 +4307,18 @@
         ]
       ]
     },
-    "HITL - Restaurar solicitud aprobada": {
+    "Prepare Slack voice response (200 characters)": {
       "main": [
         [
           {
-            "node": "Switch",
+            "node": "ElevenLabs - Generate Slack voice",
             "type": "main",
             "index": 0
           }
-        ]
-      ]
-    },
-    "IF - Slack audio response": {
-      "main": [
+        ],
         [
           {
-            "node": "Capturar respuesta original para voz",
+            "node": "Slack - Respuesta original por error de voz",
             "type": "main",
             "index": 0
           }
@@ -4273,22 +4338,6 @@
           {
             "node": "Slack - Error agente de voz",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Modelo redactor de voz": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Redactar respuesta natural para voz",
-            "type": "ai_languageModel",
-            "index": 0
-          },
-          {
-            "node": "Reintentar resumen breve para voz",
-            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -4348,19 +4397,22 @@
         ]
       ]
     },
-    "Prepare Slack voice response (200 characters)": {
-      "main": [
+    "Modelo redactor de voz": {
+      "ai_languageModel": [
         [
           {
-            "node": "ElevenLabs - Generate Slack voice",
-            "type": "main",
+            "node": "Redactar respuesta natural para voz",
+            "type": "ai_languageModel",
             "index": 0
-          }
-        ],
-        [
+          },
           {
-            "node": "Slack - Respuesta original por error de voz",
-            "type": "main",
+            "node": "Reintentar resumen breve para voz",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Telegram Voice - Redactar respuesta voz (200 caracteres)",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -4407,6 +4459,35 @@
         ]
       ]
     },
+    "IF - Suppress automatic reply": {
+      "main": [
+        [
+          {
+            "node": "NoOp - Voice reply already sent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar payload mínimo Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Slack audio response": {
+      "main": [
+        [
+          {
+            "node": "Capturar respuesta original para voz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Telegram Voice - IF - Respuesta Telegram": {
       "main": [
         [
@@ -4415,8 +4496,7 @@
             "type": "main",
             "index": 0
           }
-        ],
-        []
+        ]
       ]
     },
     "Telegram Voice - Capturar respuesta final": {
@@ -4450,15 +4530,6 @@
           {
             "node": "Telegram Voice - Fallback",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ],
-      "ai_languageModel": [
-        [
-          {
-            "node": "Modelo redactor de voz",
-            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -4505,17 +4576,6 @@
         [
           {
             "node": "Telegram Voice - Privacy - Descartar audio Telegram",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HITL - Prepare decision": {
-      "main": [
-        [
-          {
-            "node": "¿HITL aprobó envío automático?",
             "type": "main",
             "index": 0
           }
@@ -4580,17 +4640,21 @@
         ]
       ]
     },
-    "③ Create Draft — Borrador HITL": {
-      "main": []
-    },
-    "HITL - Enviar acuse neutral Telegram": {
-      "main": []
-    },
-    "HITL - Esperar decisión sin acuse previo": {
-      "main": []
-    },
-    "HITL - Responder aprobación": {
-      "main": []
+    "HITL - Mantener caso en atención humana": {
+      "main": [
+        [
+          {
+            "node": "Log de ejecución",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HITL - ¿Avisar seguimiento humano en Slack?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "IF - HITL ya aprobado": {
       "main": [
@@ -4620,6 +4684,17 @@
         ]
       ]
     },
+    "Memoria - Seleccionar último registro": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "IF - Approved but QA blocks send": {
       "main": [
         [
@@ -4638,75 +4713,6 @@
         ]
       ]
     },
-    "Switch - Semáforo operativo (85+)": {
-      "main": [
-        [
-          {
-            "node": "Log de ejecución",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "IF - Slack audio response",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Telegram Voice - IF - Respuesta Telegram",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "IF - HITL ya aprobado",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "IF - HITL ya aprobado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HITL - Mantener caso en atención humana": {
-      "main": [
-        [
-          {
-            "node": "Log de ejecución",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "HITL - ¿Avisar seguimiento humano en Slack?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF - Suppress automatic reply": {
-      "main": [
-        [
-          {
-            "node": "NoOp - Voice reply already sent",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Preparar payload mínimo Slack",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "HITL - ¿Avisar seguimiento humano en Slack?": {
       "main": [
         [
@@ -4715,21 +4721,16 @@
             "type": "main",
             "index": 0
           }
-        ],
-        []
+        ]
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "saveDataErrorExecution": "none",
-    "saveDataSuccessExecution": "none",
-    "saveManualExecutions": false,
-    "saveExecutionProgress": false
+    "binaryMode": "separate"
   },
-  "versionId": "3deb795c-90ac-4441-a6dc-c48c79c8e28f",
+  "versionId": "f6aacd2e-efdd-4ba9-a1fb-efbe9897c190",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "be553d31346f4aa161cf19895cb1235d99ef39216710aebf19f62e79e992bbe8"
