@@ -1,5 +1,5 @@
 {
-  "name": "Checkpoint 7 - Telegram Voice Module",
+  "name": "Telegram Voice Module",
   "pinData": {},
   "settings": {
     "executionOrder": "v1",
@@ -199,10 +199,10 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "r2J1TG0XqjmYF9FX",
+          "value": "89xkyjtkZCgRoCwZ",
           "mode": "list",
-          "cachedResultUrl": "/workflow/r2J1TG0XqjmYF9FX",
-          "cachedResultName": "Checkpoint 7 Final - RAG + Voice AI Telegram"
+          "cachedResultUrl": "/workflow/89xkyjtkZCgRoCwZ",
+          "cachedResultName": "Checkpoint8 AI Judge - Pruebas AB"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",

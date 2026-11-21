@@ -1,4 +1,4 @@
-# GustoBot | Flujo omnicanal de pedidos y atención (Checkpoint 7)
+# GustoBot | Flujo omnicanal de pedidos y atención (Checkpoint 8)
 
 ![n8n](https://img.shields.io/badge/n8n-Workflow-orange?style=for-the-badge&logo=n8n)
 ![Groq](https://img.shields.io/badge/Groq-LLM_Engine-purple?style=for-the-badge)
@@ -13,17 +13,19 @@
 
 ## Descripción del proyecto
 
-**GustoBot** es un asistente virtual para gestionar pedidos, consultas y reclamos de un restaurante. El **Checkpoint 7** continúa la solución del Checkpoint 6: conserva la arquitectura multi-agente Manager-Worker, la atención por Slack, Gmail y Telegram, HubSpot, revisión humana (HITL) y RAG documental con Supabase. La solución separa el procesamiento central de los adaptadores de canal: Slack, Gmail y Telegram normalizan sus entradas y llaman al workflow central; la ingesta documental de Drive queda en otro workflow.
+**GustoBot** es un asistente virtual para gestionar pedidos, consultas y reclamos de un restaurante. El **Checkpoint 8** evoluciona el flujo multicanal del Checkpoint 7: conserva la arquitectura Manager-Worker, Slack, Gmail y Telegram, HubSpot, revisión humana (HITL) y RAG con Supabase, e incorpora un AI Judge factual antes del scorecard determinístico. Los exports describen workflows configurables, no prueban una ejecución con credenciales reales; el workflow principal de Checkpoint 8 está exportado inactivo.
 
 ## Archivos y recursos
 
-* **`Checkpoint7_Final_VoiceAI_Telegram.json`**: workflow central de conversación. Recibe campos normalizados explícitos (`mensaje`, `original_input`, `usuario_id`, `canal`, `tipo_entrada` y metadatos de canal) por `Execute Workflow`; conserva el enrutamiento, workers, RAG de consulta y HITL.
-* **`Checkpoint7_Slack_Channel_Module.json`**: adaptador Slack para entradas de texto/audio, transcripción y contingencias.
-* **`Checkpoint7_Gmail_Channel_Module.json`**: adaptador Gmail para filtrar correos, validar remitentes y preparar el payload de conversación.
-* **`Checkpoint7_Telegram_Voice_Module.json`**: adaptador de voz de Telegram. Descarga y transcribe el audio, valida la transcripción y llama al workflow central sin transferir el binario.
-* **`Checkpoint7_RAG_Ingestion_Module.json`**: workflow independiente para triggers de Drive, extracción, deduplicación, aprobación de reemplazos e indexación en Supabase.
+* **`Checkpoint8_Final_VoiceAI_Telegram.json`**: workflow central de conversación de Checkpoint 8. Añade evaluación factual LLM (AI Judge), una única corrección/re-evaluación y escalado HITL antes del scorecard y la salida por canal. El export está inactivo.
+* **`Checkpoint8_RAG_Ingestion_Module.json`**: workflow separado para detectar documentos nuevos o modificados en Drive, extraer y fragmentar contenido, evitar duplicados, solicitar aprobación para reemplazos e indexar en Supabase. El export está inactivo; su nombre interno todavía dice “Checkpoint 7”.
+* **`Checkpoint8_Test_AI_Judge_AB.json`**: variante experimental del AI Judge exportada inactiva; no es necesaria para el flujo central ni evidencia de que se haya ejecutado una prueba A/B.
+* **`Checkpoint8 AI Judge - Pruebas AB (inactivo).json`**: otra variante inactiva del flujo experimental de evaluación; no activar junto con el workflow principal.
+* **`Slack_Channel_Module.json`**, **`Gmail_Channel_Module.json`** y **`Telegram_Voice_Module.json`**: adaptadores de canal. Verifica que cada llamada apunte al workflow central que se vaya a usar.
+* **`Checkpoint7_Final_VoiceAI_Telegram.json`**: workflow central anterior, conservado como referencia del Checkpoint 7.
 * **`PreEntrega_Checkpoint7_Diseno_Arquitectonico_GustoBot.pdf`**: informe de diseño agéntico vertical, gobernanza, scorecard y escalado HITL.
-* **`Diseno_Arquitectonico_Checkpoint7_GustoBot.md`**: fuente editable del diseño arquitectónico y diagramas; actualizar esta versión antes de preparar el PDF.
+* **`QA Automatizado con AI-as-a-Judge_Checkpoint8_GustoBot.md`**: fuente editable del diseño arquitectónico, scorecard y AI Judge de esta versión.
+* **`Checkpoint_Modulo8_Troncoso_Marcelo.pdf`**: documento de entrega del Módulo 8.
 * **`Supabase_document_chunks.sql`**: esquema de la tabla vectorial `document_chunks` y función `match_document_chunks`.
 * **`Worker_Registrar_Pedido.json`**: worker para registrar pedidos.
 * **`Worker_Atencion_Consultas.json`**: worker para responder consultas.
@@ -33,6 +35,20 @@
 * **[Pantallazos de evidencia del Checkpoint 4](https://docs.google.com/document/d/1o2TdufEyv6BqBbX8gGqfmB_-vun86KBp8qrNTTiD2_0/edit?usp=drive_link)**: capturas de la entrega, disponibles en el documento compartido.
 * [Planilla de logs en Google Sheets](https://docs.google.com/spreadsheets/d/1NmEYqoD3hRMmt2Ni0o4Um-sMYp7XUr-zP_bda_Aw64Y/edit?usp=drivesdk).
 Flujo completo: ![alt text](image.png)
+
+## Checkpoint 8: evaluación factual con AI Judge
+
+El workflow central ejecuta el AI Judge sobre la consulta original, la evidencia entregada por el worker/RAG y la respuesta propuesta. El juez devuelve un objeto estructurado con exactitud factual de 1 a 5, veredicto (`APROBADO`, `CORREGIR` o `ESCALAR`) y una crítica breve. Solo una respuesta con puntaje 4 o 5 y sin afirmaciones no respaldadas puede aprobarse. Si es corregible, el flujo permite un único reintento de redacción y vuelve a evaluar; falta de contexto, contradicciones o una segunda falla se escalan a revisión humana por Slack.
+
+El AI Judge complementa, no reemplaza, `Semáforo + Scorecard QA`: el scorecard determinístico conserva sus criterios de alcance, consentimiento/campos, evidencia, riesgo y trazabilidad (25/20/25/20/10), y las rutas AMARILLA/ROJA siguen sujetas a HITL. Un veredicto del juez no habilita por sí mismo una acción de riesgo ni demuestra que la cita sea semánticamente correcta.
+
+### Puesta en marcha
+
+1. Importa `Checkpoint8_Final_VoiceAI_Telegram.json` como workflow central y los cuatro workers (`Worker_Registrar_Pedido.json`, `Worker_Atencion_Consultas.json`, `Worker_Atencion_Reclamos.json` y `Worker_Anfitrion.json`).
+2. Configura las credenciales e IDs de los workflows llamados. En `Slack_Channel_Module.json`, `Gmail_Channel_Module.json` y `Telegram_Voice_Module.json`, confirma que `Call - Core Conversation Workflow` apunte al workflow central importado y que se mapeen los campos normalizados, no un payload opaco.
+3. Si se habilita RAG, importa `Supabase_document_chunks.sql` en Supabase y configura `Checkpoint8_RAG_Ingestion_Module.json` con Drive, Supabase, Slack y OpenAI. Revisa las credenciales, carpeta y tabla antes de activar la ingesta.
+4. Prueba las rutas de aprobación, corrección, escalado y errores con datos controlados. Los dos exports de prueba AI Judge están inactivos y no sustituyen una comparación A/B ejecutada y medida.
+5. Activa los workflows solo después de comprobar credenciales, permisos, IDs, rutas de error e idempotencia. Los exports centrales y de ingesta de Checkpoint 8 se encuentran inactivos.
 
 ## Arquitectura del Checkpoint 7
 
@@ -120,7 +136,7 @@ Las respuestas de los workers y RAG reciben instrucciones condicionales para sol
 
 **Configuración de Slack:** el Slack App debe suscribirse al evento de archivos compartidos en el canal configurado y tener los scopes `files:read` y `files:write`, además de los permisos de mensajes existentes. La credencial de n8n debe poder leer y publicar archivos en ese canal. El módulo elimina el filtro de usuario del trigger y descarta eventos del bot antes del procesamiento; esto evita que el acuse o la respuesta publicada por el propio bot vuelva a iniciar el flujo. Si se agregan scopes, reinstala la app en el workspace y actualiza la credencial si corresponde. Un error 403 al descargar puede indicar permisos insuficientes o falta de acceso al archivo; se debe verificar con la configuración real de Slack.
 
-## Importar el workflow
+## Importar el workflow del Checkpoint 7 (referencia)
 
 Importa primero `Checkpoint7_Final_VoiceAI_Telegram.json`; después importa los módulos `Checkpoint7_Slack_Channel_Module.json`, `Checkpoint7_Gmail_Channel_Module.json` y `Checkpoint7_Telegram_Voice_Module.json`. En cada módulo, confirma que `Call - Core Conversation Workflow` apunte al workflow central importado y que tenga mapeados los campos explícitos del contrato; no uses un campo único llamado `payload`. Si n8n asigna un ID diferente al importar, vuelve a seleccionar el workflow central en ese nodo. Importa también `Checkpoint7_RAG_Ingestion_Module.json` y los cuatro workflows de worker requeridos por el workflow central.
 

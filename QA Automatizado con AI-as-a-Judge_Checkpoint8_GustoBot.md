@@ -1,10 +1,10 @@
 # Diseño arquitectónico de un sistema agéntico vertical
 
-**Pre-entrega de diseño | Checkpoint 7**  
+**Diseño arquitectónico | Checkpoint 8**  
 **Vertical:** Operaciones y experiencia del cliente para restaurante omnicanal  
 **Proyecto:** GustoBot  
-**Estado:** diseño editable alineado con los exports Checkpoint 7 y sus guardrails actuales.  
-**Alcance de esta versión:** revisión del documento Markdown; el PDF queda expresamente fuera de esta etapa. La existencia de un nodo o una regla en un export no prueba que se haya ejecutado con credenciales reales.
+**Estado:** diseño editable alineado con los exports de Checkpoint 8, que evolucionan la base del Checkpoint 7.  
+**Alcance de esta versión:** documentación del diseño y sus guardrails; la existencia de un nodo o una regla en un export no prueba que se haya ejecutado con credenciales reales.
 
 ## Resumen ejecutivo
 
@@ -69,7 +69,10 @@ flowchart LR
     R --> O
     Q --> O
     J --> O
-    O --> QA[Scorecard QA: 25 + 20 + 25 + 20 + 10]
+    O --> J[AI Judge factual: exactitud 1-5]
+    J -->|APROBADO: 4-5| QA[Scorecard QA: 25 + 20 + 25 + 20 + 10]
+    J -->|CORREGIR: un reintento y reevaluación| J
+    J -->|ESCALAR o sigue sin evidencia| H
     QA --> SW{Semáforo operativo}
     SW -->|VERDE: >=85 y sin riesgo| S[Slack]
     SW -->|VERDE: >=85 y sin riesgo| G[Gmail]
@@ -79,7 +82,7 @@ flowchart LR
     H -->|aprobar / rechazar, con identidad y expiración| O
 ```
 
-La arquitectura reutiliza el Manager-Worker y la división de adaptadores del Checkpoint 7. El RAG de consulta permanece separado de la ingesta documental de Drive. En el workflow exportado, el scorecard y el Switch de tres colores ya están conectados; las salidas amarilla y roja se detienen en HITL. Si una ejecución ya aprobada no supera QA al reintentar, queda asignada a una persona y no vuelve a solicitar la misma aprobación. La aprobación interactiva y los límites de permisos descritos abajo deben verificarse en n8n antes de producción.
+La arquitectura reutiliza el Manager-Worker y la división de adaptadores del Checkpoint 7. El RAG de consulta permanece separado de la ingesta documental de Drive. En Checkpoint 8, las respuestas de worker/RAG pasan primero por un AI Judge factual: puede aprobar, solicitar una única corrección y reevaluación, o escalar a HITL. Después se conserva el scorecard determinístico y el Switch de tres colores; las salidas amarilla y roja se detienen en HITL. El workflow central y la ingesta están exportados inactivos. La aprobación interactiva y los límites de permisos descritos abajo deben verificarse en n8n antes de producción.
 
 ### Roles y contratos de salida
 
@@ -182,7 +185,7 @@ Las metas son criterios de aceptación sugeridos, no resultados actuales. Inform
 
 **Umbral propuesto: 0,85.** Se elige alto porque un mensaje externo incorrecto o un registro equivocado tiene un costo superior a la demora breve de revisión. La confianza del modelo no sustituye evidencia, confirmación ni clasificación de riesgo.
 
-**Correspondencia con los exports actuales:** el flujo principal aplica el umbral de confianza 0,85 antes de delegar y, después de cada worker, ejecuta el nodo nativo `Semáforo + Scorecard QA` y el Switch `VERDE / AMARILLO / ROJO`. Solo VERDE (puntaje ≥85, sin riesgo crítico ni `requires_human`) continúa al canal de salida; AMARILLO y ROJO pasan a HITL. La falta de evidencia estructurada no se sustituye por texto libre. Los pedidos tienen además una compuerta de confirmación explícita y evidencia de menú antes de escribir. Esto describe la configuración exportada, no una prueba de ejecución en producción. La aprobación interactiva de Slack y la recepción de un acuse no autorizan reembolsos ni escrituras rojas.
+**Correspondencia con los exports actuales:** el flujo principal aplica el umbral de confianza 0,85 antes de delegar. Después de una respuesta de worker/RAG, el AI Judge valida la respuesta contra la consulta y la evidencia; si solicita corrección, permite un solo reintento y vuelve a evaluar. Una aprobación del juez continúa al nodo nativo `Semáforo + Scorecard QA` y al Switch `VERDE / AMARILLO / ROJO`. Solo VERDE (puntaje ≥85, sin riesgo crítico ni `requires_human`) continúa al canal de salida; AMARILLO y ROJO pasan a HITL. La falta de evidencia estructurada no se sustituye por texto libre. Los pedidos tienen además una compuerta de confirmación explícita y evidencia de menú antes de escribir. Esto describe la configuración exportada, no una prueba de ejecución en producción. La aprobación interactiva de Slack y la recepción de un acuse no autorizan reembolsos ni escrituras rojas.
 
 ### Escalado forzado a personas
 
@@ -199,7 +202,9 @@ Las metas son criterios de aceptación sugeridos, no resultados actuales. Inform
 
 ### Playbook / rúbrica de evaluación analítica
 
-Cada worker devuelve evidencia estructurada como objetos `source` + `quote`; en RAG, la cita se deriva de los fragmentos recuperados. El scorecard implementado es determinístico (nodo Set), no un juez LLM independiente: valida la presencia y el formato de la evidencia y los controles operativos antes del Switch. En workers con herramientas, la cita la declara el agente a partir de la fuente conectada; esta compuerta estructural no demuestra por sí sola la veracidad semántica de cada cita. Puntuación de 0 a 100; una regla roja prevalece siempre sobre el puntaje.
+Cada worker devuelve evidencia estructurada como objetos `source` + `quote`; en RAG, la cita se deriva de los fragmentos recuperados. Checkpoint 8 agrega un AI Judge LLM que recibe la consulta original, el contexto/evidencia y la respuesta propuesta. Devuelve `exactitud_factual` (1–5), `estado_veredicto` (`APROBADO`, `CORREGIR` o `ESCALAR`) y una crítica breve: aprueba solo con 4 o 5 y sin afirmaciones no respaldadas; permite un único reintento de redacción y reevaluación; si falta evidencia o persiste un problema, escala a HITL. El juez no reemplaza el scorecard determinístico (nodo Set), que verifica luego la presencia y formato de evidencia y los controles operativos antes del Switch. Ninguna de estas compuertas estructurales garantiza por sí sola la verdad semántica de cada cita. La puntuación del scorecard es de 0 a 100; una regla roja prevalece siempre sobre el puntaje.
+
+Los exports `Checkpoint8_Test_AI_Judge_AB.json` y `Checkpoint8 AI Judge - Pruebas AB (inactivo).json` son variantes experimentales inactivas, no resultados de una prueba A/B ejecutada. No deben habilitarse como flujos de producción en paralelo al workflow central.
 
 | Criterio | Peso | Puntaje completo | Regla de falla |
 |---|---:|---|---|
@@ -233,7 +238,7 @@ Cada worker devuelve evidencia estructurada como objetos `source` + `quote`; en 
 
 ## Fuentes, supuestos y riesgos pendientes
 
-1. `README.md` y exports de Checkpoint 7: workflow central, adaptadores, memoria, RAG, workers, HITL, canales y herramientas actuales.
+1. `README.md` y exports de Checkpoint 7 y 8: workflow central, adaptadores, memoria, RAG, workers, HITL, canales, scorecard y AI Judge.
 2. `CLASE - Manager Multiagente + Memoria Persistente + Worker Customer.json` y `Clase - Worker Customer.json`: patrones de separación Router/Worker, contexto de memoria y escalado de Customer Success; se usan como referencia, sin modificar esos ejemplos.
 3. `Menu_GustoBot.xlsx`, `Pedidos_GustoBot.xlsx`, `Reclamos_GustoBot.xlsx` y `Logs_Ejecucion_GustoBot.xlsx`: estructuras y señales históricas. Las filas de muestra contienen información identificable; este documento no reproduce datos de clientes.
 4. `Manual de Politicas y Evaluacion v5.pdf`: fuente de políticas de menú, alérgenos, reembolsos y severidad. **Riesgo de jurisdicción:** el manual cita el artículo 34 de la Ley 24.240 (Argentina), mientras los activos del proyecto incluyen precios en CLP y respuesta chilena. No automatizar una decisión legal o financiera hasta confirmar jurisdicción, versión autorizada y aprobación del responsable.
